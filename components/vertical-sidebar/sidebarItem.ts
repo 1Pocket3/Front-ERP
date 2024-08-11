@@ -1,0 +1,663 @@
+import {
+  FileDotsIcon,
+  FilesIcon,
+  BorderVerticalIcon,
+  ShoppingCartIcon,
+  ApertureIcon,
+  PointIcon,
+  JumpRopeIcon,
+  LayoutKanbanIcon,
+  ReportSearchIcon,
+} from "vue-tabler-icons";
+
+import testIcon from "@/public/manopera.png";
+
+export interface menu {
+  header?: string;
+  title?: string;
+  icon?: any;
+  to?: string;
+  chip?: string;
+  chipBgColor?: string;
+  chipColor?: string;
+  chipVariant?: string;
+  chipIcon?: string;
+  children?: menu[];
+  disabled?: boolean;
+  type?: string;
+  subCaption?: string;
+}
+
+// Materiale
+// Angajați
+// Echipe
+// Manopera
+// Utilaje de construcții
+// Acceptări marfă
+// Furnizori
+
+const sidebarItem: menu[] = [
+  { header: "pages" },
+  {
+    title: "project",
+    icon: ApertureIcon,
+    // chip: 'New',
+    // chipColor: 'surface',
+    // chipBgColor: 'secondary',
+    to: "/projects", // dashboards/modern
+  },
+  {
+    title: "purchase_requests",
+    icon: ReportSearchIcon,
+    to: "/requests",
+  },
+  {
+    title: "material",
+    icon: FilesIcon,
+    to: "/materials", // apps/contacts
+  },
+  {
+    title: "staff",
+    icon: JumpRopeIcon,
+    to: "/",
+  },
+  {
+    title: "teams",
+    icon: ShoppingCartIcon,
+    to: "/",
+  },
+  {
+    title: "workmanship",
+    icon: LayoutKanbanIcon,
+    to: "/",
+  },
+  {
+    title: "construction_machinery",
+    icon: PointIcon,
+    to: "/",
+  },
+  {
+    title: "goods_acceptances",
+    icon: FileDotsIcon,
+    to: "/",
+  },
+  {
+    title: "providers",
+    icon: BorderVerticalIcon,
+    to: "/",
+  },
+  // { header: 'Apps' },
+  // {
+  //     title: 'Contact',
+  //     icon: BoxIcon,
+  //     to: '/apps/contacts',
+  //     chip: '2',
+  //     chipColor: 'surface',
+  //     chipBgColor: 'secondary'
+  // },
+
+  // {
+  //     title: 'Blog',
+  //     icon: ChartDonut3Icon,
+  //     to: '/',
+  //     children: [
+  //         {
+  //             title: 'Posts',
+  //             icon: PointIcon,
+  //             to: '/apps/blog/posts'
+  //         },
+  //         {
+  //             title: 'Detail',
+  //             icon: PointIcon,
+  //             to: '/apps/blog/early-black-friday-amazon-deals-cheap-tvs-headphones'
+  //         }
+  //     ]
+  // },
+  // {
+  //     title: 'E-Commerce',
+  //     icon: BasketIcon,
+  //     to: '/ecommerce/',
+  //     children: [
+  //         {
+  //             title: 'Shop',
+  //             icon: PointIcon,
+  //             to: '/ecommerce/products'
+  //         },
+  //         {
+  //             title: 'Detail',
+  //             icon: PointIcon,
+  //             to: '/ecommerce/product/detail/1'
+  //         },
+  //         {
+  //             title: 'List',
+  //             icon: PointIcon,
+  //             to: '/ecommerce/productlist'
+  //         },
+  //         {
+  //             title: 'Checkout',
+  //             icon: PointIcon,
+  //             to: '/ecommerce/checkout'
+  //         }
+  //     ]
+  // },
+  // {
+  //     title: 'Chats',
+  //     icon: Message2Icon,
+  //     to: '/apps/chats'
+  // },
+  // {
+  //     title: 'User Profile',
+  //     icon: UserCircleIcon,
+  //     to: '/',
+  //     children: [
+  //         {
+  //             title: 'Profile',
+  //             icon: PointIcon,
+  //             to: '/apps/user/profile'
+  //         },
+  //         {
+  //             title: 'Followers',
+  //             icon: PointIcon,
+  //             to: '/apps/user/profile/followers'
+  //         },
+  //         {
+  //             title: 'Friends',
+  //             icon: PointIcon,
+  //             to: '/apps/user/profile/friends'
+  //         },
+  //         {
+  //             title: 'Gallery',
+  //             icon: PointIcon,
+  //             to: '/apps/user/profile/gallery'
+  //         }
+  //     ]
+  // },
+  // {
+  //     title: 'Notes',
+  //     icon: FilesIcon,
+  //     to: '/apps/notes'
+  // },
+  // {
+  //     title: 'Calendar',
+  //     icon: CalendarIcon,
+  //     to: '/apps/calendar'
+  // },
+  // {
+  //     title: 'Kanban',
+  //     icon: LayoutKanbanIcon,
+  //     to: '/apps/kanban'
+  // },
+
+  // { header: 'Pages' },
+  // {
+  //     title: 'Pricing',
+  //     icon: CurrencyDollarIcon,
+  //     to: '/pages/pricing'
+  // },
+  // {
+  //     title: 'Account Setting',
+  //     icon: UserCircleIcon,
+  //     to: '/pages/account-settings'
+  // },
+  // {
+  //     title: 'FAQ',
+  //     icon: HelpIcon,
+  //     to: '/pages/faq'
+  // },
+  // {
+  //     title: 'Widget',
+  //     icon: LayoutIcon,
+  //     to: '/widget-card',
+  //     children: [
+  //         {
+  //             title: 'Cards',
+  //             icon: PointIcon,
+  //             to: '/widgets/cards'
+  //         },
+  //         {
+  //             title: 'Banners',
+  //             icon: PointIcon,
+  //             to: '/widgets/banners'
+  //         },
+  //         {
+  //             title: 'Charts',
+  //             icon: PointIcon,
+  //             to: '/widgets/charts'
+  //         }
+  //     ]
+  // },
+  // {
+  //     title: 'Landing Page',
+  //     icon: AppWindowIcon,
+  //     to: '/'
+  // },
+
+  // { header: 'Forms' },
+  // {
+  //     title: 'Form Elements',
+  //     icon: AppsIcon,
+  //     to: '/components/',
+  //     children: [
+  //         {
+  //             title: 'Autocomplete',
+  //             icon: PointIcon,
+  //             to: '/forms/form-elements/autocomplete'
+  //         },
+  //         {
+  //             title: 'Combobox',
+  //             icon: PointIcon,
+  //             to: '/forms/form-elements/combobox'
+  //         },
+  //         {
+  //             title: 'Button',
+  //             icon: PointIcon,
+  //             to: '/forms/form-elements/button'
+  //         },
+  //         {
+  //             title: 'Checkbox',
+  //             icon: PointIcon,
+  //             to: '/forms/form-elements/checkbox'
+  //         },
+  //         {
+  //             title: 'Custom Inputs',
+  //             icon: PointIcon,
+  //             to: '/forms/form-elements/custominputs'
+  //         },
+  //         {
+  //             title: 'File Inputs',
+  //             icon: PointIcon,
+  //             to: '/forms/form-elements/fileinputs'
+  //         },
+  //         {
+  //             title: 'Radio',
+  //             icon: PointIcon,
+  //             to: '/forms/form-elements/radio'
+  //         },
+  //         {
+  //             title: 'Date Time',
+  //             icon: PointIcon,
+  //             to: '/forms/form-elements/date-time'
+  //         },
+  //         {
+  //             title: 'Select',
+  //             icon: PointIcon,
+  //             to: '/forms/form-elements/select'
+  //         },
+  //         {
+  //             title: 'Slider',
+  //             icon: PointIcon,
+  //             to: '/forms/form-elements/slider'
+  //         },
+  //         {
+  //             title: 'Switch',
+  //             icon: PointIcon,
+  //             to: '/forms/form-elements/switch'
+  //         }
+  //     ]
+  // },
+  // {
+  //     title: 'Form Layout',
+  //     icon: FileTextIcon,
+  //     to: '/forms/form-layouts'
+  // },
+  // {
+  //     title: 'Form Horizontal',
+  //     icon: BoxAlignBottomIcon,
+  //     to: '/forms/form-horizontal'
+  // },
+  // {
+  //     title: 'Form Vertical',
+  //     icon: BoxAlignLeftIcon,
+  //     to: '/forms/form-vertical'
+  // },
+  // {
+  //     title: 'Form Custom',
+  //     icon: FileDotsIcon,
+  //     to: '/forms/form-custom'
+  // },
+  // {
+  //     title: 'Form Validation',
+  //     icon: FilesIcon,
+  //     to: '/forms/form-validation'
+  // },
+  // {
+  //     title: 'Editor',
+  //     icon: EditIcon,
+  //     to: '/forms/editor'
+  // },
+
+  // { header: 'Tables' },
+  // {
+  //     title: 'Basic Table',
+  //     icon: BorderAllIcon,
+  //     to: '/tables/basic'
+  // },
+  // {
+  //     title: 'Dark Table',
+  //     icon: BorderHorizontalIcon,
+  //     to: '/tables/dark'
+  // },
+  // {
+  //     title: 'Density Table',
+  //     icon: BorderInnerIcon,
+  //     to: '/tables/density'
+  // },
+  // {
+  //     title: 'Fixed Header Table',
+  //     icon: BorderTopIcon,
+  //     to: '/tables/fixed-header'
+  // },
+  // {
+  //     title: 'Height Table',
+  //     icon: BorderVerticalIcon,
+  //     to: '/tables/height'
+  // },
+  // {
+  //     title: 'Editable Table',
+  //     icon: BorderStyle2Icon,
+  //     to: '/tables/editable'
+  // },
+
+  // { header: 'Data Tables' },
+  // {
+  //     title: 'Basic Table',
+  //     icon: ColumnsIcon,
+  //     to: '/tables/datatables/basic'
+  // },
+  // {
+  //     title: 'Header Table',
+  //     icon: RowInsertBottomIcon,
+  //     to: '/tables/datatables/header'
+  // },
+  // {
+  //     title: 'Selection Table',
+  //     icon: EyeTableIcon,
+  //     to: '/tables/datatables/selection'
+  // },
+  // {
+  //     title: 'Sorting Table',
+  //     icon: SortAscendingIcon,
+  //     to: '/tables/datatables/sorting'
+  // },
+  // {
+  //     title: 'Pagination Table',
+  //     icon: PageBreakIcon,
+  //     to: '/tables/datatables/pagination'
+  // },
+  // {
+  //     title: 'Filtering Table',
+  //     icon: FilterIcon,
+  //     to: '/tables/datatables/filtering'
+  // },
+  // {
+  //     title: 'Grouping Table',
+  //     icon: BoxModelIcon,
+  //     to: '/tables/datatables/grouping'
+  // },
+  // {
+  //     title: 'Table Slots',
+  //     icon: ServerIcon,
+  //     to: '/tables/datatables/slots'
+  // },
+  // {
+  //     title: 'CRUD Table',
+  //     icon: JumpRopeIcon,
+  //     to: '/tables/datatables/crudtable'
+  // },
+
+  // { header: 'UI' },
+  // {
+  //     title: 'UI Components',
+  //     icon: BoxIcon,
+  //     to: '#',
+  //     children: [
+  //         {
+  //             title: 'Alert',
+  //             icon: PointIcon,
+  //             to: '/ui-components/alert'
+  //         },
+  //         {
+  //             title: 'Accordion',
+  //             icon: PointIcon,
+  //             to: '/ui-components/accordion'
+  //         },
+  //         {
+  //             title: 'Avatar',
+  //             icon: PointIcon,
+  //             to: '/ui-components/avatar'
+  //         },
+  //         {
+  //             title: 'Chip',
+  //             icon: PointIcon,
+  //             to: '/ui-components/chip'
+  //         },
+  //         {
+  //             title: 'Dialog',
+  //             icon: PointIcon,
+  //             to: '/ui-components/dialogs'
+  //         },
+  //         {
+  //             title: 'List',
+  //             icon: PointIcon,
+  //             to: '/ui-components/list'
+  //         },
+  //         {
+  //             title: 'Menus',
+  //             icon: PointIcon,
+  //             to: '/ui-components/menus'
+  //         },
+  //         {
+  //             title: 'Rating',
+  //             icon: PointIcon,
+  //             to: '/ui-components/rating'
+  //         },
+  //         {
+  //             title: 'Tabs',
+  //             icon: PointIcon,
+  //             to: '/ui-components/tabs'
+  //         },
+  //         {
+  //             title: 'Tooltip',
+  //             icon: PointIcon,
+  //             to: '/ui-components/tooltip'
+  //         },
+  //         {
+  //             title: 'Typography',
+  //             icon: PointIcon,
+  //             to: '/ui-components/typography'
+  //         }
+  //     ]
+  // },
+  // { header: 'Charts' },
+  // {
+  //     title: 'Line',
+  //     icon: ChartLineIcon,
+  //     to: '/charts/line-chart'
+  // },
+  // {
+  //     title: 'Gredient',
+  //     icon: ChartArcsIcon,
+  //     to: '/charts/gredient-chart'
+  // },
+  // {
+  //     title: 'Area',
+  //     icon: ChartAreaIcon,
+  //     to: '/charts/area-chart'
+  // },
+  // {
+  //     title: 'Candlestick',
+  //     icon: ChartCandleIcon,
+  //     to: '/charts/candlestick-chart'
+  // },
+  // {
+  //     title: 'Column',
+  //     icon: ChartDotsIcon,
+  //     to: '/charts/column-chart'
+  // },
+  // {
+  //     title: 'Doughnut & Pie',
+  //     icon: ChartDonut3Icon,
+  //     to: '/charts/doughnut-pie-chart'
+  // },
+  // {
+  //     title: 'Radialbar & Radar',
+  //     icon: ChartRadarIcon,
+  //     to: '/charts/radialbar-chart'
+  // },
+
+  // { header: 'Auth' },
+
+  // {
+  //     title: 'Login',
+  //     icon: LoginIcon,
+  //     to: '#',
+  //     children: [
+  //         {
+  //             title: 'Side Login',
+  //             icon: PointIcon,
+  //             to: '/auth/login'
+  //         },
+  //         {
+  //             title: 'Boxed Login',
+  //             icon: PointIcon,
+  //             to: '/'
+  //         }
+  //     ]
+  // },
+  // {
+  //     title: 'Register',
+  //     icon: UserPlusIcon,
+  //     to: '#',
+  //     children: [
+  //         {
+  //             title: 'Side Register',
+  //             icon: PointIcon,
+  //             to: '/auth/register'
+  //         },
+  //         {
+  //             title: 'Boxed Register',
+  //             icon: PointIcon,
+  //             to: '/auth/register2'
+  //         }
+  //     ]
+  // },
+  // {
+  //     title: 'Forgot Password',
+  //     icon: RotateIcon,
+  //     to: '#',
+  //     children: [
+  //         {
+  //             title: 'Side Forgot Password',
+  //             icon: PointIcon,
+  //             to: '/auth/forgot-password'
+  //         },
+  //         {
+  //             title: 'Boxed Forgot Password',
+  //             icon: PointIcon,
+  //             to: '/auth/forgot-password2'
+  //         }
+  //     ]
+  // },
+  // {
+  //     title: 'Two Steps',
+  //     icon: ZoomCodeIcon,
+  //     to: '#',
+  //     children: [
+  //         {
+  //             title: 'Side Two Steps',
+  //             icon: SettingsIcon,
+  //             to: '/auth/two-step'
+  //         },
+  //         {
+  //             title: 'Boxed Two Steps',
+  //             icon: SettingsIcon,
+  //             to: '/auth/two-step2'
+  //         }
+  //     ]
+  // },
+
+  // {
+  //     title: 'Error',
+  //     icon: AlertCircleIcon,
+  //     to: '/auth/404'
+  // },
+  // {
+  //     title: 'Maintenance',
+  //     icon: SettingsIcon,
+  //     to: '/auth/maintenance'
+  // },
+
+  // { header: 'Others' },
+  // {
+  //     title: 'Menu Level',
+  //     icon: BoxMultipleIcon,
+  //     to: '#',
+  //     children: [
+  //         {
+  //             title: 'Level 1',
+  //             icon: PointIcon,
+  //             to: '/'
+  //         },
+  //         {
+  //             title: 'Level 1',
+  //             icon: PointIcon,
+  //             to: '/',
+  //             children: [
+  //                 {
+  //                     title: 'Level 2',
+  //                     icon: PointIcon,
+  //                     to: '/'
+  //                 },
+  //                 {
+  //                     title: 'Level 2',
+  //                     icon: PointIcon,
+  //                     to: '/',
+  //                     children: [
+  //                         {
+  //                             title: 'Level 3',
+  //                             icon: PointIcon,
+  //                             to: '/'
+  //                         }
+  //                     ]
+  //                 }
+  //             ]
+  //         }
+  //     ]
+  // },
+  // {
+  //     title: 'Disabled',
+  //     icon: CircleOffIcon,
+  //     disabled: true,
+  //     to: '/'
+  // },
+  // {
+  //     title: 'Sub Caption',
+  //     icon: StarIcon,
+  //     subCaption: 'This is the subtitle',
+  //     to: '/'
+  // },
+  // {
+  //     title: 'Chip',
+  //     icon: AwardIcon,
+  //     chip: '9',
+  //     chipColor: 'surface',
+  //     chipBgColor: 'primary',
+  //     to: '/'
+  // },
+  // {
+  //     title: 'Outlined',
+  //     icon: MoodSmileIcon,
+  //     chip: 'outline',
+  //     chipColor: 'primary',
+  //     chipVariant: 'outlined',
+  //     to: '/'
+  // },
+  // {
+  //     title: 'External Link',
+  //     icon: StarIcon,
+  //     to: '/',
+  //     type: 'external'
+  // }
+];
+
+export default sidebarItem;
