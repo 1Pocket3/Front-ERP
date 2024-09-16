@@ -3,6 +3,7 @@ import vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
 export default defineNuxtConfig({
   ssr: false,
   css: ["@/scss/style.scss"],
+
   modules: [
     "@pinia/nuxt",
     'nuxt-mdi',
@@ -14,11 +15,13 @@ export default defineNuxtConfig({
       });
     },
   ],
+
   mdi: {
     cache: false,
     componentName: 'MdiIcon',
     defaultSize: '1em'
-  } ,
+  },
+
   vite: {
     vue: {
       template: {
@@ -26,9 +29,12 @@ export default defineNuxtConfig({
       },
     },
   },
+
   devtools: {
     timeline: {
       enabled: true,
     },
   },
+
+  compatibilityDate: "2024-09-16",
 });

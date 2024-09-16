@@ -29,8 +29,8 @@
       "@vue/compiler-sfc": [
         "../node_modules/@vue/compiler-sfc"
       ],
-      "@vue/runtime-dom": [
-        "../node_modules/@vue/runtime-dom"
+      "unplugin-vue-router/client": [
+        "../node_modules/unplugin-vue-router/client"
       ],
       "@nuxt/schema": [
         "../node_modules/@nuxt/schema"
@@ -87,7 +87,7 @@
         "../node_modules/pinia/dist/pinia"
       ],
       "#vue-router": [
-        "./vue-router-stub"
+        "../node_modules/vue-router"
       ],
       "#imports": [
         "./imports"
@@ -122,7 +122,8 @@
     "lib": [
       "ESNext",
       "dom",
-      "dom.iterable"
+      "dom.iterable",
+      "webworker"
     ],
     "jsx": "preserve",
     "jsxImportSource": "vue",
@@ -137,21 +138,31 @@
     "../.config/nuxt.*",
     "../**/*",
     "../node_modules/@pinia/nuxt/runtime",
+    "../node_modules/@pinia/nuxt/dist/runtime",
     "../node_modules/nuxt-mdi/runtime",
+    "../node_modules/nuxt-mdi/dist/runtime",
     "../node_modules/@vee-validate/nuxt/runtime",
+    "../node_modules/@vee-validate/nuxt/dist/runtime",
     "../node_modules/@nuxt/devtools/runtime",
+    "../node_modules/@nuxt/devtools/dist/runtime",
     "../node_modules/@nuxt/telemetry/runtime",
+    "../node_modules/@nuxt/telemetry/dist/runtime",
     ".."
   ],
   "exclude": [
+    "../dist",
     "../node_modules",
     "../node_modules/nuxt/node_modules",
     "../node_modules/@pinia/nuxt/runtime/server",
+    "../node_modules/@pinia/nuxt/dist/runtime/server",
     "../node_modules/nuxt-mdi/runtime/server",
+    "../node_modules/nuxt-mdi/dist/runtime/server",
     "../node_modules/@vee-validate/nuxt/runtime/server",
+    "../node_modules/@vee-validate/nuxt/dist/runtime/server",
     "../node_modules/@nuxt/devtools/runtime/server",
+    "../node_modules/@nuxt/devtools/dist/runtime/server",
     "../node_modules/@nuxt/telemetry/runtime/server",
-    "../dist",
+    "../node_modules/@nuxt/telemetry/dist/runtime/server",
     "../.output"
   ]
 }

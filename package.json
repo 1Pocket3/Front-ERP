@@ -9,6 +9,9 @@
     "preview": "nuxt preview"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.6.0",
+    "@fortawesome/free-solid-svg-icons": "^6.6.0",
+    "@fortawesome/vue-fontawesome": "^3.0.8",
     "@mdi/js": "^7.4.47",
     "@nuxt/image": "^1.7.0",
     "@pinia/nuxt": "^0.5.1",
