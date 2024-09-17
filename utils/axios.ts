@@ -3,7 +3,7 @@ import type { AxiosInstance, AxiosResponse, AxiosError } from "axios"
 
 const axiosServices: AxiosInstance = axios.create({
   // baseURL: process.env.API_BASE_URL || 'https://api.inamstro.alsodev.com/api'
-  baseURL: process.env.API_BASE_URL || 'http://185.241.61.104:8080',
+  baseURL: process.env.API_BASE_URL || 'https://185.241.61.104:8080',
 
 });
 

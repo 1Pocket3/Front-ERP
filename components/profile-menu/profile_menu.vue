@@ -11,7 +11,7 @@
         :key="i"
         :value="item"
         color="primary"
-        @active="dsf"
+        @click="test"
       >
         <div class="items">
           <v-icon :icon="item.icon"></v-icon>
@@ -40,6 +40,11 @@ import {
 } from "vue-tabler-icons";
 
 export default {
+  methods: {
+    test(id) {
+console.log(id)
+    }
+  },
   components: {
     CameraIcon,
   },
@@ -53,22 +58,27 @@ export default {
         {
           text: this.$t("acc"),
           icon: UserIcon,
+          id: 0,
         },
         {
           text: this.$t("change_password"),
           icon: KeyIcon,
+          id: 1,
         },
         {
           text: this.$t("personal_data"),
           icon: IdIcon,
+          id: 2,
         },
         {
           text: this.$t("alerts_configuration"),
           icon: BellIcon,
+          id: 3,
         },
         {
           text: this.$t("accept_modules"),
           icon: LockIcon,
+          id: 4,
         },
       ];
     },
