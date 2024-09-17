@@ -1,11 +1,15 @@
 <template>
     <div class="logo">
-		<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="100" cy="100" r="80" fill="#007ACC" />
-
-
-  <text x="100" y="115" font-family="Arial" font-size="40" fill="white" text-anchor="middle">Logo</text>
+      <svg width="200" height="50" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100%" height="100%" fill="#d0e7ff"/>
+  <rect x="10" y="10" width="180" height="30" fill="none" stroke="#5b7fa7" stroke-width="4"/>
+  <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="20" fill="#5b7fa7" font-family="Arial, sans-serif">
+    LOGO
+  </text>
+ 
+  
 </svg>
+  
 
     </div>
 </template>
