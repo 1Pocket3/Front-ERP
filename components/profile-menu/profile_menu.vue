@@ -11,7 +11,7 @@
         :key="i"
         :value="item"
         color="primary"
-      
+        @active="dsf"
       >
         <div class="items">
           <v-icon :icon="item.icon"></v-icon>
