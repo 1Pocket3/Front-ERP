@@ -21,7 +21,7 @@ import LoginForm from '@/components/login-form/LoginForm.vue';
             </v-col>
             <v-col cols="12" lg="5" xl="4" class="d-flex align-center justify-center">
                 <div class="mt-xl-0 mt-5 mw-100">
-                    <h2 class="text-h3 font-weight-bold mb-4">Welcome to Inamstro</h2>
+                    <h2 class="text-h3 font-weight-bold mb-4">Just Welcome</h2>
                     <LoginForm />
                 </div>
             </v-col>
