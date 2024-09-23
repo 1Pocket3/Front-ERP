@@ -11,7 +11,7 @@
         :key="i"
         :value="item"
         color="primary"
-        @click="test"
+         @click="selectItem(item.id)"
       >
         <div class="items">
           <v-icon :icon="item.icon"></v-icon>
@@ -24,10 +24,6 @@
   </v-card>
 </template>
 <script setup>
-const { t } = useI18n();
-</script>
-<script>
-import i18n from "~/plugins/i18n";
 import { ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import {
@@ -39,51 +35,24 @@ import {
   CameraIcon,
 } from "vue-tabler-icons";
 
-export default {
-  methods: {
-    test(id) {
-console.log(id)
-    }
-  },
-  components: {
-    CameraIcon,
-  },
 
-  data() {
-    return {};
-  },
-  computed: {
-    items() {
-      return [
-        {
-          text: this.$t("acc"),
-          icon: UserIcon,
-          id: 0,
-        },
-        {
-          text: this.$t("change_password"),
-          icon: KeyIcon,
-          id: 1,
-        },
-        {
-          text: this.$t("personal_data"),
-          icon: IdIcon,
-          id: 2,
-        },
-        {
-          text: this.$t("alerts_configuration"),
-          icon: BellIcon,
-          id: 3,
-        },
-        {
-          text: this.$t("accept_modules"),
-          icon: LockIcon,
-          id: 4,
-        },
-      ];
-    },
-  },
-};
+const { t } = useI18n();
+
+
+const emit = defineEmits(['changeItem']); 
+
+const selectItem = (id) => {
+  emit('changeItem', id); 
+}
+
+
+const items = computed(() => [
+  { text: t("acc"), icon: UserIcon, id: 0 },
+  { text: t("change_password"), icon: KeyIcon, id: 1 },
+  { text: t("personal_data"), icon: IdIcon, id: 2 },
+  { text: t("alerts_configuration"), icon: BellIcon, id: 3 },
+  { text: t("accept_modules"), icon: LockIcon, id: 4 },
+]);
 </script>
 <style scoped>
 .icon {

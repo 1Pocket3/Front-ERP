@@ -117,5 +117,12 @@ export const translateRo = {
   validation_last_name_error:"Prenumele trebuie să conțină cel puțin 2 caractere.",
   validation_email_error: "Emailul trebuie să fie unul valid.",
   validation_select_error:"Trebuie să fie selectat cel puțin un element din listă.",
-  validation_date_error: "Data trebuie să fie selectată."
+  validation_date_error: "Data trebuie să fie selectată.",
+  password: "Parolă",
+ new_password: "Parolă nouă",
+ new_password_repeat: "Confirmare parolă nouă",
+ required: "Câmp obligatoriu",
+ min_password_length: "Minim 8 caractere",
+ post_server_erorr: "Eroare la trimiterea datelor",
+ putch_password_eror: "Nu s-a reușit schimbarea parolei"
 };

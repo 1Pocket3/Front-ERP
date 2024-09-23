@@ -1,6 +1,7 @@
+import '@mdi/font/css/materialdesignicons.css'
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
-import { aliases, mdi } from 'vuetify/iconsets/mdi-svg'
+/* import { aliases, mdi } from 'vuetify/iconsets/mdi-svg' */
 import { LIGHT_THEME } from '@/themes/LightTheme';
 import { ro, ru } from 'vuetify/locale'
 
@@ -12,13 +13,13 @@ export default defineNuxtPlugin((nuxtApp) => {
         LIGHT_THEME,
       },
     },
-    icons: {
+   /*  icons: {
       defaultSet: 'mdi',
       aliases,
       sets: {
         mdi,
       },
-    },
+    }, */
     locale: {
       locale: 'ro',
       fallback:'ro',

@@ -29,12 +29,14 @@ export const useAuthStore = defineStore({
     users: [] as UserResponse[],
     accessToken: localStorage.getItem("accessToken") || "",
     refreshToken: localStorage.getItem("refreshToken") || "",
+    profile: null
   }),
   getters: {
     getTeams: (state) => state.teams,
     getUsers: (state) => state.users as UserResponse[],
     getAccessToken: (state) => state.accessToken,
     getRefreshToken: (state) => state.refreshToken,
+    getProfile: (state) => state.profile,
   },
   actions: {
     async login(loginData: { username: string; password: string }) {
@@ -51,6 +53,16 @@ export const useAuthStore = defineStore({
         throw error;
       }
     },
+
+    async fetchProfile() {
+      try {
+        const response = await axios.get("/profile/");
+        this.profile = response.data;
+      } catch(error) {
+        console.log("Eror Profile:", error)
+      }
+    },
+
     async refreshAccessToken() {
       try {
         const response = await axios.post("/auth/login/refresh/", {
@@ -82,6 +94,9 @@ export const useAuthStore = defineStore({
         throw error;
       }
     },
+
+    
+
     // Управление командами
     async fetchTeams() {
       try {

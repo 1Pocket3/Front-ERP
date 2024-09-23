@@ -114,4 +114,11 @@ export const translateRu = {
   validation_email_error:"Email должен быть настоящим",
   validation_select_error:"Должен быть выбран хотя бы 1 элемент из списка",
   validation_date_error:"Дата должны быть выбрана",
+  password:"Пароль",
+  new_password:"Новый пароль",
+  new_password_repeat:"Подтверждение нового пароля",
+  required:"Обязательное поле",
+  min_password_length:"Минимум 8 символов",
+  post_server_erorr: "Ошибка при отправке данных",
+  putch_password_eror: "Не удалось сменить пароль"
 }
