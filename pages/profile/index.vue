@@ -7,7 +7,7 @@
       <Profile_form
         class="inside-form"
         v-if="itemSelected === 0"
-        :userData="profileFormData"
+        :user-data="profileFormData"
       />
       <div>
         <ChangePassword class="inside-form" v-if="itemSelected === 1" />
@@ -33,11 +33,12 @@ import { onMounted } from "vue";
 
 const authStore = useAuthStore();
 const profileFormData = ref({
-  date: "",
-  login: "",
-  name: "",
+  date_of_birth: "",
+  username: "",
+  first_name: "",
   email: "",
-  lastName: "",
+  last_name: "",
+  photo: "",
 });
 
 const getProfileFormData = (currentUser) => {
@@ -47,22 +48,14 @@ const getProfileFormData = (currentUser) => {
     const { date_of_birth, email, first_name, last_name, photo, username } =
       currentUser;
     return { date_of_birth, email, first_name, last_name, photo, username };
-  } else {
-    return {
-      date: "",
-      login: "",
-      name: "",
-      email: "",
-      lastName: "",
-    };
-  }
+  };
 };
 
 onMounted(async () => {
   await authStore.fetchProfile();
   const user = authStore.getProfile;
   profileFormData.value = getProfileFormData(user);
-  console.log("Mounted form data:",profileFormData)
+  console.log("Mounted form data:", profileFormData);
 });
 
 library.add(faUserSecret);

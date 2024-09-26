@@ -26,21 +26,20 @@
       ></v-text-field>
     </div>
 
-    <v-date-input
+    <!--  <v-date-input
       class="dateOfBirth input"
       variant="outlined"
       prepend-icon=""
       :label="t('date_of_birth')"
       :append-inner-icon="CalendarIcon"
       v-model="props.userData.date_of_birth"
-    ></v-date-input>
+    ></v-date-input> -->
 
-    <!-- <v-select
-      v-model="formFields.select.value.value"
-      :error-messages="formFields.select.errorMessage.value"
-      :items="items"
-      :label="t('language')"
-    ></v-select> -->
+    <VueDatePicker
+    class="dateOfBirth input" 
+    v-model="props.userData.date_of_birth" 
+    format="yyyy-MM-dd"
+    :locale="t('rus')" />
 
     <v-btn class="me-4" @click="submit"> {{ t("save") }} </v-btn>
   </form>
@@ -51,7 +50,11 @@ import { useI18n } from "vue-i18n";
 import { useField, useForm } from "vee-validate";
 import { CalendarIcon } from "vue-tabler-icons";
 import { VDateInput } from "vuetify/labs/VDateInput";
-import { ref, computed } from "vue";
+import { ref, computed, defineProps } from "vue";
+import { useDate } from "vuetify";
+import VueDatePicker from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
+import { format } from "date-fns";
 
 const props = defineProps({
   userData: {
@@ -59,11 +62,6 @@ const props = defineProps({
     required: true,
   },
 });
-
-console.log("Props:", props.userData);
-
-
-
 
 const { t } = useI18n();
 const { handleSubmit } = useForm({
@@ -84,10 +82,6 @@ const { handleSubmit } = useForm({
       if (/^[a-z.-]+@[a-z.-]+\.[a-z]+$/i.test(value)) return true;
       return t("validation_email_error");
     },
-    select(value) {
-      if (value) return true;
-      return t("validation_select_error");
-    },
     date(value) {
       if (value) return true;
       return t("validation_date_error");
@@ -95,24 +89,62 @@ const { handleSubmit } = useForm({
   },
 });
 
-const items = computed(() => [t("rus"), t("rom")]);
-
 const submit = async () => {
   const formData = {
-    date_of_birth: props.userData.date_of_birth,
+    date_of_birth: props.userData.date_of_birth
+      ? format(new Date(props.userData.date_of_birth), "yyyy-MM-dd")
+      : null,
     username: props.userData.username,
     first_name: props.userData.first_name,
     email: props.userData.email,
     last_name: props.userData.last_name,
   };
   console.log("Form data:", formData);
+  console.log("Date:", props.userData.date_of_birth);
   try {
     const response = await axios.post("/profile/", formData);
     console.log("Payload:", response.data);
-   
   } catch (error) {
     console.error("Error:", error);
     alert(t("post_server_erorr"));
   }
 };
 </script>
+<style scoped lang="scss">
+.nameLastName {
+  display: flex;
+  width: 50%;
+}
+.dateOfBirth {
+  width: 24.5%;
+  background-color: hsla(0, 0%, 100%, 0.63);
+
+
+}
+.input {
+  margin-bottom: 15px;
+}
+.name {
+  margin-right: 10px;
+}
+
+
+@media (max-width: 1099px) {
+  .dateOfBirth {
+    width: 50%;
+  }
+  .nameLastName {
+    flex-direction: column;
+
+    width: 100%;
+  }
+  .name {
+    margin-right: 0;
+  }
+  @media (max-width: 900px) {
+    .dateOfBirth {
+      width: 100%;
+    }
+  }
+}
+</style>

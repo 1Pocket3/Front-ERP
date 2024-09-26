@@ -1,6 +1,9 @@
 import vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
 
 export default defineNuxtConfig({
+  plugins: [
+    "@/plugins/vue-datepicker.client"
+  ],
   ssr: false,
   css: ["@/scss/style.scss"],
 
