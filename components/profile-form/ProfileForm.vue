@@ -55,6 +55,10 @@ import { useDate } from "vuetify";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import { format } from "date-fns";
+import { useToast } from 'vue-toastification';
+import Toast, { POSITION } from 'vue-toastification';
+import 'vue-toastification/dist/index.css';
+import { getCurrentInstance } from 'vue';
 
 const props = defineProps({
   userData: {
@@ -62,7 +66,7 @@ const props = defineProps({
     required: true,
   },
 });
-
+const { appContext } = getCurrentInstance();
 const { t } = useI18n();
 const { handleSubmit } = useForm({
   validationSchema: {
@@ -89,6 +93,55 @@ const { handleSubmit } = useForm({
   },
 });
 
+appContext.app.use(Toast, {
+  position: POSITION.TOP_RIGHT,
+  timeout: 5000,
+  closeOnClick: true,
+  pauseOnFocusLoss: true,
+  pauseOnHover: true,
+  draggable: true,
+  draggablePercent: 0.6,
+  showCloseButtonOnHover: false,
+  hideProgressBar: true,
+  closeButton: "button",
+  icon: true,
+  rtl: false
+});
+
+const toast = useToast();
+const showToast = (result) => {
+  if(result) {
+    toast.success(t("putch_data_success"), {
+    position: "top-right",
+    timeout: 5000,
+    closeOnClick: true,
+    pauseOnFocusLoss: true,
+    pauseOnHover: true,
+    draggable: true,
+    draggablePercent: 0.6,
+    showCloseButtonOnHover: false,
+    hideProgressBar: true,
+    closeButton: "button",
+    icon: true,
+    rtl: false
+  });
+} else {
+  toast.error(t("putch_data_error"), {
+    position: "top-right",
+    timeout: 5000,
+    closeOnClick: true,
+    pauseOnFocusLoss: true,
+    pauseOnHover: true,
+    draggable: true,
+    draggablePercent: 0.6,
+    showCloseButtonOnHover: false,
+    hideProgressBar: true,
+    closeButton: "button",
+    icon: true,
+    rtl: false
+  });
+}
+};
 const submit = async () => {
   const formData = {
     date_of_birth: props.userData.date_of_birth
@@ -99,14 +152,15 @@ const submit = async () => {
     email: props.userData.email,
     last_name: props.userData.last_name,
   };
-  console.log("Form data:", formData);
-  console.log("Date:", props.userData.date_of_birth);
+  
   try {
     const response = await axios.post("/profile/", formData);
-    console.log("Payload:", response.data);
+    showToast(true)
+    
   } catch (error) {
     console.error("Error:", error);
-    alert(t("post_server_erorr"));
+    showToast(false)
+    console.log("Submit error", error)
   }
 };
 </script>

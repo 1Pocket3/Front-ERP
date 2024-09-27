@@ -119,5 +119,7 @@ export const translateRu = {
   required:"Обязательное поле",
   min_password_length:"Минимум 8 символов",
   post_server_erorr: "Ошибка при отправке данных",
-  putch_password_eror: "Не удалось сменить пароль"
+  putch_password_eror: "Не удалось сменить пароль",
+  putch_data_success:"Данные изменены успешно",
+  putch_data_error:"Ошибка при отправке данных",
 }

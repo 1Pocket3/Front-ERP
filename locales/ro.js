@@ -123,5 +123,7 @@ export const translateRo = {
  required: "Câmp obligatoriu",
  min_password_length: "Minim 8 caractere",
  post_server_erorr: "Eroare la trimiterea datelor",
- putch_password_eror: "Nu s-a reușit schimbarea parolei"
+ putch_password_eror: "Nu s-a reușit schimbarea parolei",
+ putch_data_success: "Datele au fost modificate cu succes",
+putch_data_error: "Eroare la trimiterea datelor",
 };
