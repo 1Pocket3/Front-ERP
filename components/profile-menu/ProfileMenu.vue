@@ -1,20 +1,20 @@
  <template>
-  <v-card class="mx-auto" max-width="300" max-height="450">
-    <v-list density="compact">
+  <v-card class="card">
+    <v-list class="list" >
       <div class="foto">
         <img class="avatar" src="./avatar.webp" alt="" />
-        <button class="btn"><CameraIcon :lazy="true" /></button>
+        <button class="btn"><CameraIcon class="icon" :lazy="true" /></button>
       </div>
-      <v-list-item 
-      class="list-item"
+      <v-list-item
+        class="list-item"
         v-for="(item, i) in items"
         :key="i"
         :value="item"
         color="primary"
-         @click="selectItem(item.id)"
+        @click="selectItem(item.id)"
       >
         <div class="items">
-          <v-icon :icon="item.icon"></v-icon>
+          <v-icon :icon="item.icon" class="item-icon"></v-icon>
           <v-list-item-title class="item-text">{{
             item.text
           }}</v-list-item-title>
@@ -24,37 +24,27 @@
   </v-card>
 </template>
 <script setup>
-import { ref, computed } from "vue";
-import { useI18n } from "vue-i18n";
-import {
-  UserIcon,
-  KeyIcon,
-  IdIcon,
-  BellIcon,
-  LockIcon,
-  CameraIcon,
-} from "vue-tabler-icons";
+import { CameraIcon } from "vue-tabler-icons";
 
-
-const { t } = useI18n();
-
-
-const emit = defineEmits(['changeItem']); 
-
+const emit = defineEmits(["changeItem"]);
 const selectItem = (id) => {
-  emit('changeItem', id); 
-}
+  emit("changeItem", id);
+};
+const props = defineProps({
+  items: {
+    type: Object,
+    required: true,
+  },
+});
 
 
-const items = computed(() => [
-  { text: t("acc"), icon: UserIcon, id: 0 },
-  { text: t("change_password"), icon: KeyIcon, id: 1 },
-  { text: t("personal_data"), icon: IdIcon, id: 2 },
-  { text: t("alerts_configuration"), icon: BellIcon, id: 3 },
-  { text: t("accept_modules"), icon: LockIcon, id: 4 },
-]);
 </script>
 <style scoped>
+
+.card {
+  max-width: 300px; 
+  max-height: 450px;
+}
 .icon {
   margin-right: 0;
 }
@@ -91,4 +81,32 @@ const items = computed(() => [
   align-items: center;
   display: flex;
 }
+
+@media (max-width: 900px) { 
+  .card {
+    display: flex;
+    flex-direction: row;
+    max-width: 80px;
+  }
+  .item-icon {
+    transform: rotate(90deg);
+  }
+  .item-text {
+    display: none;
+  }
+  
+  .icon {
+    width: 50%;
+  }
+  .foto {
+    display: none;
+  }
+  .btn {
+    display: none;
+    width: 10px;
+    height: 10px;
+  }
+  
+}
+
 </style>

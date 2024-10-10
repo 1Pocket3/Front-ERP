@@ -25,33 +25,21 @@
         :label="t('last_name')"
       ></v-text-field>
     </div>
-
-    <!--  <v-date-input
-      class="dateOfBirth input"
-      variant="outlined"
-      prepend-icon=""
-      :label="t('date_of_birth')"
-      :append-inner-icon="CalendarIcon"
-      v-model="props.userData.date_of_birth"
-    ></v-date-input> -->
-
     <VueDatePicker
     class="dateOfBirth input" 
     v-model="props.userData.date_of_birth" 
     format="yyyy-MM-dd"
-    :locale="t('rus')" />
+    :locale="t('rus')" 
+    />
 
-    <v-btn class="me-4" @click="submit"> {{ t("save") }} </v-btn>
+    <v-btn class="me-4 btn" @click="submit"> {{ t("save") }} </v-btn>
   </form>
 </template>
 
 <script setup>
 import { useI18n } from "vue-i18n";
 import { useField, useForm } from "vee-validate";
-import { CalendarIcon } from "vue-tabler-icons";
-import { VDateInput } from "vuetify/labs/VDateInput";
 import { ref, computed, defineProps } from "vue";
-import { useDate } from "vuetify";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import { format } from "date-fns";
@@ -171,9 +159,18 @@ const submit = async () => {
 }
 .dateOfBirth {
   width: 24.5%;
-  background-color: hsla(0, 0%, 100%, 0.63);
+  background-color: f9f9f9;
 
+}
+.dp__theme_light {
+  --dp-background-color: rgb(249 249 249);
+  --dp-input-padding: 11px 30px 11px 12px;
+  --dp-border-radius:6px;
+}
 
+.btn {
+  margin-top: 30px;
+  height: 45px;
 }
 .input {
   margin-bottom: 15px;
@@ -182,23 +179,17 @@ const submit = async () => {
   margin-right: 10px;
 }
 
-
 @media (max-width: 1099px) {
   .dateOfBirth {
-    width: 50%;
+    width: 100%;
   }
   .nameLastName {
     flex-direction: column;
-
     width: 100%;
   }
   .name {
     margin-right: 0;
   }
-  @media (max-width: 900px) {
-    .dateOfBirth {
-      width: 100%;
-    }
-  }
+
 }
 </style>

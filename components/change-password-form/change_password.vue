@@ -46,7 +46,6 @@ const show1 = ref(false);
 const show2 = ref(false);
 const show3 = ref(false);
 
-
 const passwordForm = ref({
   currentPassword: '',
   newPassword: '',
@@ -54,12 +53,9 @@ const passwordForm = ref({
 });
 
 const  save = async() => {
-  const passwordData = {
-  password: passwordForm.value.currentPassword ,
-  Newpassword:passwordForm.value.newPassword  , 
-  } 
+  
   try {
-    const response = await axios.patch('')
+    const response = await axios.post("", passwordForm)
   } catch(error) {
     console.error("Error:", error);
     alert(t('putch_password_eror'))
