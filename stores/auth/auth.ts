@@ -95,8 +95,6 @@ export const useAuthStore = defineStore({
       }
     },
 
-    
-
     // Управление командами
     async fetchTeams() {
       try {

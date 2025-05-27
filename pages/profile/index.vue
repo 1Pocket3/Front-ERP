@@ -3,8 +3,9 @@
     <div class="menu">
       <Profile_menu
         @changeItem="changePadge"
-        v-if="isScreenWide"
+        v-if="isScreenWide && isStoreReady"
         :items="items"
+        :user-data="profileFormData"
       />
     </div>
     <div class="form">
@@ -61,20 +62,14 @@ const updateWindowWidth = () => {
 const { t } = useI18n();
 const isScreenWide = computed(() => windowWidth.value > 900);
 const authStore = useAuthStore();
-const profileFormData = ref({
-  date_of_birth: "",
-  username: "",
-  first_name: "",
-  email: "",
-  last_name: "",
-  photo: "",
-});
+const profileFormData = ref({});
+const isStoreReady = ref(false)
 
 const getProfileFormData = (currentUser) => {
   if (currentUser) {
-    const { date_of_birth, email, first_name, last_name, photo, username } =
+    const { date_of_birth, email, first_name, last_name, profile_image, username } =
       currentUser;
-    return { date_of_birth, email, first_name, last_name, photo, username };
+    return { date_of_birth, email, first_name, last_name, profile_image, username };
   }
 };
 
@@ -90,7 +85,9 @@ onMounted(async () => {
   await authStore.fetchProfile();
   const user = authStore.getProfile;
   profileFormData.value = getProfileFormData(user);
-  window.addEventListener("resize", updateWindowWidth);
+  isStoreReady.value = true
+  // window.addEventListener("resize", updateWindowWidth);
+
 });
 
 onUnmounted(() => {

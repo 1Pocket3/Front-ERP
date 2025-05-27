@@ -3,7 +3,6 @@ import type { AxiosInstance, AxiosResponse, AxiosError } from "axios"
 
 const axiosServices: AxiosInstance = axios.create({
   baseURL: process.env.API_BASE_URL || 'http://127.0.0.1:8000',
-
 });
 
 
@@ -26,7 +25,7 @@ axiosServices.interceptors.response.use(
     if (error.response && error.response.status === 401) {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
-      // Redirect to login page or handle authentication failure as per your app's logic
+      // Redirect to login page or handle authentication failure as per your app's logic 
       return navigateTo('/auth')
     }
     return Promise.reject(error);

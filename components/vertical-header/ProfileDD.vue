@@ -9,7 +9,7 @@ const authStore = useAuthStore();
   <!-- ---------------------------------------------- -->
   <!-- notifications DD -->
   <!-- ---------------------------------------------- -->
-  <v-menu :close-on-content-click="false">
+  <v-menu :close-on-content-click="true">
     <template v-slot:activator="{ props }">
       <v-btn class="custom-hover-primary" variant="text" v-bind="props" icon>
         <v-avatar size="35">
@@ -35,16 +35,10 @@ const authStore = useAuthStore();
             <span class="text-subtitle-1 font-weight-regular textSecondary"
               >{{$t('profile_position_title')}}</span
             >
-            <!-- <div class="d-flex align-center mt-1">
-                            <MailIcon size="18" stroke-width="1.5" />
-                            <span class="text-subtitle-1 font-weight-regular textSecondary ml-2">info@modernize.com</span>
-                        </div> -->
           </div>
         </div>
         <v-divider></v-divider>
       </div>
-      <!-- height: calc(100vh - 240px); max-height: 240px -->
-      <!-- <perfect-scrollbar style="max-height: 240px">  -->
       <v-list class="py-0 theme-list" lines="two">
         <v-list-item
           v-for="item in profileDD"

@@ -2,7 +2,7 @@
   <v-card class="card">
     <v-list class="list" >
       <div class="foto">
-        <img class="avatar" src="./avatar.webp" alt="" />
+        <img class="avatar" :src="props.userData.profile_image" alt="" />
         <button class="btn"><CameraIcon class="icon" :lazy="true" /></button>
       </div>
       <v-list-item
@@ -27,17 +27,23 @@
 import { CameraIcon } from "vue-tabler-icons";
 
 const emit = defineEmits(["changeItem"]);
-const selectItem = (id) => {
-  emit("changeItem", id);
-};
+
 const props = defineProps({
   items: {
     type: Object,
     required: true,
   },
+  userData: {
+    type: Object
+  }
 });
 
 
+console.log('userData ->', props.userData)
+
+const selectItem = (id) => {
+  emit("changeItem", id);
+};
 </script>
 <style scoped>
 

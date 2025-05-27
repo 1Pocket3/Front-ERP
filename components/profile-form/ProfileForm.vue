@@ -25,12 +25,12 @@
         :label="t('last_name')"
       ></v-text-field>
     </div>
-    <VueDatePicker
-    class="dateOfBirth input" 
-    v-model="props.userData.date_of_birth" 
-    format="yyyy-MM-dd"
-    :locale="t('rus')" 
-    />
+      <VueDatePicker
+        class="dateOfBirth input" 
+        v-model="props.userData.date_of_birth" 
+        format="yyyy-MM-dd"
+        :locale="t('rus')" 
+      />
 
     <v-btn class="me-4 btn" @click="submit"> {{ t("save") }} </v-btn>
   </form>
@@ -54,6 +54,7 @@ const props = defineProps({
     required: true,
   },
 });
+
 const { appContext } = getCurrentInstance();
 const { t } = useI18n();
 const { handleSubmit } = useForm({

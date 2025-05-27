@@ -1,6 +1,14 @@
 import vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
 
 export default defineNuxtConfig({
+  nitro: {
+    devProxy: {
+      "/media/": {
+        target: "http://127.0.0.1:8000/media/",
+        changeOrigin: true,
+      },
+    },
+  },
   plugins: [
     "@/plugins/vue-datepicker.client"
   ],
