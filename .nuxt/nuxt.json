@@ -1,9 +1,9 @@
 {
-  "_hash": "aLWvYZxalw",
+  "_hash": "hOoq0YQCpY6OT5_zvRARXThfFywxsdMcvE9jtCZOrJ0",
   "project": {
-    "rootDir": "C:/13/Work/rtf/Front-ERP"
+    "rootDir": "C:/13/Work/own-crm2/Front-ERP"
   },
   "versions": {
-    "nuxt": "3.15.4"
+    "nuxt": "3.19.2"
   }
 }

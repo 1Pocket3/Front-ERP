@@ -1,17 +1,15 @@
 import { createI18n } from "vue-i18n";
-import { ro, ru } from "vuetify/locale";
-import { translateRo } from "~/locales/ro";
-import { translateRu } from "~/locales/ru";
+import { en } from "vuetify/locale";
+import { translateEn } from "~/locales/en";
 
 export default defineNuxtPlugin(({ vueApp }) => {
   const i18n = createI18n({
     legacy: false,
     globalInjection: true,
-    locale: "ru",
-    fallbackLocale: "ru",
+    locale: "en",
+    fallbackLocale: "en",
     messages: {
-      ro: { ...translateRo, ro },
-      ru: { ...translateRu, ru },
+      en: { ...translateEn, en },
     },
   });
 

@@ -9,8 +9,12 @@ const axiosServices: AxiosInstance = axios.create({
 axiosServices.interceptors.request.use(
   (config) => {
     const accessToken = localStorage.getItem('accessToken');
+    console.log('Axios request:', config.method?.toUpperCase(), config.url);
     if (accessToken) {
       config.headers['Authorization'] = `Bearer ${accessToken}`;
+      console.log('Authorization header added');
+    } else {
+      console.log('No access token found');
     }
     return config;
   },

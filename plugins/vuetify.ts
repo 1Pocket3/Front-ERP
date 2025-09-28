@@ -3,7 +3,7 @@ import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
 /* import { aliases, mdi } from 'vuetify/iconsets/mdi-svg' */
 import { LIGHT_THEME } from '@/themes/LightTheme';
-import { ro, ru } from 'vuetify/locale'
+import { en } from 'vuetify/locale'
 
 export default defineNuxtPlugin((nuxtApp) => {
   const vuetify = createVuetify({
@@ -21,11 +21,10 @@ export default defineNuxtPlugin((nuxtApp) => {
       },
     }, */
     locale: {
-      locale: 'ro',
-      fallback:'ro',
+      locale: 'en',
+      fallback:'en',
       messages: {
-        ro,
-        ru,
+        en,
       },
     },
     defaults: {

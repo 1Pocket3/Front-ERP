@@ -3,6 +3,7 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noEmit": true,
+    "skipLibCheck": true,
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "Bundler",
@@ -17,19 +18,15 @@
         "./types/nitro-imports"
       ],
       "~/*": [
-        "../*",
         "../*"
       ],
       "@/*": [
-        "../*",
         "../*"
       ],
       "~~/*": [
-        "../*",
         "../*"
       ],
       "@@/*": [
-        "../*",
         "../*"
       ],
       "nitropack/types": [
@@ -77,20 +74,11 @@
       "vite/client": [
         "../node_modules/vite/client"
       ],
-      "~": [
-        "./.."
-      ],
-      "@": [
-        "./.."
-      ],
-      "~~": [
-        "./.."
-      ],
-      "@@": [
-        "./.."
-      ],
       "#shared": [
         "../shared"
+      ],
+      "#shared/*": [
+        "../shared/*"
       ],
       "assets": [
         "../assets"
@@ -111,7 +99,7 @@
         "./*"
       ],
       "#internal/nuxt/paths": [
-        "../node_modules/nuxt/dist/core/runtime/nitro/paths"
+        "../node_modules/nuxt/dist/core/runtime/nitro/utils/paths"
       ],
       "pinia": [
         "../node_modules/pinia/dist/pinia"
@@ -119,8 +107,8 @@
       "vee-validate": [
         "../node_modules/vee-validate/dist/vee-validate"
       ],
-      "#vue-router": [
-        "./vue-router"
+      "#unhead/composables": [
+        "../node_modules/nuxt/dist/head/runtime/composables/v3"
       ]
     },
     "lib": [
@@ -131,11 +119,9 @@
   },
   "include": [
     "./types/nitro-nuxt.d.ts",
-    "../node_modules/@pinia/nuxt/runtime/server",
-    "../node_modules/nuxt-mdi/runtime/server",
-    "../node_modules/@vee-validate/nuxt/runtime/server",
-    "../node_modules/@nuxt/devtools/runtime/server",
-    "../node_modules/@nuxt/telemetry/runtime/server",
+    "../node_modules/runtime/server",
+    "../node_modules/dist/runtime/server",
+    "../shared/**/*.d.ts",
     "./types/nitro.d.ts",
     "../**/*",
     "../server/**/*"

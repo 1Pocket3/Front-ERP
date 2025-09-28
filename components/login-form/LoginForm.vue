@@ -42,6 +42,7 @@ async function validate(values: any, { setErrors }: any) {
 
   try {
     await authStore.login(loginData);
+    console.log('Login successful, redirecting to main page...');
     return navigateTo("/main_page");
   } catch (error: any) {
     console.error("Error during login:", error);

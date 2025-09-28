@@ -1,126 +1,22 @@
 
 import type { DefineComponent, SlotsType } from 'vue'
 type IslandComponent<T extends DefineComponent> = T & DefineComponent<{}, {refresh: () => Promise<void>}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, SlotsType<{ fallback: { error: unknown } }>>
-interface _GlobalComponents {
-      'Alerts': typeof import("../components/alerts/Alerts.vue")['default']
-    'ChangePasswordFormChangePassword': typeof import("../components/change-password-form/change_password.vue")['default']
-    'FormElementsFileinputFileInputMultiple': typeof import("../components/form-elements/fileinput/FileInputMultiple.vue")['default']
-    'FormElementsModalFilterModal': typeof import("../components/form-elements/modal/FilterModal.vue")['default']
-    'FormElementsModalRequestFilterModal': typeof import("../components/form-elements/modal/RequestFilterModal.vue")['default']
-    'LoginForm': typeof import("../components/login-form/LoginForm.vue")['default']
-    'Logo': typeof import("../components/logo/Logo.vue")['default']
-    'LogoDark': typeof import("../components/logo/LogoDark.vue")['default']
-    'PersonalData': typeof import("../components/personal-data/PersonalData.vue")['default']
-    'ProfileForm': typeof import("../components/profile-form/ProfileForm.vue")['default']
-    'ProfileMenu': typeof import("../components/profile-menu/ProfileMenu.vue")['default']
-    'ProfileMenuMobile': typeof import("../components/profile-menu/ProfileMenuMobile.vue")['default']
-    'SharedBaseBreadcrumb': typeof import("../components/shared/BaseBreadcrumb.vue")['default']
-    'TabsProjectTabs': typeof import("../components/tabs/ProjectTabs.vue")['default']
-    'TabsStatusbar': typeof import("../components/tabs/Statusbar/Statusbar.vue")['default']
-    'VerticalHeaderLanguageDD': typeof import("../components/vertical-header/LanguageDD.vue")['default']
-    'VerticalHeaderNotificationDD': typeof import("../components/vertical-header/NotificationDD.vue")['default']
-    'VerticalHeaderProfileDD': typeof import("../components/vertical-header/ProfileDD.vue")['default']
-    'VerticalHeader': typeof import("../components/vertical-header/VerticalHeader.vue")['default']
-    'VerticalSidebarIcon': typeof import("../components/vertical-sidebar/Icon.vue")['default']
-    'VerticalSidebarNavCollapse': typeof import("../components/vertical-sidebar/NavCollapse/NavCollapse.vue")['default']
-    'VerticalSidebarNavGroup': typeof import("../components/vertical-sidebar/NavGroup/index.vue")['default']
-    'VerticalSidebarNavItem': typeof import("../components/vertical-sidebar/NavItem/index.vue")['default']
-    'VerticalSidebar': typeof import("../components/vertical-sidebar/VerticalSidebar.vue")['default']
-    'VerticalSidebarProfile': typeof import("../components/vertical-sidebar/profile/Profile.vue")['default']
-    'VerticalSidebarItem': typeof import("../components/vertical-sidebar/sidebarItem")['default']
-    'NuxtWelcome': typeof import("../node_modules/nuxt/dist/app/components/welcome.vue")['default']
-    'NuxtLayout': typeof import("../node_modules/nuxt/dist/app/components/nuxt-layout")['default']
-    'NuxtErrorBoundary': typeof import("../node_modules/nuxt/dist/app/components/nuxt-error-boundary")['default']
-    'ClientOnly': typeof import("../node_modules/nuxt/dist/app/components/client-only")['default']
-    'DevOnly': typeof import("../node_modules/nuxt/dist/app/components/dev-only")['default']
-    'ServerPlaceholder': typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']
-    'NuxtLink': typeof import("../node_modules/nuxt/dist/app/components/nuxt-link")['default']
-    'NuxtLoadingIndicator': typeof import("../node_modules/nuxt/dist/app/components/nuxt-loading-indicator")['default']
-    'NuxtRouteAnnouncer': typeof import("../node_modules/nuxt/dist/app/components/nuxt-route-announcer")['default']
-    'NuxtImg': typeof import("../node_modules/nuxt/dist/app/components/nuxt-stubs")['NuxtImg']
-    'NuxtPicture': typeof import("../node_modules/nuxt/dist/app/components/nuxt-stubs")['NuxtPicture']
-    'MdiIcon': typeof import("../node_modules/nuxt-mdi/dist/runtime/components/MdiIcon.vue")['default']
-    'ErrorMessage': typeof import("vee-validate")['ErrorMessage']
-    'Field': typeof import("vee-validate")['Field']
-    'FieldArray': typeof import("vee-validate")['FieldArray']
-    'Form': typeof import("vee-validate")['Form']
-    'NuxtPage': typeof import("../node_modules/nuxt/dist/pages/runtime/page")['default']
-    'NoScript': typeof import("../node_modules/nuxt/dist/head/runtime/components")['NoScript']
-    'Link': typeof import("../node_modules/nuxt/dist/head/runtime/components")['Link']
-    'Base': typeof import("../node_modules/nuxt/dist/head/runtime/components")['Base']
-    'Title': typeof import("../node_modules/nuxt/dist/head/runtime/components")['Title']
-    'Meta': typeof import("../node_modules/nuxt/dist/head/runtime/components")['Meta']
-    'Style': typeof import("../node_modules/nuxt/dist/head/runtime/components")['Style']
-    'Head': typeof import("../node_modules/nuxt/dist/head/runtime/components")['Head']
-    'Html': typeof import("../node_modules/nuxt/dist/head/runtime/components")['Html']
-    'Body': typeof import("../node_modules/nuxt/dist/head/runtime/components")['Body']
-    'NuxtIsland': typeof import("../node_modules/nuxt/dist/app/components/nuxt-island")['default']
-    'NuxtRouteAnnouncer': IslandComponent<typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']>
-      'LazyAlerts': typeof import("../components/alerts/Alerts.vue")['default']
-    'LazyChangePasswordFormChangePassword': typeof import("../components/change-password-form/change_password.vue")['default']
-    'LazyFormElementsFileinputFileInputMultiple': typeof import("../components/form-elements/fileinput/FileInputMultiple.vue")['default']
-    'LazyFormElementsModalFilterModal': typeof import("../components/form-elements/modal/FilterModal.vue")['default']
-    'LazyFormElementsModalRequestFilterModal': typeof import("../components/form-elements/modal/RequestFilterModal.vue")['default']
-    'LazyLoginForm': typeof import("../components/login-form/LoginForm.vue")['default']
-    'LazyLogo': typeof import("../components/logo/Logo.vue")['default']
-    'LazyLogoDark': typeof import("../components/logo/LogoDark.vue")['default']
-    'LazyPersonalData': typeof import("../components/personal-data/PersonalData.vue")['default']
-    'LazyProfileForm': typeof import("../components/profile-form/ProfileForm.vue")['default']
-    'LazyProfileMenu': typeof import("../components/profile-menu/ProfileMenu.vue")['default']
-    'LazyProfileMenuMobile': typeof import("../components/profile-menu/ProfileMenuMobile.vue")['default']
-    'LazySharedBaseBreadcrumb': typeof import("../components/shared/BaseBreadcrumb.vue")['default']
-    'LazyTabsProjectTabs': typeof import("../components/tabs/ProjectTabs.vue")['default']
-    'LazyTabsStatusbar': typeof import("../components/tabs/Statusbar/Statusbar.vue")['default']
-    'LazyVerticalHeaderLanguageDD': typeof import("../components/vertical-header/LanguageDD.vue")['default']
-    'LazyVerticalHeaderNotificationDD': typeof import("../components/vertical-header/NotificationDD.vue")['default']
-    'LazyVerticalHeaderProfileDD': typeof import("../components/vertical-header/ProfileDD.vue")['default']
-    'LazyVerticalHeader': typeof import("../components/vertical-header/VerticalHeader.vue")['default']
-    'LazyVerticalSidebarIcon': typeof import("../components/vertical-sidebar/Icon.vue")['default']
-    'LazyVerticalSidebarNavCollapse': typeof import("../components/vertical-sidebar/NavCollapse/NavCollapse.vue")['default']
-    'LazyVerticalSidebarNavGroup': typeof import("../components/vertical-sidebar/NavGroup/index.vue")['default']
-    'LazyVerticalSidebarNavItem': typeof import("../components/vertical-sidebar/NavItem/index.vue")['default']
-    'LazyVerticalSidebar': typeof import("../components/vertical-sidebar/VerticalSidebar.vue")['default']
-    'LazyVerticalSidebarProfile': typeof import("../components/vertical-sidebar/profile/Profile.vue")['default']
-    'LazyVerticalSidebarItem': typeof import("../components/vertical-sidebar/sidebarItem")['default']
-    'LazyNuxtWelcome': typeof import("../node_modules/nuxt/dist/app/components/welcome.vue")['default']
-    'LazyNuxtLayout': typeof import("../node_modules/nuxt/dist/app/components/nuxt-layout")['default']
-    'LazyNuxtErrorBoundary': typeof import("../node_modules/nuxt/dist/app/components/nuxt-error-boundary")['default']
-    'LazyClientOnly': typeof import("../node_modules/nuxt/dist/app/components/client-only")['default']
-    'LazyDevOnly': typeof import("../node_modules/nuxt/dist/app/components/dev-only")['default']
-    'LazyServerPlaceholder': typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']
-    'LazyNuxtLink': typeof import("../node_modules/nuxt/dist/app/components/nuxt-link")['default']
-    'LazyNuxtLoadingIndicator': typeof import("../node_modules/nuxt/dist/app/components/nuxt-loading-indicator")['default']
-    'LazyNuxtRouteAnnouncer': typeof import("../node_modules/nuxt/dist/app/components/nuxt-route-announcer")['default']
-    'LazyNuxtImg': typeof import("../node_modules/nuxt/dist/app/components/nuxt-stubs")['NuxtImg']
-    'LazyNuxtPicture': typeof import("../node_modules/nuxt/dist/app/components/nuxt-stubs")['NuxtPicture']
-    'LazyMdiIcon': typeof import("../node_modules/nuxt-mdi/dist/runtime/components/MdiIcon.vue")['default']
-    'LazyErrorMessage': typeof import("vee-validate")['ErrorMessage']
-    'LazyField': typeof import("vee-validate")['Field']
-    'LazyFieldArray': typeof import("vee-validate")['FieldArray']
-    'LazyForm': typeof import("vee-validate")['Form']
-    'LazyNuxtPage': typeof import("../node_modules/nuxt/dist/pages/runtime/page")['default']
-    'LazyNoScript': typeof import("../node_modules/nuxt/dist/head/runtime/components")['NoScript']
-    'LazyLink': typeof import("../node_modules/nuxt/dist/head/runtime/components")['Link']
-    'LazyBase': typeof import("../node_modules/nuxt/dist/head/runtime/components")['Base']
-    'LazyTitle': typeof import("../node_modules/nuxt/dist/head/runtime/components")['Title']
-    'LazyMeta': typeof import("../node_modules/nuxt/dist/head/runtime/components")['Meta']
-    'LazyStyle': typeof import("../node_modules/nuxt/dist/head/runtime/components")['Style']
-    'LazyHead': typeof import("../node_modules/nuxt/dist/head/runtime/components")['Head']
-    'LazyHtml': typeof import("../node_modules/nuxt/dist/head/runtime/components")['Html']
-    'LazyBody': typeof import("../node_modules/nuxt/dist/head/runtime/components")['Body']
-    'LazyNuxtIsland': typeof import("../node_modules/nuxt/dist/app/components/nuxt-island")['default']
-    'LazyNuxtRouteAnnouncer': IslandComponent<typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']>
-}
 
-declare module 'vue' {
-  export interface GlobalComponents extends _GlobalComponents { }
+type HydrationStrategies = {
+  hydrateOnVisible?: IntersectionObserverInit | true
+  hydrateOnIdle?: number | true
+  hydrateOnInteraction?: keyof HTMLElementEventMap | Array<keyof HTMLElementEventMap> | true
+  hydrateOnMediaQuery?: string
+  hydrateAfter?: number
+  hydrateWhen?: boolean
+  hydrateNever?: true
 }
+type LazyComponent<T> = (T & DefineComponent<HydrationStrategies, {}, {}, {}, {}, {}, {}, { hydrated: () => void }>)
+
 
 export const Alerts: typeof import("../components/alerts/Alerts.vue")['default']
 export const ChangePasswordFormChangePassword: typeof import("../components/change-password-form/change_password.vue")['default']
 export const FormElementsFileinputFileInputMultiple: typeof import("../components/form-elements/fileinput/FileInputMultiple.vue")['default']
-export const FormElementsModalFilterModal: typeof import("../components/form-elements/modal/FilterModal.vue")['default']
-export const FormElementsModalRequestFilterModal: typeof import("../components/form-elements/modal/RequestFilterModal.vue")['default']
 export const LoginForm: typeof import("../components/login-form/LoginForm.vue")['default']
 export const Logo: typeof import("../components/logo/Logo.vue")['default']
 export const LogoDark: typeof import("../components/logo/LogoDark.vue")['default']
@@ -129,9 +25,6 @@ export const ProfileForm: typeof import("../components/profile-form/ProfileForm.
 export const ProfileMenu: typeof import("../components/profile-menu/ProfileMenu.vue")['default']
 export const ProfileMenuMobile: typeof import("../components/profile-menu/ProfileMenuMobile.vue")['default']
 export const SharedBaseBreadcrumb: typeof import("../components/shared/BaseBreadcrumb.vue")['default']
-export const TabsProjectTabs: typeof import("../components/tabs/ProjectTabs.vue")['default']
-export const TabsStatusbar: typeof import("../components/tabs/Statusbar/Statusbar.vue")['default']
-export const VerticalHeaderLanguageDD: typeof import("../components/vertical-header/LanguageDD.vue")['default']
 export const VerticalHeaderNotificationDD: typeof import("../components/vertical-header/NotificationDD.vue")['default']
 export const VerticalHeaderProfileDD: typeof import("../components/vertical-header/ProfileDD.vue")['default']
 export const VerticalHeader: typeof import("../components/vertical-header/VerticalHeader.vue")['default']
@@ -144,12 +37,13 @@ export const VerticalSidebarProfile: typeof import("../components/vertical-sideb
 export const VerticalSidebarItem: typeof import("../components/vertical-sidebar/sidebarItem")['default']
 export const NuxtWelcome: typeof import("../node_modules/nuxt/dist/app/components/welcome.vue")['default']
 export const NuxtLayout: typeof import("../node_modules/nuxt/dist/app/components/nuxt-layout")['default']
-export const NuxtErrorBoundary: typeof import("../node_modules/nuxt/dist/app/components/nuxt-error-boundary")['default']
+export const NuxtErrorBoundary: typeof import("../node_modules/nuxt/dist/app/components/nuxt-error-boundary.vue")['default']
 export const ClientOnly: typeof import("../node_modules/nuxt/dist/app/components/client-only")['default']
 export const DevOnly: typeof import("../node_modules/nuxt/dist/app/components/dev-only")['default']
 export const ServerPlaceholder: typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']
 export const NuxtLink: typeof import("../node_modules/nuxt/dist/app/components/nuxt-link")['default']
 export const NuxtLoadingIndicator: typeof import("../node_modules/nuxt/dist/app/components/nuxt-loading-indicator")['default']
+export const NuxtTime: typeof import("../node_modules/nuxt/dist/app/components/nuxt-time.vue")['default']
 export const NuxtRouteAnnouncer: typeof import("../node_modules/nuxt/dist/app/components/nuxt-route-announcer")['default']
 export const NuxtImg: typeof import("../node_modules/nuxt/dist/app/components/nuxt-stubs")['NuxtImg']
 export const NuxtPicture: typeof import("../node_modules/nuxt/dist/app/components/nuxt-stubs")['NuxtPicture']
@@ -169,60 +63,56 @@ export const Head: typeof import("../node_modules/nuxt/dist/head/runtime/compone
 export const Html: typeof import("../node_modules/nuxt/dist/head/runtime/components")['Html']
 export const Body: typeof import("../node_modules/nuxt/dist/head/runtime/components")['Body']
 export const NuxtIsland: typeof import("../node_modules/nuxt/dist/app/components/nuxt-island")['default']
-export const NuxtRouteAnnouncer: IslandComponent<typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']>
-export const LazyAlerts: typeof import("../components/alerts/Alerts.vue")['default']
-export const LazyChangePasswordFormChangePassword: typeof import("../components/change-password-form/change_password.vue")['default']
-export const LazyFormElementsFileinputFileInputMultiple: typeof import("../components/form-elements/fileinput/FileInputMultiple.vue")['default']
-export const LazyFormElementsModalFilterModal: typeof import("../components/form-elements/modal/FilterModal.vue")['default']
-export const LazyFormElementsModalRequestFilterModal: typeof import("../components/form-elements/modal/RequestFilterModal.vue")['default']
-export const LazyLoginForm: typeof import("../components/login-form/LoginForm.vue")['default']
-export const LazyLogo: typeof import("../components/logo/Logo.vue")['default']
-export const LazyLogoDark: typeof import("../components/logo/LogoDark.vue")['default']
-export const LazyPersonalData: typeof import("../components/personal-data/PersonalData.vue")['default']
-export const LazyProfileForm: typeof import("../components/profile-form/ProfileForm.vue")['default']
-export const LazyProfileMenu: typeof import("../components/profile-menu/ProfileMenu.vue")['default']
-export const LazyProfileMenuMobile: typeof import("../components/profile-menu/ProfileMenuMobile.vue")['default']
-export const LazySharedBaseBreadcrumb: typeof import("../components/shared/BaseBreadcrumb.vue")['default']
-export const LazyTabsProjectTabs: typeof import("../components/tabs/ProjectTabs.vue")['default']
-export const LazyTabsStatusbar: typeof import("../components/tabs/Statusbar/Statusbar.vue")['default']
-export const LazyVerticalHeaderLanguageDD: typeof import("../components/vertical-header/LanguageDD.vue")['default']
-export const LazyVerticalHeaderNotificationDD: typeof import("../components/vertical-header/NotificationDD.vue")['default']
-export const LazyVerticalHeaderProfileDD: typeof import("../components/vertical-header/ProfileDD.vue")['default']
-export const LazyVerticalHeader: typeof import("../components/vertical-header/VerticalHeader.vue")['default']
-export const LazyVerticalSidebarIcon: typeof import("../components/vertical-sidebar/Icon.vue")['default']
-export const LazyVerticalSidebarNavCollapse: typeof import("../components/vertical-sidebar/NavCollapse/NavCollapse.vue")['default']
-export const LazyVerticalSidebarNavGroup: typeof import("../components/vertical-sidebar/NavGroup/index.vue")['default']
-export const LazyVerticalSidebarNavItem: typeof import("../components/vertical-sidebar/NavItem/index.vue")['default']
-export const LazyVerticalSidebar: typeof import("../components/vertical-sidebar/VerticalSidebar.vue")['default']
-export const LazyVerticalSidebarProfile: typeof import("../components/vertical-sidebar/profile/Profile.vue")['default']
-export const LazyVerticalSidebarItem: typeof import("../components/vertical-sidebar/sidebarItem")['default']
-export const LazyNuxtWelcome: typeof import("../node_modules/nuxt/dist/app/components/welcome.vue")['default']
-export const LazyNuxtLayout: typeof import("../node_modules/nuxt/dist/app/components/nuxt-layout")['default']
-export const LazyNuxtErrorBoundary: typeof import("../node_modules/nuxt/dist/app/components/nuxt-error-boundary")['default']
-export const LazyClientOnly: typeof import("../node_modules/nuxt/dist/app/components/client-only")['default']
-export const LazyDevOnly: typeof import("../node_modules/nuxt/dist/app/components/dev-only")['default']
-export const LazyServerPlaceholder: typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']
-export const LazyNuxtLink: typeof import("../node_modules/nuxt/dist/app/components/nuxt-link")['default']
-export const LazyNuxtLoadingIndicator: typeof import("../node_modules/nuxt/dist/app/components/nuxt-loading-indicator")['default']
-export const LazyNuxtRouteAnnouncer: typeof import("../node_modules/nuxt/dist/app/components/nuxt-route-announcer")['default']
-export const LazyNuxtImg: typeof import("../node_modules/nuxt/dist/app/components/nuxt-stubs")['NuxtImg']
-export const LazyNuxtPicture: typeof import("../node_modules/nuxt/dist/app/components/nuxt-stubs")['NuxtPicture']
-export const LazyMdiIcon: typeof import("../node_modules/nuxt-mdi/dist/runtime/components/MdiIcon.vue")['default']
-export const LazyErrorMessage: typeof import("vee-validate")['ErrorMessage']
-export const LazyField: typeof import("vee-validate")['Field']
-export const LazyFieldArray: typeof import("vee-validate")['FieldArray']
-export const LazyForm: typeof import("vee-validate")['Form']
-export const LazyNuxtPage: typeof import("../node_modules/nuxt/dist/pages/runtime/page")['default']
-export const LazyNoScript: typeof import("../node_modules/nuxt/dist/head/runtime/components")['NoScript']
-export const LazyLink: typeof import("../node_modules/nuxt/dist/head/runtime/components")['Link']
-export const LazyBase: typeof import("../node_modules/nuxt/dist/head/runtime/components")['Base']
-export const LazyTitle: typeof import("../node_modules/nuxt/dist/head/runtime/components")['Title']
-export const LazyMeta: typeof import("../node_modules/nuxt/dist/head/runtime/components")['Meta']
-export const LazyStyle: typeof import("../node_modules/nuxt/dist/head/runtime/components")['Style']
-export const LazyHead: typeof import("../node_modules/nuxt/dist/head/runtime/components")['Head']
-export const LazyHtml: typeof import("../node_modules/nuxt/dist/head/runtime/components")['Html']
-export const LazyBody: typeof import("../node_modules/nuxt/dist/head/runtime/components")['Body']
-export const LazyNuxtIsland: typeof import("../node_modules/nuxt/dist/app/components/nuxt-island")['default']
-export const LazyNuxtRouteAnnouncer: IslandComponent<typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']>
+export const NuxtRouteAnnouncer: typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']
+export const LazyAlerts: LazyComponent<typeof import("../components/alerts/Alerts.vue")['default']>
+export const LazyChangePasswordFormChangePassword: LazyComponent<typeof import("../components/change-password-form/change_password.vue")['default']>
+export const LazyFormElementsFileinputFileInputMultiple: LazyComponent<typeof import("../components/form-elements/fileinput/FileInputMultiple.vue")['default']>
+export const LazyLoginForm: LazyComponent<typeof import("../components/login-form/LoginForm.vue")['default']>
+export const LazyLogo: LazyComponent<typeof import("../components/logo/Logo.vue")['default']>
+export const LazyLogoDark: LazyComponent<typeof import("../components/logo/LogoDark.vue")['default']>
+export const LazyPersonalData: LazyComponent<typeof import("../components/personal-data/PersonalData.vue")['default']>
+export const LazyProfileForm: LazyComponent<typeof import("../components/profile-form/ProfileForm.vue")['default']>
+export const LazyProfileMenu: LazyComponent<typeof import("../components/profile-menu/ProfileMenu.vue")['default']>
+export const LazyProfileMenuMobile: LazyComponent<typeof import("../components/profile-menu/ProfileMenuMobile.vue")['default']>
+export const LazySharedBaseBreadcrumb: LazyComponent<typeof import("../components/shared/BaseBreadcrumb.vue")['default']>
+export const LazyVerticalHeaderNotificationDD: LazyComponent<typeof import("../components/vertical-header/NotificationDD.vue")['default']>
+export const LazyVerticalHeaderProfileDD: LazyComponent<typeof import("../components/vertical-header/ProfileDD.vue")['default']>
+export const LazyVerticalHeader: LazyComponent<typeof import("../components/vertical-header/VerticalHeader.vue")['default']>
+export const LazyVerticalSidebarIcon: LazyComponent<typeof import("../components/vertical-sidebar/Icon.vue")['default']>
+export const LazyVerticalSidebarNavCollapse: LazyComponent<typeof import("../components/vertical-sidebar/NavCollapse/NavCollapse.vue")['default']>
+export const LazyVerticalSidebarNavGroup: LazyComponent<typeof import("../components/vertical-sidebar/NavGroup/index.vue")['default']>
+export const LazyVerticalSidebarNavItem: LazyComponent<typeof import("../components/vertical-sidebar/NavItem/index.vue")['default']>
+export const LazyVerticalSidebar: LazyComponent<typeof import("../components/vertical-sidebar/VerticalSidebar.vue")['default']>
+export const LazyVerticalSidebarProfile: LazyComponent<typeof import("../components/vertical-sidebar/profile/Profile.vue")['default']>
+export const LazyVerticalSidebarItem: LazyComponent<typeof import("../components/vertical-sidebar/sidebarItem")['default']>
+export const LazyNuxtWelcome: LazyComponent<typeof import("../node_modules/nuxt/dist/app/components/welcome.vue")['default']>
+export const LazyNuxtLayout: LazyComponent<typeof import("../node_modules/nuxt/dist/app/components/nuxt-layout")['default']>
+export const LazyNuxtErrorBoundary: LazyComponent<typeof import("../node_modules/nuxt/dist/app/components/nuxt-error-boundary.vue")['default']>
+export const LazyClientOnly: LazyComponent<typeof import("../node_modules/nuxt/dist/app/components/client-only")['default']>
+export const LazyDevOnly: LazyComponent<typeof import("../node_modules/nuxt/dist/app/components/dev-only")['default']>
+export const LazyServerPlaceholder: LazyComponent<typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']>
+export const LazyNuxtLink: LazyComponent<typeof import("../node_modules/nuxt/dist/app/components/nuxt-link")['default']>
+export const LazyNuxtLoadingIndicator: LazyComponent<typeof import("../node_modules/nuxt/dist/app/components/nuxt-loading-indicator")['default']>
+export const LazyNuxtTime: LazyComponent<typeof import("../node_modules/nuxt/dist/app/components/nuxt-time.vue")['default']>
+export const LazyNuxtRouteAnnouncer: LazyComponent<typeof import("../node_modules/nuxt/dist/app/components/nuxt-route-announcer")['default']>
+export const LazyNuxtImg: LazyComponent<typeof import("../node_modules/nuxt/dist/app/components/nuxt-stubs")['NuxtImg']>
+export const LazyNuxtPicture: LazyComponent<typeof import("../node_modules/nuxt/dist/app/components/nuxt-stubs")['NuxtPicture']>
+export const LazyMdiIcon: LazyComponent<typeof import("../node_modules/nuxt-mdi/dist/runtime/components/MdiIcon.vue")['default']>
+export const LazyErrorMessage: LazyComponent<typeof import("vee-validate")['ErrorMessage']>
+export const LazyField: LazyComponent<typeof import("vee-validate")['Field']>
+export const LazyFieldArray: LazyComponent<typeof import("vee-validate")['FieldArray']>
+export const LazyForm: LazyComponent<typeof import("vee-validate")['Form']>
+export const LazyNuxtPage: LazyComponent<typeof import("../node_modules/nuxt/dist/pages/runtime/page")['default']>
+export const LazyNoScript: LazyComponent<typeof import("../node_modules/nuxt/dist/head/runtime/components")['NoScript']>
+export const LazyLink: LazyComponent<typeof import("../node_modules/nuxt/dist/head/runtime/components")['Link']>
+export const LazyBase: LazyComponent<typeof import("../node_modules/nuxt/dist/head/runtime/components")['Base']>
+export const LazyTitle: LazyComponent<typeof import("../node_modules/nuxt/dist/head/runtime/components")['Title']>
+export const LazyMeta: LazyComponent<typeof import("../node_modules/nuxt/dist/head/runtime/components")['Meta']>
+export const LazyStyle: LazyComponent<typeof import("../node_modules/nuxt/dist/head/runtime/components")['Style']>
+export const LazyHead: LazyComponent<typeof import("../node_modules/nuxt/dist/head/runtime/components")['Head']>
+export const LazyHtml: LazyComponent<typeof import("../node_modules/nuxt/dist/head/runtime/components")['Html']>
+export const LazyBody: LazyComponent<typeof import("../node_modules/nuxt/dist/head/runtime/components")['Body']>
+export const LazyNuxtIsland: LazyComponent<typeof import("../node_modules/nuxt/dist/app/components/nuxt-island")['default']>
+export const LazyNuxtRouteAnnouncer: LazyComponent<typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']>
 
 export const componentNames: string[]

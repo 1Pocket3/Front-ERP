@@ -1,16 +1,8 @@
 import {
-  FileDotsIcon,
-  FilesIcon,
-  BorderVerticalIcon,
-  ShoppingCartIcon,
-  ApertureIcon,
-  PointIcon,
-  JumpRopeIcon,
-  LayoutKanbanIcon,
-  ReportSearchIcon,
+  UsersIcon,
 } from "vue-tabler-icons";
 
-import testIcon from "@/public/manopera.png";
+// import testIcon from "@/public/manopera.png";
 
 export interface menu {
   header?: string;
@@ -38,54 +30,59 @@ export interface menu {
 
 const sidebarItem: menu[] = [
   { header: "pages" },
+  // {
+  //   title: "project",
+  //   icon: ApertureIcon,
+  //   // chip: 'New',
+  //   // chipColor: 'surface',
+  //   // chipBgColor: 'secondary',
+  //   to: "/projects", // dashboards/modern
+  // },
   {
-    title: "project",
-    icon: ApertureIcon,
-    // chip: 'New',
-    // chipColor: 'surface',
-    // chipBgColor: 'secondary',
-    to: "/projects", // dashboards/modern
+    title: "leads",
+    icon: UsersIcon,
+    to: "/leads",
   },
-  {
-    title: "purchase_requests",
-    icon: ReportSearchIcon,
-    to: "/requests",
-  },
-  {
-    title: "material",
-    icon: FilesIcon,
-    to: "/materials", // apps/contacts
-  },
-  {
-    title: "staff",
-    icon: JumpRopeIcon,
-    to: "/",
-  },
-  {
-    title: "teams",
-    icon: ShoppingCartIcon,
-    to: "/",
-  },
-  {
-    title: "workmanship",
-    icon: LayoutKanbanIcon,
-    to: "/",
-  },
-  {
-    title: "construction_machinery",
-    icon: PointIcon,
-    to: "/",
-  },
-  {
-    title: "goods_acceptances",
-    icon: FileDotsIcon,
-    to: "/",
-  },
-  {
-    title: "providers",
-    icon: BorderVerticalIcon,
-    to: "/",
-  },
+  // {
+  //   title: "purchase_requests",
+  //   icon: ReportSearchIcon,
+  //   to: "/requests",
+  // },
+  // {
+  //   title: "material",
+  //   icon: FilesIcon,
+  //   to: "/materials", // apps/contacts
+  // },
+  // {
+  //   title: "staff",
+  //   icon: JumpRopeIcon,
+  //   to: "/",
+  // },
+  // {
+  //   title: "teams",
+  //   icon: ShoppingCartIcon,
+  //   to: "/",
+  // },
+  // {
+  //   title: "workmanship",
+  //   icon: LayoutKanbanIcon,
+  //   to: "/",
+  // },
+  // {
+  //   title: "construction_machinery",
+  //   icon: PointIcon,
+  //   to: "/",
+  // },
+  // {
+  //   title: "goods_acceptances",
+  //   icon: FileDotsIcon,
+  //   to: "/",
+  // },
+  // {
+  //   title: "providers",
+  //   icon: BorderVerticalIcon,
+  //   to: "/",
+  // },
   // { header: 'Apps' },
   // {
   //     title: 'Contact',

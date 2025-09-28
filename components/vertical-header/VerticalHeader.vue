@@ -5,7 +5,7 @@ import { ref } from "vue";
 import {
   Menu2Icon,
 } from "vue-tabler-icons";
-import LanguageDD from "./LanguageDD.vue";
+// import LanguageDD from "./LanguageDD.vue";
 import NotificationDD from "./NotificationDD.vue";
 import ProfileDD from "./ProfileDD.vue";
 
@@ -92,7 +92,7 @@ const toggleSidebar = () => {
     <!-- ---------------------------------------------- -->
     <!-- translate -->
     <!-- ---------------------------------------------- -->
-    <LanguageDD />
+    <!-- <LanguageDD /> -->
 
     <!-- ---------------------------------------------- -->
     <!-- ShoppingCart -->

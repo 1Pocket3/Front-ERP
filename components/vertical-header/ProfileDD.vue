@@ -1,8 +1,59 @@
 <script setup lang="ts">
+import { ref, onMounted } from "vue";
 import { profileDD } from "@/_mockApis/headerData";
 import { useAuthStore } from "@/stores/auth/auth";
+import { useLeadsStore } from "@/stores/leads/leads";
 
 const authStore = useAuthStore();
+const leadsStore = useLeadsStore();
+
+const loading = ref(false);
+
+const fetchUserProfile = async () => {
+  // Если данные уже есть в store, не делаем запрос
+  if (leadsStore.getCurrentUser) {
+    return;
+  }
+  
+  loading.value = true;
+  try {
+    // Вызываем метод из actions
+    await leadsStore.fetchCurrentUser();
+  } catch (error) {
+    console.error("Error fetching user profile:", error);
+  } finally {
+    loading.value = false;
+  }
+};
+
+const getUserDisplayName = () => {
+  const user = leadsStore.getCurrentUser;
+  if (!user) return "Loading...";
+  
+  if (user.first_name && user.last_name) {
+    return `${user.first_name} ${user.last_name}`;
+  }
+  return user.username || user.email || "User";
+};
+
+const getUserRole = () => {
+  const user = leadsStore.getCurrentUser;
+  if (!user) return "";
+  
+  const role = user.role;
+  switch (role) {
+    case 'admin':
+      return 'Administrator';
+    case 'manager':
+      return 'Manager';
+    default:
+      return role || 'User';
+  }
+};
+
+onMounted(() => {
+  fetchUserProfile();
+});
 </script>
 
 <template>
@@ -12,12 +63,8 @@ const authStore = useAuthStore();
   <v-menu :close-on-content-click="true">
     <template v-slot:activator="{ props }">
       <v-btn class="custom-hover-primary" variant="text" v-bind="props" icon>
-        <v-avatar size="35">
-          <img
-            src="@/assets/images/profile/user-1.jpg"
-            width="35"
-            alt="Julia"
-          />
+        <v-avatar size="35" color="primary">
+          <v-icon size="20" color="white">mdi-account</v-icon>
         </v-avatar>
       </v-btn>
     </template>
@@ -27,19 +74,28 @@ const authStore = useAuthStore();
           {{ $t("pop_profile_title") }}
         </h6>
         <div class="d-flex align-center mt-4 pb-6">
-          <v-avatar size="80">
-            <img src="@/assets/images/profile/user-1.jpg" width="80" />
+          <v-avatar size="80" color="primary">
+            <v-icon size="40" color="white">mdi-account</v-icon>
           </v-avatar>
           <div class="ml-3">
-            <h6 class="text-h6 mb-n1">Mathew Anderson</h6>
-            <span class="text-subtitle-1 font-weight-regular textSecondary"
-              >{{$t('profile_position_title')}}</span
-            >
+            <h6 class="text-h6 mb-n1">
+              <v-progress-circular
+                v-if="loading"
+                indeterminate
+                size="16"
+                width="2"
+                class="mr-2"
+              ></v-progress-circular>
+              {{ getUserDisplayName() }}
+            </h6>
+            <span class="text-subtitle-1 font-weight-regular textSecondary">
+              {{ getUserRole() }}
+            </span>
           </div>
         </div>
         <v-divider></v-divider>
       </div>
-      <v-list class="py-0 theme-list" lines="two">
+      <!-- <v-list class="py-0 theme-list" lines="two">
         <v-list-item
           v-for="item in profileDD"
           :key="item.title"
@@ -69,7 +125,7 @@ const authStore = useAuthStore();
             </p>
           </div>
         </v-list-item>
-      </v-list>
+      </v-list> -->
       <!-- </perfect-scrollbar> -->
       <!-- <div class="px-8 py-3">
                 <div class="bg-lightprimary rounded-md pa-5 overflow-hidden position-relative">

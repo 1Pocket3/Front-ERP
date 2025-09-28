@@ -16,6 +16,7 @@ declare global {
   const defineAppConfig: typeof import('../../node_modules/nuxt/dist/app/nuxt')['defineAppConfig']
   const defineAsyncComponent: typeof import('vue')['defineAsyncComponent']
   const defineComponent: typeof import('vue')['defineComponent']
+  const defineLazyHydrationComponent: typeof import('../../node_modules/nuxt/dist/app/composables/lazy-hydration')['defineLazyHydrationComponent']
   const defineNuxtComponent: typeof import('../../node_modules/nuxt/dist/app/composables/component')['defineNuxtComponent']
   const defineNuxtLink: typeof import('../../node_modules/nuxt/dist/app/components/nuxt-link')['defineNuxtLink']
   const defineNuxtPlugin: typeof import('../../node_modules/nuxt/dist/app/nuxt')['defineNuxtPlugin']
@@ -34,7 +35,7 @@ declare global {
   const h: typeof import('vue')['h']
   const hasInjectionContext: typeof import('vue')['hasInjectionContext']
   const inject: typeof import('vue')['inject']
-  const injectHead: typeof import('../../node_modules/@unhead/vue')['injectHead']
+  const injectHead: typeof import('../../node_modules/nuxt/dist/app/composables/head')['injectHead']
   const isNuxtError: typeof import('../../node_modules/nuxt/dist/app/composables/error')['isNuxtError']
   const isPrerendered: typeof import('../../node_modules/nuxt/dist/app/composables/payload')['isPrerendered']
   const isProxy: typeof import('vue')['isProxy']
@@ -66,6 +67,7 @@ declare global {
   const onServerPrefetch: typeof import('vue')['onServerPrefetch']
   const onUnmounted: typeof import('vue')['onUnmounted']
   const onUpdated: typeof import('vue')['onUpdated']
+  const onWatcherCleanup: typeof import('vue')['onWatcherCleanup']
   const prefetchComponents: typeof import('../../node_modules/nuxt/dist/app/composables/preload')['prefetchComponents']
   const preloadComponents: typeof import('../../node_modules/nuxt/dist/app/composables/preload')['preloadComponents']
   const preloadPayload: typeof import('../../node_modules/nuxt/dist/app/composables/payload')['preloadPayload']
@@ -114,8 +116,8 @@ declare global {
   const useFormContext: typeof import('../../node_modules/vee-validate/dist/vee-validate')['useFormContext']
   const useFormErrors: typeof import('../../node_modules/vee-validate/dist/vee-validate')['useFormErrors']
   const useFormValues: typeof import('../../node_modules/vee-validate/dist/vee-validate')['useFormValues']
-  const useHead: typeof import('../../node_modules/@unhead/vue')['useHead']
-  const useHeadSafe: typeof import('../../node_modules/@unhead/vue')['useHeadSafe']
+  const useHead: typeof import('../../node_modules/nuxt/dist/app/composables/head')['useHead']
+  const useHeadSafe: typeof import('../../node_modules/nuxt/dist/app/composables/head')['useHeadSafe']
   const useHydration: typeof import('../../node_modules/nuxt/dist/app/composables/hydrate')['useHydration']
   const useId: typeof import('vue')['useId']
   const useIsFieldDirty: typeof import('../../node_modules/vee-validate/dist/vee-validate')['useIsFieldDirty']
@@ -165,17 +167,20 @@ declare global {
   const useScriptMetaPixel: typeof import('../../node_modules/nuxt/dist/app/composables/script-stubs')['useScriptMetaPixel']
   const useScriptNpm: typeof import('../../node_modules/nuxt/dist/app/composables/script-stubs')['useScriptNpm']
   const useScriptPlausibleAnalytics: typeof import('../../node_modules/nuxt/dist/app/composables/script-stubs')['useScriptPlausibleAnalytics']
+  const useScriptRybbitAnalytics: typeof import('../../node_modules/nuxt/dist/app/composables/script-stubs')['useScriptRybbitAnalytics']
   const useScriptSegment: typeof import('../../node_modules/nuxt/dist/app/composables/script-stubs')['useScriptSegment']
+  const useScriptSnapchatPixel: typeof import('../../node_modules/nuxt/dist/app/composables/script-stubs')['useScriptSnapchatPixel']
   const useScriptStripe: typeof import('../../node_modules/nuxt/dist/app/composables/script-stubs')['useScriptStripe']
   const useScriptTriggerConsent: typeof import('../../node_modules/nuxt/dist/app/composables/script-stubs')['useScriptTriggerConsent']
   const useScriptTriggerElement: typeof import('../../node_modules/nuxt/dist/app/composables/script-stubs')['useScriptTriggerElement']
+  const useScriptUmamiAnalytics: typeof import('../../node_modules/nuxt/dist/app/composables/script-stubs')['useScriptUmamiAnalytics']
   const useScriptVimeoPlayer: typeof import('../../node_modules/nuxt/dist/app/composables/script-stubs')['useScriptVimeoPlayer']
   const useScriptXPixel: typeof import('../../node_modules/nuxt/dist/app/composables/script-stubs')['useScriptXPixel']
   const useScriptYouTubePlayer: typeof import('../../node_modules/nuxt/dist/app/composables/script-stubs')['useScriptYouTubePlayer']
-  const useSeoMeta: typeof import('../../node_modules/@unhead/vue')['useSeoMeta']
-  const useServerHead: typeof import('../../node_modules/@unhead/vue')['useServerHead']
-  const useServerHeadSafe: typeof import('../../node_modules/@unhead/vue')['useServerHeadSafe']
-  const useServerSeoMeta: typeof import('../../node_modules/@unhead/vue')['useServerSeoMeta']
+  const useSeoMeta: typeof import('../../node_modules/nuxt/dist/app/composables/head')['useSeoMeta']
+  const useServerHead: typeof import('../../node_modules/nuxt/dist/app/composables/head')['useServerHead']
+  const useServerHeadSafe: typeof import('../../node_modules/nuxt/dist/app/composables/head')['useServerHeadSafe']
+  const useServerSeoMeta: typeof import('../../node_modules/nuxt/dist/app/composables/head')['useServerSeoMeta']
   const useShadowRoot: typeof import('vue')['useShadowRoot']
   const useSlots: typeof import('vue')['useSlots']
   const useState: typeof import('../../node_modules/nuxt/dist/app/composables/state')['useState']
@@ -221,6 +226,7 @@ declare module 'vue' {
     readonly defineAppConfig: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/nuxt')['defineAppConfig']>
     readonly defineAsyncComponent: UnwrapRef<typeof import('vue')['defineAsyncComponent']>
     readonly defineComponent: UnwrapRef<typeof import('vue')['defineComponent']>
+    readonly defineLazyHydrationComponent: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/lazy-hydration')['defineLazyHydrationComponent']>
     readonly defineNuxtComponent: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/component')['defineNuxtComponent']>
     readonly defineNuxtLink: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/components/nuxt-link')['defineNuxtLink']>
     readonly defineNuxtPlugin: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/nuxt')['defineNuxtPlugin']>
@@ -239,7 +245,7 @@ declare module 'vue' {
     readonly h: UnwrapRef<typeof import('vue')['h']>
     readonly hasInjectionContext: UnwrapRef<typeof import('vue')['hasInjectionContext']>
     readonly inject: UnwrapRef<typeof import('vue')['inject']>
-    readonly injectHead: UnwrapRef<typeof import('../../node_modules/@unhead/vue')['injectHead']>
+    readonly injectHead: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/head')['injectHead']>
     readonly isNuxtError: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/error')['isNuxtError']>
     readonly isPrerendered: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/payload')['isPrerendered']>
     readonly isProxy: UnwrapRef<typeof import('vue')['isProxy']>
@@ -271,6 +277,7 @@ declare module 'vue' {
     readonly onServerPrefetch: UnwrapRef<typeof import('vue')['onServerPrefetch']>
     readonly onUnmounted: UnwrapRef<typeof import('vue')['onUnmounted']>
     readonly onUpdated: UnwrapRef<typeof import('vue')['onUpdated']>
+    readonly onWatcherCleanup: UnwrapRef<typeof import('vue')['onWatcherCleanup']>
     readonly prefetchComponents: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/preload')['prefetchComponents']>
     readonly preloadComponents: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/preload')['preloadComponents']>
     readonly preloadPayload: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/payload')['preloadPayload']>
@@ -319,8 +326,8 @@ declare module 'vue' {
     readonly useFormContext: UnwrapRef<typeof import('../../node_modules/vee-validate/dist/vee-validate')['useFormContext']>
     readonly useFormErrors: UnwrapRef<typeof import('../../node_modules/vee-validate/dist/vee-validate')['useFormErrors']>
     readonly useFormValues: UnwrapRef<typeof import('../../node_modules/vee-validate/dist/vee-validate')['useFormValues']>
-    readonly useHead: UnwrapRef<typeof import('../../node_modules/@unhead/vue')['useHead']>
-    readonly useHeadSafe: UnwrapRef<typeof import('../../node_modules/@unhead/vue')['useHeadSafe']>
+    readonly useHead: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/head')['useHead']>
+    readonly useHeadSafe: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/head')['useHeadSafe']>
     readonly useHydration: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/hydrate')['useHydration']>
     readonly useId: UnwrapRef<typeof import('vue')['useId']>
     readonly useIsFieldDirty: UnwrapRef<typeof import('../../node_modules/vee-validate/dist/vee-validate')['useIsFieldDirty']>
@@ -370,17 +377,20 @@ declare module 'vue' {
     readonly useScriptMetaPixel: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/script-stubs')['useScriptMetaPixel']>
     readonly useScriptNpm: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/script-stubs')['useScriptNpm']>
     readonly useScriptPlausibleAnalytics: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/script-stubs')['useScriptPlausibleAnalytics']>
+    readonly useScriptRybbitAnalytics: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/script-stubs')['useScriptRybbitAnalytics']>
     readonly useScriptSegment: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/script-stubs')['useScriptSegment']>
+    readonly useScriptSnapchatPixel: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/script-stubs')['useScriptSnapchatPixel']>
     readonly useScriptStripe: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/script-stubs')['useScriptStripe']>
     readonly useScriptTriggerConsent: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/script-stubs')['useScriptTriggerConsent']>
     readonly useScriptTriggerElement: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/script-stubs')['useScriptTriggerElement']>
+    readonly useScriptUmamiAnalytics: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/script-stubs')['useScriptUmamiAnalytics']>
     readonly useScriptVimeoPlayer: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/script-stubs')['useScriptVimeoPlayer']>
     readonly useScriptXPixel: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/script-stubs')['useScriptXPixel']>
     readonly useScriptYouTubePlayer: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/script-stubs')['useScriptYouTubePlayer']>
-    readonly useSeoMeta: UnwrapRef<typeof import('../../node_modules/@unhead/vue')['useSeoMeta']>
-    readonly useServerHead: UnwrapRef<typeof import('../../node_modules/@unhead/vue')['useServerHead']>
-    readonly useServerHeadSafe: UnwrapRef<typeof import('../../node_modules/@unhead/vue')['useServerHeadSafe']>
-    readonly useServerSeoMeta: UnwrapRef<typeof import('../../node_modules/@unhead/vue')['useServerSeoMeta']>
+    readonly useSeoMeta: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/head')['useSeoMeta']>
+    readonly useServerHead: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/head')['useServerHead']>
+    readonly useServerHeadSafe: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/head')['useServerHeadSafe']>
+    readonly useServerSeoMeta: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/head')['useServerSeoMeta']>
     readonly useShadowRoot: UnwrapRef<typeof import('vue')['useShadowRoot']>
     readonly useSlots: UnwrapRef<typeof import('vue')['useSlots']>
     readonly useState: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/state')['useState']>
