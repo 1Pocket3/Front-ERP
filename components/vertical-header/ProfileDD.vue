@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { profileDD } from "@/_mockApis/headerData";
 import { useAuthStore } from "@/stores/auth/auth";
 import { useLeadsStore } from "@/stores/leads/leads";
 
