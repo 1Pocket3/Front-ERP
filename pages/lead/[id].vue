@@ -4,6 +4,7 @@ import { useI18n } from "vue-i18n";
 import { useLeadsStore, type Lead } from "@/stores/leads/leads";
 import { useCustomizerStore } from "@/stores/customizer";
 import BaseBreadcrumb from "@/components/shared/BaseBreadcrumb.vue";
+import CommentsSection from "@/components/comments/CommentsSection.vue";
 import { PencilIcon, TrashIcon, PhoneIcon } from "vue-tabler-icons";
 
 const { t } = useI18n();
@@ -175,6 +176,7 @@ onMounted(async () => {
       <span class="text-h5">{{ lead.full_name }}</span>
       <div class="action-buttons">
         <v-btn
+          v-if="isAdmin"
           color="primary"
           variant="outlined"
           @click="editLead"
@@ -184,6 +186,7 @@ onMounted(async () => {
           {{ t('edit') }}
         </v-btn>
         <v-btn
+          v-if="isAdmin"
           color="error"
           variant="outlined"
           @click="dialogDelete = true"
@@ -320,6 +323,9 @@ onMounted(async () => {
       </v-row>
     </v-card-text>
   </v-card>
+
+  <!-- Comments Section -->
+  <CommentsSection v-if="lead" :lead-id="lead.id" class="mt-4" />
 
   <v-card v-else-if="loading" elevation="0" class="mt-4">
     <v-card-text class="text-center py-8">

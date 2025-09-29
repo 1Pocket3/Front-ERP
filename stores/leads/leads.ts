@@ -31,6 +31,22 @@ export interface Lead {
   additional_data?: any;
 }
 
+export interface Comment {
+  id: number;
+  text: string;
+  author: {
+    id: number;
+    username: string;
+    first_name: string;
+    last_name: string;
+    email: string;
+    role: string;
+  };
+  author_name: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface LeadsResponse {
   results: Lead[];
   count: number;
@@ -310,6 +326,58 @@ export const useLeadsStore = defineStore({
         }
       } catch (error) {
         console.error('Error deleting import:', error);
+        throw error;
+      }
+    },
+
+    // ==================== COMMENT METHODS ====================
+
+    async getLeadComments(leadId: number) {
+      try {
+        const response = await axios.get(`leads/leads/${leadId}/comments/`);
+        return response.data;
+      } catch (error) {
+        console.error('Error fetching comments:', error);
+        throw error;
+      }
+    },
+
+    async createComment(leadId: number, text: string) {
+      try {
+        const response = await axios.post(`leads/leads/${leadId}/comments/create/`, {
+          text: text
+        });
+        if (response.status === 201) {
+          return response.data;
+        }
+      } catch (error) {
+        console.error('Error creating comment:', error);
+        throw error;
+      }
+    },
+
+    async updateComment(commentId: number, text: string) {
+      try {
+        const response = await axios.put(`leads/comments/${commentId}/update/`, {
+          text: text
+        });
+        if (response.status === 200) {
+          return response.data;
+        }
+      } catch (error) {
+        console.error('Error updating comment:', error);
+        throw error;
+      }
+    },
+
+    async deleteComment(commentId: number) {
+      try {
+        const response = await axios.delete(`leads/comments/${commentId}/delete/`);
+        if (response.status === 200) {
+          return response.data;
+        }
+      } catch (error) {
+        console.error('Error deleting comment:', error);
         throw error;
       }
     },

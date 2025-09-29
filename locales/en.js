@@ -177,4 +177,22 @@ export const translateEn = {
   results: "results",
   records_per_page: "Records per page",
   clear_search: "Clear search",
+  
+  // Comments
+  comments: "Comments",
+  add_comment: "Add Comment",
+  add_comment_placeholder: "Write a comment...",
+  no_comments: "No comments yet",
+  edit_comment: "Edit Comment",
+  edit_comment_as_admin: "Edit Comment (as Admin)",
+  edit_comment_placeholder: "Edit your comment...",
+  confirm_delete_comment: "Are you sure you want to delete this comment?",
+  confirm_delete_comment_as_admin: "Are you sure you want to delete this comment as an admin?",
+  edit: "Edit",
+  delete: "Delete",
+  edit_as_admin: "Edit (as Admin)",
+  delete_as_admin: "Delete (as Admin)",
+  editing_as_admin: "Editing as Admin",
+  cancel: "Cancel",
+  save: "Save",
 }
