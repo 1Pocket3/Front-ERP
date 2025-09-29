@@ -9,6 +9,7 @@ export interface Lead {
   email?: string;
   company?: string;
   lead_source?: string;
+  status: string;
   uploaded_by: {
     id: number;
     username: string;
@@ -142,6 +143,26 @@ export const useLeadsStore = defineStore({
         }
       } catch (error) {
         console.error('Error updating lead:', error);
+        throw error;
+      }
+    },
+
+    async updateLeadStatus(id: number, status: string) {
+      try {
+        const response = await axios.patch(`leads/leads/${id}/`, { status });
+        if (response.status === 200) {
+          // Обновляем локальное состояние при необходимости
+          if (this.currentLead && this.currentLead.id === id) {
+            this.currentLead.status = response.data.status;
+          }
+          const idx = this.leads.findIndex(l => l.id === id);
+          if (idx !== -1) {
+            this.leads[idx] = { ...this.leads[idx], status: response.data.status } as Lead;
+          }
+          return response.data;
+        }
+      } catch (error) {
+        console.error('Error updating lead status:', error);
         throw error;
       }
     },

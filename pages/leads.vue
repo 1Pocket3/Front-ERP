@@ -33,6 +33,7 @@ interface RowItem {
   email?: string;
   company?: string;
   lead_source?: string;
+  status: string;
   assigned_to?: LeadManager;
   uploaded_by: LeadManager;
   created_at: string;
@@ -70,10 +71,10 @@ const headers: ComputedRef = computed(() => [
   { title: t("email"), align: "start", key: "email", sortable: true },
   { title: t("company"), align: "start", key: "company", sortable: true },
   { title: t("lead_source"), align: "start", key: "lead_source", sortable: true },
+  { title: 'Status', align: 'start', key: 'status', sortable: true },
   { title: t("assigned_to"), align: "start", key: "assigned_to", sortable: true },
   { title: t("uploaded_by"), align: "start", key: "uploaded_by", sortable: true },
   { title: t("created_at"), align: "start", key: "created_at", sortable: true },
-  { title: t("actions"), align: "center", key: "actions", sortable: false },
 ]);
 
 const fetchLeads = async () => {
@@ -120,6 +121,7 @@ const formatLeadData = (lead: Lead): RowItem => {
     email: lead.email,
     company: lead.company,
     lead_source: lead.lead_source,
+    status: lead.status,
     assigned_to: lead.assigned_to ? {
       id: lead.assigned_to.id,
       username: lead.assigned_to.username,
@@ -305,6 +307,35 @@ const maskPhoneNumber = (phoneNumber: string) => {
 
 const getUserDisplayName = (user: any) => {
   return `${user.first_name} ${user.last_name}`.trim() || user.username;
+};
+
+const getStatusColor = (status: string) => {
+  switch (status) {
+    case 'New':
+      return 'default';
+    case 'Ftd':
+      return 'success';
+    case 'Ftd Na':
+      return 'info';
+    case 'No answer':
+      return 'warning';
+    case 'Call again':
+      return 'primary';
+    case 'Money Call':
+      return 'info';
+    case 'Awaiting Deposit':
+      return 'warning';
+    case 'Kachin Kachin':
+      return 'success';
+    case 'Not interested':
+      return 'error';
+    case 'Reading':
+      return 'secondary';
+    case 'Risk':
+      return 'error';
+    default:
+      return 'secondary';
+  }
 };
 
 onMounted(async () => {
@@ -508,6 +539,23 @@ onUnmounted(() => {
             </v-chip>
             <span v-else class="text-grey">—</span>
           </td>
+          <td class="text-body-2" @click.stop>
+            <v-chip
+              :color="getStatusColor(item.status)"
+              size="small"
+              variant="outlined"
+            >
+              <v-icon start size="x-small" class="mr-1">
+                {{ getStatusColor(item.status) === 'success' ? 'mdi-check' :
+                   getStatusColor(item.status) === 'error' ? 'mdi-close' :
+                   getStatusColor(item.status) === 'warning' ? 'mdi-alert' :
+                   getStatusColor(item.status) === 'info' ? 'mdi-information' :
+                   getStatusColor(item.status) === 'primary' ? 'mdi-star' :
+                   'mdi-circle-outline' }}
+              </v-icon>
+              {{ item.status }}
+            </v-chip>
+          </td>
           <td>
             <div v-if="isAdmin" class="d-flex align-center" @click.stop>
               <v-select
@@ -574,39 +622,6 @@ onUnmounted(() => {
             </v-chip>
           </td>
           <td class="text-body-2 text-medium-emphasis" @click.stop>{{ item.created_at }}</td>
-          <td @click.stop>
-            <div class="action-btn">
-              <v-btn
-                @click.stop="navigateTo(`/edit-lead/${item.id}`)"
-                icon="mdi-pencil"
-                size="small"
-                variant="text"
-                color="primary"
-              >
-                <v-tooltip
-                  activator="parent"
-                  location="top"
-                >
-                  {{ t('edit') }}
-                </v-tooltip>
-              </v-btn>
-
-              <v-btn
-                @click.stop="toggleDeleteDialog(item.id)"
-                icon="mdi-delete"
-                size="small"
-                variant="text"
-                color="error"
-              >
-                <v-tooltip
-                  activator="parent"
-                  location="top"
-                >
-                  {{ t('delete') }}
-                </v-tooltip>
-              </v-btn>
-            </div>
-          </td>
         </tr>
       </template>
     </v-data-table>

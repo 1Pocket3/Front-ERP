@@ -23,6 +23,20 @@ const dialogDelete = ref(false);
 const allUsers = ref<any[]>([]);
 const isAdmin = ref(false);
 const isAssigning = ref(false);
+const isUpdatingStatus = ref(false);
+const allStatuses = [
+  'New',
+  'Ftd',
+  'Ftd Na',
+  'No answer',
+  'Call again',
+  'Money Call',
+  'Awaiting Deposit',
+  'Kachin Kachin',
+  'Not interested',
+  'Reading',
+  'Risk',
+];
 
 const fetchLead = async () => {
   loading.value = true;
@@ -71,6 +85,52 @@ const assignLeadToUser = async (userId: number | null) => {
     typeAlert.value = "error";
   } finally {
     isAssigning.value = false;
+  }
+};
+
+const updateStatus = async (newStatus: string) => {
+  if (!lead.value) return;
+  isUpdatingStatus.value = true;
+  try {
+    await store.updateLeadStatus(lead.value.id, newStatus);
+    await fetchLead();
+    customizer.toggleAlertVisibility();
+    typeAlert.value = "success";
+  } catch (error) {
+    console.error("Error updating status:", error);
+    customizer.toggleAlertVisibility();
+    typeAlert.value = "error";
+  } finally {
+    isUpdatingStatus.value = false;
+  }
+};
+
+const getStatusColor = (status: string) => {
+  switch (status) {
+    case 'New':
+      return 'default';
+    case 'Ftd':
+      return 'success';
+    case 'Ftd Na':
+      return 'info';
+    case 'No answer':
+      return 'warning';
+    case 'Call again':
+      return 'primary';
+    case 'Money Call':
+      return 'info';
+    case 'Awaiting Deposit':
+      return 'warning';
+    case 'Kachin Kachin':
+      return 'success';
+    case 'Not interested':
+      return 'error';
+    case 'Reading':
+      return 'secondary';
+    case 'Risk':
+      return 'error';
+    default:
+      return 'secondary';
   }
 };
 
@@ -245,6 +305,58 @@ onMounted(async () => {
           <v-card variant="outlined" class="pa-4">
             <h3 class="text-h6 mb-4">{{ t('system_information') }}</h3>
             
+            <div class="info-item mb-3">
+              <strong>Status:</strong>
+              <div class="ml-2" v-if="isAdmin || (lead.assigned_to && store.getCurrentUser && lead.assigned_to.id === store.getCurrentUser.id)">
+                <v-select
+                  :items="allStatuses"
+                  :model-value="lead.status"
+                  density="compact"
+                  variant="outlined"
+                  hide-details
+                  class="assign-select"
+                  :loading="isUpdatingStatus"
+                  @update:model-value="updateStatus"
+                >
+                  <template #selection="{ item }">
+                    <v-chip :color="getStatusColor(item.title)" size="small" variant="outlined">
+                      <v-icon start size="x-small" class="mr-1">
+                        {{ getStatusColor(item.title) === 'success' ? 'mdi-check' :
+                           getStatusColor(item.title) === 'error' ? 'mdi-close' :
+                           getStatusColor(item.title) === 'warning' ? 'mdi-alert' :
+                           getStatusColor(item.title) === 'info' ? 'mdi-information' :
+                           getStatusColor(item.title) === 'primary' ? 'mdi-star' :
+                           'mdi-circle-outline' }}
+                      </v-icon>
+                      {{ item.title }}
+                    </v-chip>
+                  </template>
+                  <template #item="{ item, props }">
+                    <v-list-item v-bind="props">
+                      <template #title>
+                        <v-chip :color="getStatusColor(item.title)" size="small" variant="outlined">
+                          {{ item.title }}
+                        </v-chip>
+                      </template>
+                    </v-list-item>
+                  </template>
+                </v-select>
+              </div>
+              <div class="ml-2" v-else>
+                <v-chip :color="getStatusColor(lead.status)" size="small" variant="outlined">
+                  <v-icon start size="x-small" class="mr-1">
+                    {{ getStatusColor(lead.status) === 'success' ? 'mdi-check' :
+                       getStatusColor(lead.status) === 'error' ? 'mdi-close' :
+                       getStatusColor(lead.status) === 'warning' ? 'mdi-alert' :
+                       getStatusColor(lead.status) === 'info' ? 'mdi-information' :
+                       getStatusColor(lead.status) === 'primary' ? 'mdi-star' :
+                       'mdi-circle-outline' }}
+                  </v-icon>
+                  {{ lead.status }}
+                </v-chip>
+              </div>
+            </div>
+
             <div class="info-item mb-3">
               <strong>{{ t('uploaded_by') }}:</strong>
               <span class="ml-2">
