@@ -57,7 +57,7 @@ const assignLeadToUser = async (userId: number | null) => {
   
   isAssigning.value = true;
   try {
-    await store.assignLeads([lead.value.id], userId || 0);
+    await store.assignLeads([lead.value.id], userId);
     
     // Обновляем данные лида
     await fetchLead();
@@ -256,7 +256,10 @@ onMounted(async () => {
               <strong>{{ t('assigned_to') }}:</strong>
               <div v-if="isAdmin" class="d-flex align-center mt-2">
                 <v-select
-                  :items="allUsers.map(user => ({ ...user, display_name: getUserDisplayName(user) }))"
+                  :items="[
+                    { id: null, display_name: 'Remove Assign', role: 'unassign' },
+                    ...allUsers.map(user => ({ ...user, display_name: getUserDisplayName(user) }))
+                  ]"
                   item-title="display_name"
                   item-value="id"
                   :model-value="lead.assigned_to?.id || null"
@@ -269,8 +272,8 @@ onMounted(async () => {
                   @update:model-value="assignLeadToUser"
                 >
                   <template v-slot:item="{ props, item }">
-                    <v-list-item v-bind="props" :title="getUserDisplayName(item.raw)">
-                      <template v-slot:subtitle>
+                    <v-list-item v-bind="props" :title="item.raw.role === 'unassign' ? 'Remove Assign' : getUserDisplayName(item.raw)">
+                      <template v-slot:subtitle v-if="item.raw.role !== 'unassign'">
                         <v-chip size="x-small" :color="item.raw.role === 'admin' ? 'error' : 'primary'">
                           {{ item.raw.role }}
                         </v-chip>

@@ -257,12 +257,7 @@ const fetchAllUsers = async () => {
 
 const assignLeadToUser = async (leadId: number, userId: number | null) => {
   try {
-    if (userId === null) {
-      // Снимаем назначение - нужно создать отдельный эндпоинт или использовать существующий
-      await store.assignLeads([leadId], 0); // Временно используем 0 для снятия назначения
-    } else {
-      await store.assignLeads([leadId], userId);
-    }
+    await store.assignLeads([leadId], userId);
     customizer.toggleAlertVisibility();
     typeAlert.value = "success";
     await fetchLeads(); // Обновляем данные
@@ -391,10 +386,11 @@ onUnmounted(() => {
         class="mr-2"
       >
         <v-icon>mdi-refresh</v-icon>
-        Обновить
+        Refresh
       </v-btn>
       
       <v-btn
+        v-if="isAdmin"
         color="primary"
         variant="outlined"
         @click="handleImport"

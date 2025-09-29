@@ -142,7 +142,7 @@ export const useLeadsStore = defineStore({
       }
     },
 
-    async assignLeads(leadIds: number[], assignedToId: number) {
+    async assignLeads(leadIds: number[], assignedToId: number | null) {
       try {
         const response = await axios.post('leads/leads/assign/', {
           lead_ids: leadIds,

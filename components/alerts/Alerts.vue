@@ -22,9 +22,9 @@ export default {
     message() {
       switch (this.type) {
         case 'success':
-          return this.t('success_create_proj');
+          return this.t('assign_success_text');
         case 'error':
-          return this.t('success_delete_proj_text');
+          return this.t('unassign_success_text');
         case 'warning':
           return 'Warning alert!';
         default:
