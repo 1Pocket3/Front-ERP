@@ -64,6 +64,15 @@ const isFetching = ref(false);
 const allUsers = ref<any[]>([]);
 const isAdmin = ref(false);
 
+// Filters
+const managerFilter = ref<number | null>(null);
+const statusFilter = ref<string[]>([]);
+const assignedFilter = ref<'any' | 'assigned' | 'unassigned'>('any');
+
+// Bulk assign
+const selectedRows = ref<RowItem[]>([]);
+const bulkAssignUserId = ref<number | null>(null);
+
 const headers: ComputedRef = computed(() => [
   { title: "ID", align: "start", key: "id", sortable: true },
   { title: t("full_name"), align: "start", key: "full_name", sortable: true },
@@ -86,6 +95,9 @@ const fetchLeads = async () => {
   try {
     await store.fetchLeads({
       search: searchQuery.value,
+      manager_id: isAdmin.value && managerFilter.value ? managerFilter.value : undefined,
+      status: statusFilter.value && statusFilter.value.length ? statusFilter.value : undefined,
+      assigned: assignedFilter.value === 'any' ? undefined : assignedFilter.value === 'assigned',
       page: pagination.value,
       page_size: itemsPerPage.value,
     });
@@ -257,6 +269,35 @@ const fetchAllUsers = async () => {
   }
 };
 
+const applyFilters = () => {
+  pagination.value = 1;
+  fetchLeads();
+};
+
+const clearFilters = () => {
+  managerFilter.value = null;
+  statusFilter.value = [];
+  assignedFilter.value = 'any';
+  pagination.value = 1;
+  fetchLeads();
+};
+
+const bulkAssign = async () => {
+  if (!isAdmin.value || selectedRows.value.length === 0) return;
+  try {
+    await store.assignLeads(selectedRows.value.map(r => r.id), bulkAssignUserId.value);
+    customizer.toggleAlertVisibility();
+    typeAlert.value = "success";
+    selectedRows.value = [];
+    bulkAssignUserId.value = null;
+    await fetchLeads();
+  } catch (error) {
+    console.error('Error bulk assigning leads:', error);
+    customizer.toggleAlertVisibility();
+    typeAlert.value = "error";
+  }
+};
+
 const assignLeadToUser = async (leadId: number, userId: number | null) => {
   try {
     await store.assignLeads([leadId], userId);
@@ -409,6 +450,53 @@ onUnmounted(() => {
     </div>
 
     <div class="filter-wrapper">
+      <!-- Manager filter (admin only) -->
+      <v-select
+        v-if="isAdmin"
+        :items="allUsers.map(user => ({ ...user, display_name: getUserDisplayName(user) }))"
+        item-title="display_name"
+        item-value="id"
+        density="compact"
+        variant="outlined"
+        hide-details
+        clearable
+        style="min-width: 200px;"
+        :label="t('assigned_to')"
+        v-model="managerFilter"
+        @update:model-value="applyFilters"
+      />
+
+      <!-- Status filter (multi) -->
+      <v-select
+        :items="['New','Ftd','Ftd Na','No answer','Call again','Money Call','Awaiting Deposit','Kachin Kachin','Not interested','Reading','Risk']"
+        multiple
+        density="compact"
+        variant="outlined"
+        hide-details
+        clearable
+        style="min-width: 240px;"
+        label="Status"
+        v-model="statusFilter"
+        @update:model-value="applyFilters"
+      />
+
+      <!-- Assigned filter -->
+      <v-select
+        :items="[
+          { title: t('all'), value: 'any' },
+          { title: t('assigned_to'), value: 'assigned' },
+          { title: t('not_assigned'), value: 'unassigned' }
+        ]"
+        item-title="title"
+        item-value="value"
+        density="compact"
+        variant="outlined"
+        hide-details
+        style="min-width: 180px;"
+        v-model="assignedFilter"
+        @update:model-value="applyFilters"
+      />
+
       <v-btn
         color="info"
         variant="outlined"
@@ -438,6 +526,13 @@ onUnmounted(() => {
       >
         <PlusIcon stroke-width="1.5" size="20" class="mr-2" />
         {{ t('add_lead') }}
+      </v-btn>
+      
+      <v-btn
+        variant="text"
+        @click="clearFilters"
+      >
+        {{ t('clear') }}
       </v-btn>
       
     </div>
@@ -470,10 +565,38 @@ onUnmounted(() => {
       :headers="headers"
       item-key="id"
       :items="dataReadyForTable"
+      :return-object="true"
+      v-model="selectedRows"
+      show-select
       class="border rounded-md table-hover"
       :loading="loading"
       hide-default-footer
     >
+      
+
+      <!-- Bulk actions toolbar -->
+      <template v-slot:top>
+        <div v-if="isAdmin && selectedRows.length" class="px-4 py-2 d-flex align-center gap-3">
+          <div class="text-body-2">{{ t('selected') }}: {{ selectedRows.length }}</div>
+          <v-select
+            :items="allUsers.map(user => ({ ...user, display_name: getUserDisplayName(user) }))"
+            item-title="display_name"
+            item-value="id"
+            density="compact"
+            variant="outlined"
+            hide-details
+            style="min-width: 220px;"
+            :label="t('assign_manager')"
+            v-model="bulkAssignUserId"
+          />
+          <v-btn color="primary" variant="flat" :disabled="bulkAssignUserId===null" @click="bulkAssign">
+            {{ t('assign') }}
+          </v-btn>
+          <v-btn color="error" variant="outlined" @click="() => { bulkAssignUserId = null; selectedRows = []; }">
+            {{ t('cancel') }}
+          </v-btn>
+        </div>
+      </template>
       <template v-slot:no-data>
         <div class="text-center py-8">
           <v-icon size="64" color="grey-lighten-1">mdi-database-off</v-icon>
@@ -492,137 +615,137 @@ onUnmounted(() => {
           </v-btn>
         </div>
       </template>
-      <template v-slot:item="{ item }">
-        <tr @click="viewLead(item)" style="cursor: pointer" class="table-row">
-          <td class="text-body-2 font-weight-medium">{{ item.id }}</td>
-          <td class="text-body-2">
-            <div class="d-flex flex-column">
-              <span class="font-weight-medium">{{ item.full_name }}</span>
-              <!-- <span class="text-caption text-medium-emphasis">{{ item.first_name }} {{ item.last_name }}</span> -->
-            </div>
-          </td>
-          <td class="text-body-2" @click.stop>
-            <div v-if="item.phone" class="d-flex align-center gap-2">
-              <span class="text-body-2">{{ maskPhoneNumber(item.phone) }}</span>
-              <v-btn
-                icon="mdi-phone"
-                size="small"
-                variant="text"
-                color="success"
-                @click.stop="makeCall(item.phone)"
-                class="call-btn"
-              > 
-                <v-icon size="small">mdi-phone</v-icon>
-                <v-tooltip activator="parent" location="top">
-                  {{ t('call') }}
-                </v-tooltip>
-              </v-btn>
-            </div>
-            <span v-else class="text-grey">—</span>
-          </td>
-          <td class="text-body-2" @click.stop>
-            <span v-if="item.email" class="text-primary">{{ item.email }}</span>
-            <span v-else class="text-grey">—</span>
-          </td>
-          <td class="text-body-2" @click.stop>
-            <span v-if="item.company" class="font-weight-medium">{{ item.company }}</span>
-            <span v-else class="text-grey">—</span>
-          </td>
-          <td class="text-body-2" @click.stop>
-            <v-chip 
-              v-if="item.lead_source" 
-              color="success" 
-              variant="outlined"
-              size="small"
-            >
-              {{ item.lead_source }}
-            </v-chip>
-            <span v-else class="text-grey">—</span>
-          </td>
-          <td class="text-body-2" @click.stop>
-            <v-chip
-              :color="getStatusColor(item.status)"
-              size="small"
-              variant="outlined"
-            >
-              <v-icon start size="x-small" class="mr-1">
-                {{ getStatusColor(item.status) === 'success' ? 'mdi-check' :
-                   getStatusColor(item.status) === 'error' ? 'mdi-close' :
-                   getStatusColor(item.status) === 'warning' ? 'mdi-alert' :
-                   getStatusColor(item.status) === 'info' ? 'mdi-information' :
-                   getStatusColor(item.status) === 'primary' ? 'mdi-star' :
-                   'mdi-circle-outline' }}
-              </v-icon>
-              {{ item.status }}
-            </v-chip>
-          </td>
-          <td>
-            <div v-if="isAdmin" class="d-flex align-center" @click.stop>
-              <v-select
-                v-if="!item.assigned_to"
-                :items="allUsers.map(user => ({ ...user, display_name: getUserDisplayName(user) }))"
-                item-title="display_name"
-                item-value="id"
-                density="compact"
-                variant="outlined"
-                hide-details
-                :placeholder="t('assign_manager')"
-                class="assign-select"
-                @update:model-value="(userId) => assignLeadToUser(item.id, userId)"
-                @click.stop
-              >
-                <template v-slot:item="{ props, item }">
-                  <v-list-item v-bind="props" :title="getUserDisplayName(item.raw)">
-                    <template v-slot:subtitle>
-                      <v-chip size="x-small" :color="item.raw.role === 'admin' ? 'error' : 'primary'">
-                        {{ item.raw.role }}
-                      </v-chip>
-                    </template>
-                  </v-list-item>
+      <!-- ID column -->
+      <template v-slot:item.id="{ item }">
+        <span class="text-body-2 font-weight-medium">{{ item.id }}</span>
+      </template>
+
+      <!-- Full name with link for middle-click -->
+      <template v-slot:item.full_name="{ item }">
+        <NuxtLink :to="`/lead/${item.id}`" class="font-weight-medium text-primary" @click.stop>
+          {{ item.full_name }}
+        </NuxtLink>
+      </template>
+
+      <!-- Phone column with call button -->
+      <template v-slot:item.phone="{ item }">
+        <div v-if="item.phone" class="d-flex align-center gap-2">
+          <span class="text-body-2">{{ maskPhoneNumber(item.phone) }}</span>
+          <v-btn
+            icon="mdi-phone"
+            size="small"
+            variant="text"
+            color="success"
+            @click.stop="makeCall(item.phone)"
+            class="call-btn"
+          >
+            <v-icon size="small">mdi-phone</v-icon>
+            <v-tooltip activator="parent" location="top">
+              {{ t('call') }}
+            </v-tooltip>
+          </v-btn>
+        </div>
+        <span v-else class="text-grey">—</span>
+      </template>
+
+      <!-- Email column -->
+      <template v-slot:item.email="{ item }">
+        <span v-if="item.email" class="text-primary">{{ item.email }}</span>
+        <span v-else class="text-grey">—</span>
+      </template>
+
+      <!-- Company column -->
+      <template v-slot:item.company="{ item }">
+        <span v-if="item.company" class="font-weight-medium">{{ item.company }}</span>
+        <span v-else class="text-grey">—</span>
+      </template>
+
+      <!-- Lead source column -->
+      <template v-slot:item.lead_source="{ item }">
+        <v-chip v-if="item.lead_source" color="success" variant="outlined" size="small">
+          {{ item.lead_source }}
+        </v-chip>
+        <span v-else class="text-grey">—</span>
+      </template>
+
+      <!-- Status column -->
+      <template v-slot:item.status="{ item }">
+        <v-chip :color="getStatusColor(item.status)" size="small" variant="outlined">
+          <v-icon start size="x-small" class="mr-1">
+            {{ getStatusColor(item.status) === 'success' ? 'mdi-check' :
+               getStatusColor(item.status) === 'error' ? 'mdi-close' :
+               getStatusColor(item.status) === 'warning' ? 'mdi-alert' :
+               getStatusColor(item.status) === 'info' ? 'mdi-information' :
+               getStatusColor(item.status) === 'primary' ? 'mdi-star' :
+               'mdi-circle-outline' }}
+          </v-icon>
+          {{ item.status }}
+        </v-chip>
+      </template>
+
+      <!-- Assigned to column -->
+      <template v-slot:item.assigned_to="{ item }">
+        <div v-if="isAdmin" class="d-flex align-center" @click.stop>
+          <v-select
+            v-if="!item.assigned_to"
+            :items="allUsers.map(user => ({ ...user, display_name: getUserDisplayName(user) }))"
+            item-title="display_name"
+            item-value="id"
+            density="compact"
+            variant="outlined"
+            hide-details
+            :placeholder="t('assign_manager')"
+            class="assign-select"
+            @update:model-value="(userId) => assignLeadToUser(item.id, userId)"
+            @click.stop
+          >
+            <template v-slot:item="{ props, item }">
+              <v-list-item v-bind="props" :title="getUserDisplayName(item.raw)">
+                <template v-slot:subtitle>
+                  <v-chip size="x-small" :color="item.raw.role === 'admin' ? 'error' : 'primary'">
+                    {{ item.raw.role }}
+                  </v-chip>
                 </template>
-              </v-select>
-              <div v-else class="d-flex align-center gap-2">
-                <v-chip 
-                  color="primary" 
-                  size="small"
-                  class="text-body-2"
-                >
-                  {{ `${item.assigned_to.first_name} ${item.assigned_to.last_name}` }}
-                </v-chip>
-                <v-btn
-                  icon="mdi-close"
-                  size="x-small"
-                  variant="text"
-                  color="error"
-                  @click.stop="assignLeadToUser(item.id, null)"
-                >
-                  <v-tooltip activator="parent">
-                    {{ t('unassign') }}
-                  </v-tooltip>
-                </v-btn>
-              </div>
-            </div>
-            <div v-else>
-              <v-chip 
-                v-if="item.assigned_to" 
-                color="primary" 
-                size="small"
-                class="text-body-2"
-              >
-                {{ `${item.assigned_to.first_name} ${item.assigned_to.last_name}` }}
-              </v-chip>
-              <v-chip v-else color="grey" variant="outlined" size="small">
-                {{ t('not_assigned') }}
-              </v-chip>
-            </div>
-          </td>
-          <td @click.stop>
-            <v-chip color="secondary" size="small" class="text-body-2">
-              {{ `${item.uploaded_by.first_name} ${item.uploaded_by.last_name}` }}
+              </v-list-item>
+            </template>
+          </v-select>
+          <div v-else class="d-flex align-center gap-2">
+            <v-chip color="primary" size="small" class="text-body-2">
+              {{ `${item.assigned_to.first_name} ${item.assigned_to.last_name}` }}
             </v-chip>
-          </td>
-          <td class="text-body-2 text-medium-emphasis" @click.stop>{{ item.created_at }}</td>
-        </tr>
+            <v-btn
+              icon="mdi-close"
+              size="x-small"
+              variant="text"
+              color="error"
+              @click.stop="assignLeadToUser(item.id, null)"
+            >
+              <v-tooltip activator="parent">
+                {{ t('unassign') }}
+              </v-tooltip>
+            </v-btn>
+          </div>
+        </div>
+        <div v-else>
+          <v-chip v-if="item.assigned_to" color="primary" size="small" class="text-body-2">
+            {{ `${item.assigned_to.first_name} ${item.assigned_to.last_name}` }}
+          </v-chip>
+        <v-chip v-else color="grey" variant="outlined" size="small">
+            {{ t('not_assigned') }}
+          </v-chip>
+        </div>
+      </template>
+
+      <!-- Uploaded by column -->
+      <template v-slot:item.uploaded_by="{ item }">
+        <v-chip color="secondary" size="small" class="text-body-2">
+          {{ `${item.uploaded_by.first_name || item.uploaded_by.username} ${item.uploaded_by.last_name || ''}` }}
+        </v-chip>
+      </template>
+
+      <!-- Created at column -->
+      <template v-slot:item.created_at="{ item }">
+        <span class="text-body-2 text-medium-emphasis">{{ item.created_at }}</span>
       </template>
     </v-data-table>
     

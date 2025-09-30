@@ -84,6 +84,8 @@ export const useLeadsStore = defineStore({
     async fetchLeads(params: {
       search?: string;
       manager_id?: number;
+      status?: string | string[];
+      assigned?: boolean;
       page?: number;
       page_size?: number;
     } = {}) {
@@ -92,6 +94,11 @@ export const useLeadsStore = defineStore({
         
         if (params.search) queryParams.append('search', params.search);
         if (params.manager_id) queryParams.append('manager_id', params.manager_id.toString());
+        if (params.status) {
+          const statuses = Array.isArray(params.status) ? params.status : [params.status];
+          if (statuses.length > 0) queryParams.append('statuses', statuses.join(','));
+        }
+        if (params.assigned !== undefined) queryParams.append('assigned', params.assigned ? 'true' : 'false');
         if (params.page) queryParams.append('page', params.page.toString());
         if (params.page_size) queryParams.append('page_size', params.page_size.toString());
 
