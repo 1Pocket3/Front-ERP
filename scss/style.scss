@@ -1,44 +1,44 @@
-@import './variables';
-@import 'vuetify/styles.scss';
-@import './override';
-@import './layout/text';
-@import './layout/reboot';
-@import './layout/container';
-@import './layout/sidebar';
-@import './layout/rtl';
-@import './layout/topbar';
-@import './layout/horizontal';
-@import './layout/dark';
-@import './layout/customizer';
+@use './variables' as *;
+@use 'vuetify/styles' as *;
+@use './override' as *;
+@use './layout/text' as *;
+@use './layout/reboot' as *;
+@use './layout/container' as *;
+@use './layout/sidebar' as *;
+@use './layout/rtl' as *;
+@use './layout/topbar' as *;
+@use './layout/horizontal' as *;
+@use './layout/dark' as *;
+@use './layout/customizer' as *;
 
 
-@import './components/VBreadcrumb';
-@import './components/VAlert';
-@import './components/VButtons';
-@import './components/VCard';
-@import './components/VCarousel';
-@import './components/VField';
-@import './components/VList';
-@import './components/VInput';
-@import './components/VNavigationDrawer';
-@import './components/VShadow';
-@import './components/VSwitch';
-@import './components/VSelectionControl';
-@import './components/VTextField';
-@import './components/VTextarea';
-@import './components/VTabs';
-@import './components/VTable';
-@import './components/VExpansionpanel';
+@use './components/VBreadcrumb' as *;
+@use './components/VAlert' as *;
+@use './components/VButtons' as *;
+@use './components/VCard' as *;
+@use './components/VCarousel' as *;
+@use './components/VField' as *;
+@use './components/VList' as *;
+@use './components/VInput' as *;
+@use './components/VNavigationDrawer' as *;
+@use './components/VShadow' as *;
+@use './components/VSwitch' as *;
+@use './components/VSelectionControl' as *;
+@use './components/VTextField' as *;
+@use './components/VTextarea' as *;
+@use './components/VTabs' as *;
+@use './components/VTable' as *;
+@use './components/VExpansionpanel' as *;
 
 /*Landing page css*/
 // @import 'landingpage/header';
 // @import 'landingpage/general';
 
-@import './pages/datatable';
-@import './pages/dashboards';
-@import './pages/editor';
-@import './pages/authentication';
-@import './pages/apps';
+@use './pages/datatable' as *;
+@use './pages/dashboards' as *;
+@use './pages/editor' as *;
+@use './pages/authentication' as *;
+@use './pages/apps' as *;
 
 // @import 'vue3-perfect-scrollbar/dist/vue3-perfect-scrollbar.css';
 
