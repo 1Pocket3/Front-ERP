@@ -34,8 +34,10 @@ const allStatuses = [
   'Awaiting Deposit',
   'Kachin Kachin',
   'Not interested',
-  'Reading',
+  'Reassign',
   'Risk',
+  'Number not in service',
+  'Different Person',
 ];
 
 const fetchLead = async () => {
@@ -125,10 +127,14 @@ const getStatusColor = (status: string) => {
       return 'success';
     case 'Not interested':
       return 'error';
-    case 'Reading':
+    case 'Reassign':
       return 'secondary';
     case 'Risk':
       return 'error';
+    case 'Number not in service':
+      return 'warning';
+    case 'Different Person':
+      return 'info';
     default:
       return 'secondary';
   }
