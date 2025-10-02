@@ -312,16 +312,15 @@ const assignLeadToUser = async (leadId: number, userId: number | null) => {
 };
 
 const makeCall = async (leadId: number) => {
-  try {
-    const result = await store.initiateCall(leadId);
-    customizer.toggleAlertVisibility();
-    typeAlert.value = "success";
-    console.log('Call initiated:', result);
-  } catch (error) {
-    console.error('Error initiating call:', error);
-    customizer.toggleAlertVisibility();
-    typeAlert.value = "error";
-  }
+   try {
+    const billId = store.getCurrentUser?.phone_extension;
+    const result = await store.initiateCall(leadId, billId);
+     customizer.toggleAlertVisibility();
+     typeAlert.value = "success";
+   } catch (error) {
+     customizer.toggleAlertVisibility();
+     typeAlert.value = "error";
+   }
 };
 
 const maskPhoneNumber = (phoneNumber: string) => {
