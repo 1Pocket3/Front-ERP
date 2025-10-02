@@ -425,39 +425,5 @@ export const useLeadsStore = defineStore({
         throw error;
       }
     },
-
-    async getCallHistory(leadId: number) {
-      try {
-        const response = await axios.get(`leads/leads/${leadId}/call-history/`);
-        return response.data;
-      } catch (error) {
-        console.error('Error fetching call history:', error);
-        throw error;
-      }
-    },
-
-    async getActiveCalls() {
-      try {
-        const response = await axios.get('leads/calls/active/');
-        return response.data;
-      } catch (error) {
-        console.error('Error fetching active calls:', error);
-        throw error;
-      }
-    },
-
-    async updateCallNotes(callId: string, notes: string) {
-      try {
-        const response = await axios.post(`leads/calls/${callId}/notes/`, {
-          notes: notes
-        });
-        if (response.status === 200) {
-          return response.data;
-        }
-      } catch (error) {
-        console.error('Error updating call notes:', error);
-        throw error;
-      }
-    },
   },
 });

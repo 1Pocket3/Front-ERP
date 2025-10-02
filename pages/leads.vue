@@ -381,6 +381,10 @@ const getStatusColor = (status: string) => {
       return 'warning';
     case 'Different Person':
       return 'info';
+    case 'Wrong number':
+      return 'warning';
+    case 'No Language':
+      return 'info';
     default:
       return 'secondary';
   }
@@ -475,7 +479,7 @@ onUnmounted(() => {
 
       <!-- Status filter (multi) -->
       <v-select
-        :items="['New','Ftd','Ftd Na','No answer','Call again','Money Call','Awaiting Deposit','Kachin Kachin','Not interested','Reassign','Risk','Number not in service','Different Person']"
+        :items="['New','Ftd','Ftd Na','No answer','Call again','Money Call','Awaiting Deposit','Kachin Kachin','Not interested','Reassign','Risk','Number not in service','Different Person','Wrong number','No Language']"
         multiple
         density="compact"
         variant="outlined"

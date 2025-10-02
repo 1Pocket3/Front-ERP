@@ -24,9 +24,6 @@ const allUsers = ref<any[]>([]);
 const isAdmin = ref(false);
 const isAssigning = ref(false);
 const isUpdatingStatus = ref(false);
-const callHistory = ref<any[]>([]);
-const activeCalls = ref<any[]>([]);
-const loadingCalls = ref(false);
 const allStatuses = [
   'New',
   'Ftd',
@@ -41,6 +38,8 @@ const allStatuses = [
   'Risk',
   'Number not in service',
   'Different Person',
+  'Wrong number',
+  'No Language',
 ];
 
 const fetchLead = async () => {
@@ -217,61 +216,7 @@ const formatDate = (dateString: string) => {
   });
 };
 
-const fetchCallHistory = async () => {
-  if (!lead.value) return;
-  
-  loadingCalls.value = true;
-  try {
-    const result = await store.getCallHistory(lead.value.id);
-    callHistory.value = result.calls || [];
-  } catch (error) {
-    console.error('Error fetching call history:', error);
-  } finally {
-    loadingCalls.value = false;
-  }
-};
 
-const fetchActiveCalls = async () => {
-  try {
-    const result = await store.getActiveCalls();
-    activeCalls.value = result.active_calls || [];
-  } catch (error) {
-    console.error('Error fetching active calls:', error);
-  }
-};
-
-const getCallStatusColor = (status: string) => {
-  switch (status) {
-    case 'trying':
-      return 'info';
-    case 'ringing':
-      return 'warning';
-    case 'connected':
-      return 'success';
-    case 'terminated':
-      return 'error';
-    case 'held':
-    case 'holding':
-      return 'secondary';
-    case 'queued':
-    case 'dequeued':
-      return 'primary';
-    default:
-      return 'default';
-  }
-};
-
-const formatDuration = (seconds: number) => {
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-  const secs = seconds % 60;
-  
-  if (hours > 0) {
-    return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  } else {
-    return `${minutes}:${secs.toString().padStart(2, '0')}`;
-  }
-};
 
 onMounted(async () => {
   await fetchLead();
@@ -293,9 +238,6 @@ onMounted(async () => {
     await fetchAllUsers();
   }
   
-  // Загружаем историю звонков и активные звонки
-  // await fetchCallHistory();
-  // await fetchActiveCalls();
 });
 </script>
 
