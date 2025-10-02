@@ -294,8 +294,8 @@ onMounted(async () => {
   }
   
   // Загружаем историю звонков и активные звонки
-  await fetchCallHistory();
-  await fetchActiveCalls();
+  // await fetchCallHistory();
+  // await fetchActiveCalls();
 });
 </script>
 
@@ -532,106 +532,6 @@ onMounted(async () => {
     </v-card-text>
   </v-card>
 
-    <!-- Call History Section -->
-    <v-row v-if="lead" class="mt-4">
-    <v-col cols="12">
-      <v-card variant="outlined" class="pa-4">
-        <div class="d-flex justify-space-between align-center mb-4">
-          <h3 class="text-h6">{{ t('call_history') }}</h3>
-          <v-btn
-            color="primary"
-            variant="outlined"
-            size="small"
-            @click="makeCall"
-            :disabled="!lead.phone"
-          >
-            <PhoneIcon stroke-width="1.5" size="16" class="mr-2" />
-            {{ t('initiate_call') }}
-          </v-btn>
-        </div>
-        
-        <!-- Active Calls -->
-        <div v-if="activeCalls.length > 0" class="mb-4">
-          <h4 class="text-subtitle-1 mb-2">{{ t('active_calls') }}</h4>
-          <v-alert
-            v-for="call in activeCalls"
-            :key="call.id"
-            type="info"
-            variant="tonal"
-            class="mb-2"
-          >
-            <div class="d-flex justify-space-between align-center">
-              <div>
-                <strong>{{ t('call_id') }}:</strong> {{ call.call_id }}<br>
-                <strong>{{ t('status') }}:</strong> {{ call.status }}<br>
-                <strong>{{ t('initiated_at') }}:</strong> {{ formatDate(call.initiated_at) }}
-              </div>
-              <v-chip :color="call.status === 'connected' ? 'success' : 'warning'" size="small">
-                {{ call.status }}
-              </v-chip>
-            </div>
-          </v-alert>
-        </div>
-        
-        <!-- Call History Table -->
-        <v-data-table
-          :headers="[
-            { title: t('call_id'), key: 'call_id' },
-            { title: t('caller'), key: 'caller' },
-            { title: t('status'), key: 'status' },
-            { title: t('initiated_at'), key: 'initiated_at' },
-            { title: t('connected_at'), key: 'connected_at' },
-            { title: t('duration'), key: 'duration_seconds' },
-            { title: t('notes'), key: 'notes' }
-          ]"
-          :items="callHistory"
-          :loading="loadingCalls"
-          class="elevation-0"
-          hide-default-footer
-        >
-          <template v-slot:item.caller="{ item }">
-            <span>{{ item.caller.first_name }} {{ item.caller.last_name }}</span>
-          </template>
-          
-          <template v-slot:item.status="{ item }">
-            <v-chip 
-              :color="getCallStatusColor(item.status)" 
-              size="small" 
-              variant="outlined"
-            >
-              {{ item.status }}
-            </v-chip>
-          </template>
-          
-          <template v-slot:item.initiated_at="{ item }">
-            <span>{{ formatDate(item.initiated_at) }}</span>
-          </template>
-          
-          <template v-slot:item.connected_at="{ item }">
-            <span v-if="item.connected_at">{{ formatDate(item.connected_at) }}</span>
-            <span v-else class="text-grey">—</span>
-          </template>
-          
-          <template v-slot:item.duration_seconds="{ item }">
-            <span v-if="item.duration_seconds">{{ formatDuration(item.duration_seconds) }}</span>
-            <span v-else class="text-grey">—</span>
-          </template>
-          
-          <template v-slot:item.notes="{ item }">
-            <span v-if="item.notes">{{ item.notes }}</span>
-            <span v-else class="text-grey">—</span>
-          </template>
-          
-          <template v-slot:no-data>
-            <div class="text-center py-4">
-              <v-icon size="48" color="grey-lighten-1">mdi-phone-off</v-icon>
-              <p class="text-grey mt-2">{{ t('no_call_history') }}</p>
-            </div>
-          </template>
-        </v-data-table>
-      </v-card>
-    </v-col>
-  </v-row>
 
   <!-- Delete Dialog -->
   <v-dialog v-model="dialogDelete" max-width="500px">

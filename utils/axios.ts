@@ -2,7 +2,7 @@ import axios from 'axios';
 import type { AxiosInstance, AxiosResponse, AxiosError } from "axios"
 
 const axiosServices: AxiosInstance = axios.create({
-  baseURL: process.env.API_BASE_URL || 'http://127.0.0.1:8000',
+  baseURL: process.env.API_BASE_URL || 'http://10.8.0.1:8000',
 });
 
 
