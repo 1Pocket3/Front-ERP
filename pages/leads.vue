@@ -311,12 +311,16 @@ const assignLeadToUser = async (leadId: number, userId: number | null) => {
   }
 };
 
-const makeCall = (phoneNumber: string) => {
-  if (phoneNumber) {
-    // Убираем все символы кроме цифр и +
-    const cleanPhone = phoneNumber.replace(/[^\d+]/g, '');
-    // Открываем ссылку для звонка
-    window.open(`tel:${cleanPhone}`, '_self');
+const makeCall = async (leadId: number) => {
+  try {
+    const result = await store.initiateCall(leadId);
+    customizer.toggleAlertVisibility();
+    typeAlert.value = "success";
+    console.log('Call initiated:', result);
+  } catch (error) {
+    console.error('Error initiating call:', error);
+    customizer.toggleAlertVisibility();
+    typeAlert.value = "error";
   }
 };
 
@@ -640,7 +644,7 @@ onUnmounted(() => {
             size="small"
             variant="text"
             color="success"
-            @click.stop="makeCall(item.phone)"
+            @click.stop="makeCall(item.id)"
             class="call-btn"
           >
             <v-icon size="small">mdi-phone</v-icon>
