@@ -1,0 +1,228 @@
+// Dark theme specific styles
+.v-theme--dark {
+  // Override Vuetify dark theme colors
+  --v-theme-surface: #1e293b;
+  --v-theme-background: #0f172a;
+  --v-theme-on-surface: #f7fafc;
+  --v-theme-on-background: #f7fafc;
+  
+  // Custom dark theme variables
+  --dark-bg-primary: #0f172a;
+  --dark-bg-secondary: #1e293b;
+  --dark-bg-tertiary: #334155;
+  --dark-text-primary: #f7fafc;
+  --dark-text-secondary: #e2e8f0;
+  --dark-border: #2d3748;
+  
+  // Card styles
+  .v-card {
+    background-color: var(--dark-bg-secondary) !important;
+    border-color: var(--dark-border) !important;
+  }
+  
+  // Table styles
+  .v-table {
+    background-color: var(--dark-bg-secondary) !important;
+    
+    .v-table__wrapper {
+      background-color: var(--dark-bg-secondary) !important;
+    }
+    
+    th, td {
+      color: var(--dark-text-primary) !important;
+      border-color: var(--dark-border) !important;
+    }
+    
+    .v-data-table__tr:hover {
+      background-color: var(--dark-bg-tertiary) !important;
+    }
+  }
+  
+  // Navigation drawer
+  .v-navigation-drawer {
+    background-color: var(--dark-bg-secondary) !important;
+    border-color: var(--dark-border) !important;
+  }
+  
+  // App bar
+  .v-app-bar {
+    background-color: var(--dark-bg-secondary) !important;
+    border-color: var(--dark-border) !important;
+  }
+  
+  // Form elements
+  .v-field {
+    background-color: var(--dark-bg-tertiary) !important;
+    border-color: var(--dark-border) !important;
+  }
+  
+  .v-field__input {
+    color: var(--dark-text-primary) !important;
+  }
+  
+  // List items
+  .v-list-item {
+    color: var(--dark-text-primary) !important;
+    
+    &:hover {
+      background-color: var(--dark-bg-tertiary) !important;
+    }
+  }
+  
+  // Buttons
+  .v-btn {
+    &.v-btn--variant-text {
+      color: var(--dark-text-primary) !important;
+    }
+  }
+  
+  // Custom dark theme classes
+  .dark-bg-primary {
+    background-color: var(--dark-bg-primary) !important;
+  }
+  
+  .dark-bg-secondary {
+    background-color: var(--dark-bg-secondary) !important;
+  }
+  
+  .dark-text-primary {
+    color: var(--dark-text-primary) !important;
+  }
+  
+  .dark-text-secondary {
+    color: var(--dark-text-secondary) !important;
+  }
+  
+  .dark-border {
+    border-color: var(--dark-border) !important;
+  }
+  
+  // Status colors for dark mode
+  .status-new {
+    background-color: rgba(59, 130, 246, 0.2) !important;
+    color: #60a5fa !important;
+  }
+  
+  .status-ftd {
+    background-color: rgba(16, 185, 129, 0.2) !important;
+    color: #34d399 !important;
+  }
+  
+  .status-wrong-number {
+    background-color: rgba(245, 158, 11, 0.2) !important;
+    color: #f59e0b !important;
+  }
+  
+  .status-no-language {
+    background-color: rgba(59, 130, 246, 0.2) !important;
+    color: #60a5fa !important;
+  }
+  
+  // Lead card dark mode
+  .lead-card {
+    background-color: var(--dark-bg-secondary) !important;
+    border-color: var(--dark-border) !important;
+    
+    .lead-name {
+      color: var(--dark-text-primary) !important;
+    }
+    
+    .lead-phone {
+      color: var(--dark-text-secondary) !important;
+    }
+  }
+  
+  // Call button dark mode
+  .call-button {
+    background-color: rgba(16, 185, 129, 0.1) !important;
+    color: #34d399 !important;
+    border-color: rgba(16, 185, 129, 0.3) !important;
+    
+    &:hover {
+      background-color: rgba(16, 185, 129, 0.2) !important;
+    }
+  }
+  
+  // Leads table dark mode
+  .leads-table {
+    background-color: var(--dark-bg-secondary) !important;
+    
+    .v-data-table__wrapper {
+      background-color: var(--dark-bg-secondary) !important;
+    }
+    
+    .v-data-table__tr {
+      background-color: var(--dark-bg-secondary) !important;
+      
+      &:hover {
+        background-color: var(--dark-bg-tertiary) !important;
+      }
+    }
+    
+    .v-data-table__td,
+    .v-data-table__th {
+      color: var(--dark-text-primary) !important;
+      border-color: var(--dark-border) !important;
+    }
+    
+    .v-data-table__th {
+      background-color: var(--dark-bg-tertiary) !important;
+      color: var(--dark-text-primary) !important;
+    }
+  }
+  
+  // Status chips dark mode
+  .v-chip {
+    &.status-new {
+      background-color: rgba(59, 130, 246, 0.2) !important;
+      color: #60a5fa !important;
+    }
+    
+    &.status-ftd {
+      background-color: rgba(16, 185, 129, 0.2) !important;
+      color: #34d399 !important;
+    }
+    
+    &.status-wrong-number {
+      background-color: rgba(245, 158, 11, 0.2) !important;
+      color: #f59e0b !important;
+    }
+    
+    &.status-no-language {
+      background-color: rgba(59, 130, 246, 0.2) !important;
+      color: #60a5fa !important;
+    }
+  }
+  
+  // Filters section dark mode
+  .container_filters {
+    background-color: var(--dark-bg-secondary) !important;
+    border-color: var(--dark-border) !important;
+  }
+  
+  // Search field dark mode
+  .search-field {
+    .v-field {
+      background-color: var(--dark-bg-tertiary) !important;
+      border-color: var(--dark-border) !important;
+    }
+    
+    .v-field__input {
+      color: var(--dark-text-primary) !important;
+    }
+  }
+  
+  // Filter select dark mode
+  .filter-wrapper {
+    .v-select {
+      .v-field {
+        background-color: var(--dark-bg-tertiary) !important;
+        border-color: var(--dark-border) !important;
+      }
+      
+      .v-field__input {
+        color: var(--dark-text-primary) !important;
+      }
+    }
+  }
+}

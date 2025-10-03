@@ -196,20 +196,7 @@ export const translateEn = {
   cancel: "Cancel",
   save: "Save",
   
-  // Call Management
-  call_history: "Call History",
-  initiate_call: "Initiate Call",
-  active_calls: "Active Calls",
-  call_id: "Call ID",
-  caller: "Caller",
-  status: "Status",
-  initiated_at: "Initiated At",
-  connected_at: "Connected At",
-  duration: "Duration",
-  notes: "Notes",
-  no_call_history: "No call history available",
-  call_initiated: "Call initiated successfully",
-  call_failed: "Failed to initiate call",
-  phone_extension_required: "Phone extension required",
-  call_permission_denied: "You can only call leads assigned to you",
+  // Theme
+  switch_to_light_mode: "Switch to Light Mode",
+  switch_to_dark_mode: "Switch to Dark Mode",
 }

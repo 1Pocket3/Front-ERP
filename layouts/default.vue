@@ -5,6 +5,11 @@ import VerticalHeaderVue from "@/components/vertical-header/VerticalHeader.vue";
 
 const route = useRoute();
 const customizer = useCustomizerStore();
+
+// Initialize theme on mount
+onMounted(() => {
+  customizer.initializeTheme();
+});
 </script>
 
 <template>

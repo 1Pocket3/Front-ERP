@@ -248,9 +248,9 @@ onMounted(async () => {
     <Alerts :t="t" :type="typeAlert" />
   </div>
 
-  <v-card v-if="lead" elevation="0" class="mt-4">
+  <v-card v-if="lead" elevation="0" class="mt-4 lead-card">
     <v-card-title class="d-flex justify-space-between align-center">
-      <span class="text-h5">{{ lead.full_name }}</span>
+      <span class="text-h5 lead-name">{{ lead.full_name }}</span>
       <div class="action-buttons">
         <v-btn
           v-if="isAdmin"
@@ -283,14 +283,14 @@ onMounted(async () => {
             <div class="info-item mb-3">
               <strong>{{ t('phone') }}:</strong>
               <div v-if="lead.phone" class="d-flex align-center gap-2 ml-2">
-                <span class="text-body-2">{{ maskPhoneNumber(lead.phone) }}</span>
+                <span class="text-body-2 lead-phone">{{ maskPhoneNumber(lead.phone) }}</span>
                 <v-btn
                   icon="mdi-phone"
                   size="small"
                   variant="text"
                   color="success"
                   @click="makeCall"
-                  class="call-btn"
+                  class="call-btn call-button"
                 >
                   <v-icon size="small">mdi-phone</v-icon>
                   <v-tooltip activator="parent" location="top">
@@ -360,7 +360,7 @@ onMounted(async () => {
                 </v-select>
               </div>
               <div class="ml-2" v-else>
-                <v-chip :color="getStatusColor(lead.status)" size="small" variant="outlined">
+                <v-chip :color="getStatusColor(lead.status)" size="small" variant="outlined" :class="`status-${lead.status.toLowerCase().replace(/\s+/g, '-')}`">
                   <v-icon start size="x-small" class="mr-1">
                     {{ getStatusColor(lead.status) === 'success' ? 'mdi-check' :
                        getStatusColor(lead.status) === 'error' ? 'mdi-close' :

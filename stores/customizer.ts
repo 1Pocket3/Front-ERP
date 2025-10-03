@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import config from '@/config'
-
+import { LIGHT_THEME, DARK_THEME } from '@/themes'
 
 export const useCustomizerStore = defineStore({
   id: "customizer",
@@ -11,10 +11,15 @@ export const useCustomizerStore = defineStore({
     actTheme: config.actTheme,
     boxed: config.boxed,
     setBorderCard: config.setBorderCard,
-    showAlert: config.showAlert
+    showAlert: config.showAlert,
+    isDark: false
   }),
 
-  getters: {},
+  getters: {
+    getCurrentTheme: (state) => {
+      return state.isDark ? DARK_THEME : LIGHT_THEME;
+    }
+  },
   actions: {
     toggleAlertVisibility() {
       this.showAlert = !this.showAlert; // Метод для переключения видимости алерта
@@ -22,6 +27,29 @@ export const useCustomizerStore = defineStore({
         setTimeout(() => {
           this.showAlert = false; // Спустя 3 секунды скрываем алерт
         }, 3000);
+      }
+    },
+    toggleTheme() {
+      this.isDark = !this.isDark;
+      this.actTheme = this.isDark ? 'DARK_THEME' : 'LIGHT_THEME';
+      // Save to localStorage
+      if (process.client) {
+        localStorage.setItem('theme', this.isDark ? 'dark' : 'light');
+      }
+    },
+    setTheme(theme: 'light' | 'dark') {
+      this.isDark = theme === 'dark';
+      this.actTheme = this.isDark ? 'DARK_THEME' : 'LIGHT_THEME';
+      if (process.client) {
+        localStorage.setItem('theme', theme);
+      }
+    },
+    initializeTheme() {
+      if (process.client) {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+          this.setTheme(savedTheme as 'light' | 'dark');
+        }
       }
     },
     SET_SIDEBAR_DRAWER() {

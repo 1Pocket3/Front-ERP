@@ -443,7 +443,7 @@ onUnmounted(() => {
     {{ error }}
   </v-alert>
 
-  <div class="container_filters py-4">
+  <div class="container_filters py-4 lead-card">
     <div class="search-wrapper">
       <v-text-field
         v-model="searchQuery"
@@ -551,7 +551,7 @@ onUnmounted(() => {
 
 
   <!-- Search Info -->
-  <v-card v-if="searchQuery" elevation="0" class="mb-4">
+  <v-card v-if="searchQuery" elevation="0" class="mb-4 lead-card">
     <v-card-text class="py-3">
       <div class="d-flex justify-space-between align-center">
         <div class="text-body-2 text-medium-emphasis">
@@ -569,7 +569,7 @@ onUnmounted(() => {
     </v-card-text>
   </v-card>
 
-  <v-card elevation="0">
+  <v-card elevation="0" class="lead-card">
     <v-data-table
       :items-per-page="-1"
       :page="1"
@@ -579,7 +579,7 @@ onUnmounted(() => {
       :return-object="true"
       v-model="selectedRows"
       show-select
-      class="border rounded-md table-hover"
+      class="border rounded-md table-hover leads-table"
       :loading="loading"
       hide-default-footer
     >
@@ -648,7 +648,7 @@ onUnmounted(() => {
             variant="text"
             color="success"
             @click.stop="makeCall(item.id)"
-            class="call-btn"
+            class="call-btn call-button"
           >
             <v-icon size="small">mdi-phone</v-icon>
             <v-tooltip activator="parent" location="top">
@@ -681,7 +681,7 @@ onUnmounted(() => {
 
       <!-- Status column -->
       <template v-slot:item.status="{ item }">
-        <v-chip :color="getStatusColor(item.status)" size="small" variant="outlined">
+        <v-chip :color="getStatusColor(item.status)" size="small" variant="outlined" :class="`status-${item.status.toLowerCase().replace(/\s+/g, '-')}`">
           <v-icon start size="x-small" class="mr-1">
             {{ getStatusColor(item.status) === 'success' ? 'mdi-check' :
                getStatusColor(item.status) === 'error' ? 'mdi-close' :

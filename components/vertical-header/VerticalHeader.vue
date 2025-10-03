@@ -8,6 +8,7 @@ import {
 // import LanguageDD from "./LanguageDD.vue";
 import NotificationDD from "./NotificationDD.vue";
 import ProfileDD from "./ProfileDD.vue";
+import ThemeToggle from "@/components/theme-toggle/ThemeToggle.vue";
 
 
 // const customizer = useCustomizerStore();
@@ -102,6 +103,11 @@ const toggleSidebar = () => {
                 <ShoppingCartIcon stroke-width="1.5" size="22" />
             </v-badge>
         </v-btn> -->
+
+    <!-- ---------------------------------------------- -->
+    <!-- Theme Toggle -->
+    <!-- ---------------------------------------------- -->
+    <ThemeToggle />
 
     <!-- ---------------------------------------------- -->
     <!-- Notification -->
