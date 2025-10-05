@@ -436,8 +436,9 @@ onUnmounted(() => {
     {{ error }}
   </v-alert>
 
-  <div class="container_filters py-4 lead-card">
-    <div class="search-wrapper">
+  <div class="filters-container py-4 lead-card">
+    <!-- Search Section -->
+    <div class="search-section mb-4">
       <v-text-field
         v-model="searchQuery"
         :label="t('search_leads')"
@@ -453,92 +454,105 @@ onUnmounted(() => {
       />
     </div>
 
-    <div class="filter-wrapper">
-      <!-- Manager filter (admin only) -->
-      <v-select
-        v-if="isAdmin"
-        :items="allUsers.map((user: any) => ({ ...user, display_name: getUserDisplayName(user) }))"
-        item-title="display_name"
-        item-value="id"
-        density="compact"
-        variant="outlined"
-        hide-details
-        clearable
-        style="min-width: 200px;"
-        :label="t('assigned_to')"
-        v-model="managerFilter"
-        @update:model-value="applyFilters"
-      />
+    <!-- Filters Section -->
+    <div class="filters-section">
+      <div class="filters-row">
+        <!-- Manager filter (admin only) -->
+        <v-select
+          v-if="isAdmin"
+          :items="allUsers.map((user: any) => ({ ...user, display_name: getUserDisplayName(user) }))"
+          item-title="display_name"
+          item-value="id"
+          density="compact"
+          variant="outlined"
+          hide-details
+          clearable
+          class="filter-item manager-filter"
+          :label="t('assigned_to')"
+          v-model="managerFilter"
+          @update:model-value="applyFilters"
+        />
 
-      <!-- Status filter (multi) -->
-      <v-select
-        :items="['New','Ftd','Ftd Na','No answer','Call again','Money Call','Awaiting Deposit','Kachin Kachin','Not interested','Reassign','Risk','Number not in service','Different Person','Wrong number','No Language']"
-        multiple
-        density="compact"
-        variant="outlined"
-        hide-details
-        clearable
-        style="min-width: 240px;"
-        label="Status"
-        v-model="statusFilter"
-        @update:model-value="applyFilters"
-      />
+        <!-- Status filter (multi) -->
+        <v-select
+          :items="['New','Ftd','Ftd Na','No answer','Call again','Money Call','Awaiting Deposit','Kachin Kachin','Not interested','Reassign','Risk','Number not in service','Different Person','Wrong number','No Language']"
+          multiple
+          density="compact"
+          variant="outlined"
+          hide-details
+          clearable
+          class="filter-item status-filter"
+          label="Status"
+          v-model="statusFilter"
+          @update:model-value="applyFilters"
+        />
 
-      <!-- Assigned filter -->
-      <v-select
-        :items="[
-          { title: t('all'), value: 'any' },
-          { title: t('assigned_to'), value: 'assigned' },
-          { title: t('not_assigned'), value: 'unassigned' }
-        ]"
-        item-title="title"
-        item-value="value"
-        density="compact"
-        variant="outlined"
-        hide-details
-        style="min-width: 180px;"
-        v-model="assignedFilter"
-        @update:model-value="applyFilters"
-      />
+        <!-- Assigned filter -->
+        <v-select
+          :items="[
+            { title: t('all'), value: 'any' },
+            { title: t('assigned_to'), value: 'assigned' },
+            { title: t('not_assigned'), value: 'unassigned' }
+          ]"
+          item-title="title"
+          item-value="value"
+          density="compact"
+          variant="outlined"
+          hide-details
+          class="filter-item assigned-filter"
+          v-model="assignedFilter"
+          @update:model-value="applyFilters"
+        />
+      </div>
 
-      <v-btn
-        color="info"
-        variant="outlined"
-        @click="fetchLeads"
-        :loading="loading"
-        class="mr-2"
-      >
-        <v-icon>mdi-refresh</v-icon>
-        Refresh
-      </v-btn>
-      
-      <v-btn
-        v-if="isAdmin"
-        color="primary"
-        variant="outlined"
-        @click="handleImport"
-        class="mr-2"
-      >
-        <UploadIcon stroke-width="1.5" size="20" class="mr-2" />
-        {{ t('import_leads') }}
-      </v-btn>
-      
-      <v-btn
-        color="primary"
-        variant="flat"
-        @click="navigateTo('/add-lead')"
-      >
-        <PlusIcon stroke-width="1.5" size="20" class="mr-2" />
-        {{ t('add_lead') }}
-      </v-btn>
-      
-      <v-btn
-        variant="text"
-        @click="clearFilters"
-      >
-        {{ t('clear') }}
-      </v-btn>
-      
+      <!-- Action Buttons Section -->
+      <div class="actions-section">
+        <div class="actions-row">
+          <v-btn
+            color="info"
+            variant="outlined"
+            @click="fetchLeads"
+            :loading="loading"
+            class="action-btn"
+            size="small"
+          >
+            <v-icon size="small">mdi-refresh</v-icon>
+            <span class="btn-text">Refresh</span>
+          </v-btn>
+          
+          <v-btn
+            v-if="isAdmin"
+            color="primary"
+            variant="outlined"
+            @click="handleImport"
+            class="action-btn"
+            size="small"
+          >
+            <UploadIcon stroke-width="1.5" size="16" class="btn-icon" />
+            <span class="btn-text">{{ t('import_leads') }}</span>
+          </v-btn>
+          
+          <v-btn
+            color="primary"
+            variant="flat"
+            @click="navigateTo('/add-lead')"
+            class="action-btn"
+            size="small"
+          >
+            <PlusIcon stroke-width="1.5" size="16" class="btn-icon" />
+            <span class="btn-text">{{ t('add_lead') }}</span>
+          </v-btn>
+          
+          <v-btn
+            variant="text"
+            @click="clearFilters"
+            class="action-btn"
+            size="small"
+          >
+            <span class="btn-text">{{ t('clear') }}</span>
+          </v-btn>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -891,16 +905,66 @@ onUnmounted(() => {
 </template>
 
 <style scoped lang="scss">
-.container_filters {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+// Filters Container
+.filters-container {
+  .search-section {
+    .search-field {
+      width: 50%;
+    }
+  }
+
+  .filters-section {
+    .filters-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+
+      .filter-item {
+        flex: 1;
+        min-width: 200px;
+        
+        &.manager-filter {
+          min-width: 180px;
+        }
+        
+        &.status-filter {
+          min-width: 220px;
+        }
+        
+        &.assigned-filter {
+          min-width: 160px;
+        }
+      }
+    }
+
+    .actions-section {
+      .actions-row {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+
+        .action-btn {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          white-space: nowrap;
+
+          .btn-icon {
+            flex-shrink: 0;
+          }
+
+          .btn-text {
+            display: inline;
+          }
+        }
+      }
+    }
+  }
 }
 
-.search-wrapper {
-  width: 40%;
-}
-
+// Table styles
 .table-hover tr:hover {
   background-color: rgba(var(--v-theme-primary), 0.04);
 }
@@ -911,27 +975,6 @@ onUnmounted(() => {
 
 .table-row:hover {
   background-color: rgba(var(--v-theme-primary), 0.08) !important;
-}
-
-.filter-wrapper {
-  margin-left: auto;
-  display: flex;
-  gap: 8px;
-}
-
-.search-field {
-  width: 100%;
-}
-
-.action-btn {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  margin-right: 18px;
-  div {
-    cursor: pointer;
-  }
 }
 
 .min-width-40 {
@@ -965,20 +1008,119 @@ onUnmounted(() => {
   transform: none !important;
 }
 
-@media (max-width: 600px) {
-  .container_filters {
-    flex-direction: column;
-    align-items: end;
+// Responsive breakpoints
+@media (max-width: 1200px) {
+  .filters-container .filters-section .filters-row {
+    .filter-item {
+      min-width: 180px;
+      
+      &.status-filter {
+        min-width: 200px;
+      }
+    }
   }
+}
 
-  .filter-wrapper {
-    margin-left: 0;
-    margin-bottom: 4px;
+@media (max-width: 992px) {
+  .filters-container .filters-section .filters-row {
+    .filter-item {
+      min-width: 160px;
+      
+      &.status-filter {
+        min-width: 180px;
+      }
+    }
   }
+}
 
-  .search-wrapper {
-    width: 100%;
-    margin-bottom: 10px;
+@media (max-width: 768px) {
+  .filters-container {
+    .search-section {
+      .search-field {
+        width: 100%;
+      }
+    }
+    
+    .filters-section {
+      .filters-row {
+        flex-direction: column;
+        gap: 8px;
+
+        .filter-item {
+          min-width: 100%;
+          width: 100%;
+        }
+      }
+
+      .actions-section .actions-row {
+        justify-content: center;
+        gap: 8px;
+
+        .action-btn {
+          flex: 1;
+          min-width: 0;
+          min-height: 44px !important;
+          height: 44px !important;
+          padding: 10px 16px !important;
+          
+          .btn-text {
+            font-size: 0.875rem;
+            display: inline !important;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .filters-container {
+    .filters-section {
+      .actions-section .actions-row {
+        flex-direction: column;
+        gap: 12px;
+
+        .action-btn {
+          width: 100%;
+          justify-content: center;
+          min-height: 48px !important;
+          height: 48px !important;
+          padding: 12px 20px !important;
+          
+          .btn-text {
+            font-size: 0.9rem;
+            display: inline !important;
+            font-weight: 500;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 400px) {
+  .filters-container {
+    .filters-section {
+      .actions-section .actions-row {
+        gap: 10px;
+        
+        .action-btn {
+          min-height: 44px !important;
+          height: 44px !important;
+          padding: 10px !important;
+          
+          .btn-text {
+            display: none;
+          }
+          
+          .btn-icon,
+          .v-icon {
+            margin: 0 !important;
+            font-size: 20px !important;
+          }
+        }
+      }
+    }
   }
 }
 </style>

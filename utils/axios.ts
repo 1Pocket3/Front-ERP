@@ -30,10 +30,9 @@ axiosServices.interceptors.response.use(
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
       // Redirect to login page only if not already on auth page
-      // Временно отключаем редирект для отладки
-      // if (process.client && window.location.pathname !== '/auth') {
-      //   return navigateTo('/auth');
-      // }
+      if (process.client && window.location.pathname !== '/auth') {
+        return navigateTo('/auth');
+      }
     }
     return Promise.reject(error);
   }
