@@ -39,7 +39,30 @@ export default defineNuxtConfig({
         transformAssetUrls,
       },
     },
+    build: {
+      // Remove manual chunks to avoid initialization order issues
+      rollupOptions: {
+        output: {
+          // Let Vite handle chunking automatically
+        }
+      }
+    },
+    // Remove optimizeDeps to avoid initialization issues
+    // optimizeDeps: {
+    //   include: [
+    //     'vue',
+    //     'vue-router',
+    //     'pinia'
+    //   ]
+    // },
+    // Simplified configuration for stability
   },
+
+  build: {
+    analyze: false
+  },
+
+  // Production optimizations removed for stability
 
   devtools: {
     timeline: {

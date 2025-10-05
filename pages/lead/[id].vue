@@ -4,8 +4,7 @@ import { useI18n } from "vue-i18n";
 import { useLeadsStore, type Lead } from "@/stores/leads/leads";
 import { useCustomizerStore } from "@/stores/customizer";
 import { useAuthStore } from "@/stores/auth/auth";
-import BaseBreadcrumb from "@/components/shared/BaseBreadcrumb.vue";
-import CommentsSection from "@/components/comments/CommentsSection.vue";
+// Components will be loaded lazily
 import { PencilIcon, TrashIcon, PhoneIcon } from "vue-tabler-icons";
 
 const { t } = useI18n();

@@ -2,7 +2,6 @@
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import type { ComputedRef } from "vue";
 import { PencilIcon, TrashIcon, PlusIcon, UploadIcon } from "vue-tabler-icons";
-import BaseBreadcrumb from "@/components/shared/BaseBreadcrumb.vue";
 import { useI18n } from "vue-i18n";
 import { useLeadsStore, type Lead } from "@/stores/leads/leads";
 import { useCustomizerStore } from "@/stores/customizer";
@@ -419,7 +418,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <!-- <BaseBreadcrumb :project-title="'Лиды'" /> -->
+  <!-- <LazyBaseBreadcrumb :project-title="'Лиды'" /> -->
   <div class="mt-2 alert-container" v-if="customizer.showAlert">
     <Alerts :t="t" :type="typeAlert" />
   </div>

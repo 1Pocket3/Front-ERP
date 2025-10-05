@@ -2,11 +2,14 @@
   "name": "nuxt-app",
   "private": true,
   "type": "module",
+  "sideEffects": false,
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev --host",
     "generate": "nuxt generate",
-    "preview": "nuxt preview"
+    "preview": "nuxt preview",
+    "optimize": "node scripts/optimize-bundle.js",
+    "build:analyze": "nuxt build --analyze"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
