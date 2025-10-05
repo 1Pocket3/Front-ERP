@@ -41,8 +41,6 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from "vue";
-import { library } from "@fortawesome/fontawesome-svg-core";
-import { faUserSecret } from "@fortawesome/free-solid-svg-icons";
 import { useAuthStore } from "@/stores/auth/auth";
 import ChangePassword from "~/components/change-password-form/change_password.vue";
 import PersonalData from "~/components/personal-data/PersonalData.vue";
@@ -94,7 +92,6 @@ onUnmounted(() => {
   window.removeEventListener("resize", updateWindowWidth);
 });
 
-library.add(faUserSecret);
 
 const itemSelected = ref(0);
 const changePadge = (id) => {

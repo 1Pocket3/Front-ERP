@@ -16,7 +16,6 @@
 @use './components/VAlert' as *;
 @use './components/VButtons' as *;
 @use './components/VCard' as *;
-@use './components/VCarousel' as *;
 @use './components/VField' as *;
 @use './components/VList' as *;
 @use './components/VInput' as *;
@@ -28,15 +27,12 @@
 @use './components/VTextarea' as *;
 @use './components/VTabs' as *;
 @use './components/VTable' as *;
-@use './components/VExpansionpanel' as *;
 
 /*Landing page css*/
 // @import 'landingpage/header';
 // @import 'landingpage/general';
 
-@use './pages/datatable' as *;
 @use './pages/dashboards' as *;
-@use './pages/editor' as *;
 @use './pages/authentication' as *;
 @use './pages/apps' as *;
 @use './themes/dark' as *;
