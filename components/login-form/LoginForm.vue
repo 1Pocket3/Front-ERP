@@ -46,6 +46,8 @@ async function validate(values: any, { setErrors }: any) {
     return navigateTo("/main_page");
   } catch (error: any) {
     console.error("Error during login:", error);
+    console.error("Error message:", error.message);
+    console.error("Error response:", error.response);
     setErrors({ apiError: error.message });
   }
 }

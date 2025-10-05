@@ -386,7 +386,6 @@ const getStatusColor = (status: string) => {
 onMounted(async () => {
   console.log('Leads page mounted');
   await fetchLeads();
-  await fetchAllUsers();
   
   // Проверяем, есть ли данные пользователя в store
   // console.log('Current user in store:', authStore.getCurrentUser);
@@ -407,6 +406,8 @@ onMounted(async () => {
   // Загружаем список пользователей только для админов
   if (isAdmin.value) {
     console.log('Loading all users for admin...');
+    await fetchAllUsers();
+
   }
 });
 

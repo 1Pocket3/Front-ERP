@@ -29,8 +29,11 @@ axiosServices.interceptors.response.use(
     if (error.response && error.response.status === 401) {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
-      // Redirect to login page or handle authentication failure as per your app's logic 
-      return navigateTo('/auth')
+      // Redirect to login page only if not already on auth page
+      // Временно отключаем редирект для отладки
+      // if (process.client && window.location.pathname !== '/auth') {
+      //   return navigateTo('/auth');
+      // }
     }
     return Promise.reject(error);
   }
