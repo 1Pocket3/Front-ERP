@@ -8,6 +8,10 @@ export default defineNuxtConfig({
         changeOrigin: true,
       },
     },
+    // Suppress deprecation warnings in development
+    experimental: {
+      wasm: false
+    }
   },
   plugins: [
     "@/plugins/vue-datepicker.client"

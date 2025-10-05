@@ -4,12 +4,13 @@
   "type": "module",
   "sideEffects": false,
   "scripts": {
-    "build": "nuxt build",
-    "dev": "nuxt dev --host",
+    "build": "cross-env NODE_OPTIONS=--no-deprecation nuxt build",
+    "dev": "cross-env NODE_OPTIONS=--no-deprecation nuxt dev --host",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "optimize": "node scripts/optimize-bundle.js",
-    "build:analyze": "nuxt build --analyze"
+    "build:analyze": "nuxt build --analyze",
+    "start": "cross-env NODE_OPTIONS=--no-deprecation nuxt preview"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
@@ -38,6 +39,7 @@
   },
   "devDependencies": {
     "@types/node": "^24.6.0",
+    "cross-env": "^10.1.0",
     "nuxt-mdi": "^1.1.6",
     "sass": "^1.75.0",
     "vite-plugin-vuetify": "^2.0.3"
