@@ -44,6 +44,9 @@ const { t } = useI18n();
 const store = useLeadsStore();
 const customizer = useCustomizerStore();
 const authStore = useAuthStore();
+
+// Computed свойства
+const isAdmin = computed(() => authStore.getIsAdmin);
 const leads = ref<RowItem[]>([]);
 const typeAlert = ref("success");
 
@@ -62,7 +65,6 @@ const totalCount = ref(0);
 let searchTimeout: ReturnType<typeof setTimeout> | null = null;
 const isFetching = ref(false);
 const allUsers = ref<any[]>([]);
-const isAdmin = ref(false);
 
 // Filters
 const managerFilter = ref<number | null>(null);
@@ -106,8 +108,7 @@ const fetchLeads = async () => {
   } catch (err) {
     console.error("Error fetching leads:", err);
     error.value = err instanceof Error ? err.message : 'Ошибка загрузки данных';
-    customizer.toggleAlertVisibility();
-    typeAlert.value = "error";
+    customizer.toggleAlertVisibility('error', 'Failed to load leads');
   } finally {
     loading.value = false;
     isFetching.value = false;
@@ -161,29 +162,18 @@ const processLeads = () => {
   totalCount.value = store.getTotalCount;
 };
 
-const viewLead = (lead: RowItem) => {
-  return navigateTo(`/lead/${lead.id}`);
-};
-
-const toggleDeleteDialog = (id: number) => {
-  selectedLeadId.value = id;
-  dialogDelete.value = !dialogDelete.value;
-};
-
 const deleteLead = async () => {
   if (!selectedLeadId.value) return;
   
   try {
     await store.deleteLead(selectedLeadId.value);
-    customizer.toggleAlertVisibility();
-    typeAlert.value = "success";
+    customizer.toggleAlertVisibility('success', 'Lead deleted successfully');
     await fetchLeads();
     dialogDelete.value = false;
     selectedLeadId.value = null;
   } catch (error) {
     console.error("Error deleting lead:", error);
-    customizer.toggleAlertVisibility();
-    typeAlert.value = "error";
+    customizer.toggleAlertVisibility('error', 'Failed to delete lead');
   }
 };
 
@@ -250,14 +240,12 @@ const handleFileUpload = async (event: Event) => {
 
   try {
     await store.importLeads(file);
-    customizer.toggleAlertVisibility();
-    typeAlert.value = "success";
+    customizer.toggleAlertVisibility('success', 'Leads imported successfully');
     dialogImport.value = false;
     await fetchLeads();
   } catch (error) {
     console.error("Error importing leads:", error);
-    customizer.toggleAlertVisibility();
-    typeAlert.value = "error";
+    customizer.toggleAlertVisibility('error', 'Failed to import leads');
   }
 };
 
@@ -286,40 +274,45 @@ const bulkAssign = async () => {
   if (!isAdmin.value || selectedRows.value.length === 0) return;
   try {
     await store.assignLeads(selectedRows.value.map(r => r.id), bulkAssignUserId.value);
-    customizer.toggleAlertVisibility();
-    typeAlert.value = "success";
+    customizer.toggleAlertVisibility('success', 'Leads assigned successfully');
     selectedRows.value = [];
     bulkAssignUserId.value = null;
     await fetchLeads();
   } catch (error) {
     console.error('Error bulk assigning leads:', error);
-    customizer.toggleAlertVisibility();
-    typeAlert.value = "error";
+    customizer.toggleAlertVisibility('error', 'Failed to assign leads');
   }
 };
 
 const assignLeadToUser = async (leadId: number, userId: number | null) => {
   try {
     await store.assignLeads([leadId], userId);
-    customizer.toggleAlertVisibility();
-    typeAlert.value = "success";
+    customizer.toggleAlertVisibility('success', 'Lead assigned successfully');
     await fetchLeads(); // Обновляем данные
   } catch (error) {
     console.error("Error assigning lead:", error);
-    customizer.toggleAlertVisibility();
-    typeAlert.value = "error";
+    customizer.toggleAlertVisibility('error', 'Failed to assign lead');
   }
 };
 
 const makeCall = async (leadId: number) => {
    try {
-    const billId = store.getCurrentUser?.phone_extension;
+    // Устанавливаем состояние загрузки для конкретного лида
+    authStore.setCallingState(true, leadId);
+    
+    const billId = authStore.getCurrentUser?.phone_extension;
     const result = await store.initiateCall(leadId, billId);
-     customizer.toggleAlertVisibility();
-     typeAlert.value = "success";
+    
+    // Показываем сообщение из ответа API
+    const message = result?.message || 'Call initiated successfully';
+    customizer.toggleAlertVisibility('success', message);
    } catch (error) {
-     customizer.toggleAlertVisibility();
-     typeAlert.value = "error";
+     console.error('Error making call:', error);
+     const errorMessage = error instanceof Error ? error.message : 'Failed to initiate call';
+     customizer.toggleAlertVisibility('error', errorMessage);
+   } finally {
+     // Сбрасываем состояние загрузки
+     authStore.setCallingState(false, null);
    }
 };
 
@@ -393,28 +386,27 @@ const getStatusColor = (status: string) => {
 onMounted(async () => {
   console.log('Leads page mounted');
   await fetchLeads();
+  await fetchAllUsers();
   
   // Проверяем, есть ли данные пользователя в store
-  console.log('Current user in store:', store.getCurrentUser);
-  if (!store.getCurrentUser) {
-    console.log('No user data in store, fetching...');
-    try {
-      await store.fetchCurrentUser();
-    } catch (error) {
-      console.error('Could not fetch current user:', error);
-    }
-  } else {
-    console.log('User data already in store');
-  }
+  // console.log('Current user in store:', authStore.getCurrentUser);
+  // if (!authStore.getCurrentUser) {
+  //   console.log('No user data in store, fetching...');
+  //   try {
+  //     await authStore.fetchCurrentUser();
+  //   } catch (error) {
+  //     console.error('Could not fetch current user:', error);
+  //   }
+  // } else {
+  //   console.log('User data already in store');
+  // }
   
-  // Устанавливаем флаг админа
-  isAdmin.value = store.getIsAdmin;
-  console.log('isAdmin set to:', isAdmin.value);
+  // // Устанавливаем флаг админа
+  // console.log('isAdmin set to:', isAdmin.value);
   
   // Загружаем список пользователей только для админов
   if (isAdmin.value) {
     console.log('Loading all users for admin...');
-    await fetchAllUsers();
   }
 });
 
@@ -464,7 +456,7 @@ onUnmounted(() => {
       <!-- Manager filter (admin only) -->
       <v-select
         v-if="isAdmin"
-        :items="allUsers.map(user => ({ ...user, display_name: getUserDisplayName(user) }))"
+        :items="allUsers.map((user: any) => ({ ...user, display_name: getUserDisplayName(user) }))"
         item-title="display_name"
         item-value="id"
         density="compact"
@@ -646,13 +638,15 @@ onUnmounted(() => {
             icon="mdi-phone"
             size="small"
             variant="text"
-            color="success"
+            :color="authStore.callingLeadId === item.id ? 'success' : authStore.isCalling && authStore.callingLeadId !== item.id ? 'error' : 'success'"
+            :loading="authStore.callingLeadId === item.id"
+            :disabled="authStore.isCalling"
             @click.stop="makeCall(item.id)"
             class="call-btn call-button"
           >
             <v-icon size="small">mdi-phone</v-icon>
             <v-tooltip activator="parent" location="top">
-              {{ t('call') }}
+              {{ authStore.callingLeadId === item.id ? t('calling') : authStore.isCalling && authStore.callingLeadId !== item.id ? t('call_in_progress') : t('call') }}
             </v-tooltip>
           </v-btn>
         </div>
@@ -699,7 +693,7 @@ onUnmounted(() => {
         <div v-if="isAdmin" class="d-flex align-center" @click.stop>
           <v-select
             v-if="!item.assigned_to"
-            :items="allUsers.map(user => ({ ...user, display_name: getUserDisplayName(user) }))"
+            :items="allUsers.map((user: any) => ({ ...user, display_name: getUserDisplayName(user) }))"
             item-title="display_name"
             item-value="id"
             density="compact"
@@ -707,7 +701,7 @@ onUnmounted(() => {
             hide-details
             :placeholder="t('assign_manager')"
             class="assign-select"
-            @update:model-value="(userId) => assignLeadToUser(item.id, userId)"
+            @update:model-value="(userId: any) => assignLeadToUser(item.id, userId)"
             @click.stop
           >
             <template v-slot:item="{ props, item }">
@@ -959,6 +953,15 @@ onUnmounted(() => {
 .call-btn:hover {
   opacity: 1;
   transform: scale(1.1);
+}
+
+.call-btn.v-btn--disabled {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+}
+
+.call-btn.v-btn--disabled:hover {
+  transform: none !important;
 }
 
 @media (max-width: 600px) {

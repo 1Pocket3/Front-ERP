@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import { useLeadsStore } from '@/stores/leads/leads';
+import { useAuthStore } from '@/stores/auth/auth';
 
-const store = useLeadsStore();
+const authStore = useAuthStore();
 
 onMounted(async () => {
-  console.log('Main page mounted, loading user data...');
+  // console.log('Main page mounted, loading user data...');
   // Загружаем данные пользователя при входе на главную страницу
-  try {
-    const user = await store.fetchCurrentUser();
-    console.log('User loaded on main page:', user);
-  } catch (error) {
-    console.error('Error fetching current user:', error);
-  }
+  // try {
+  //   const user = await authStore.fetchCurrentUser();
+  //   console.log('User loaded on main page:', user);
+  // } catch (error) {
+  //   console.error('Error fetching current user:', error);
+  // }
 });
 </script>
 

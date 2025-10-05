@@ -66,8 +66,6 @@ export const useLeadsStore = defineStore({
     currentPage: 1,
     pageSize: 20,
     totalPages: 0,
-    currentUser: null as any,
-    isAdmin: false,
   }),
   getters: {
     getLeads: (state) => state.leads,
@@ -77,8 +75,6 @@ export const useLeadsStore = defineStore({
     getCurrentPage: (state) => state.currentPage,
     getPageSize: (state) => state.pageSize,
     getTotalPages: (state) => state.totalPages,
-    getCurrentUser: (state) => state.currentUser,
-    getIsAdmin: (state) => state.isAdmin,
   },
   actions: {
     async fetchLeads(params: {
@@ -162,7 +158,7 @@ export const useLeadsStore = defineStore({
           if (this.currentLead && this.currentLead.id === id) {
             this.currentLead.status = response.data.status;
           }
-          const idx = this.leads.findIndex(l => l.id === id);
+          const idx = this.leads.findIndex((l: Lead) => l.id === id);
           if (idx !== -1) {
             this.leads[idx] = { ...this.leads[idx], status: response.data.status } as Lead;
           }
@@ -269,28 +265,6 @@ export const useLeadsStore = defineStore({
       }
     },
 
-    async fetchCurrentUser() {
-      console.log('fetchCurrentUser called, currentUser:', this.currentUser);
-      
-      // Если данные уже есть, возвращаем их
-      if (this.currentUser) {
-        console.log('Returning cached user data');
-        return this.currentUser;
-      }
-      
-      console.log('Fetching user data from API...');
-      try {
-        const response = await axios.get('leads/leads/me/');
-        console.log('User data received:', response.data);
-        this.currentUser = response.data;
-        this.isAdmin = response.data?.role === 'admin';
-        console.log('isAdmin set to:', this.isAdmin);
-        return this.currentUser;
-      } catch (error) {
-        console.error('Error fetching current user:', error);
-        throw error;
-      }
-    },
 
     // Новые методы для работы с файлами
     async uploadFile(file: File) {

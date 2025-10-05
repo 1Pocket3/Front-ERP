@@ -29,7 +29,11 @@ export const useAuthStore = defineStore({
     users: [] as UserResponse[],
     accessToken: localStorage.getItem("accessToken") || "",
     refreshToken: localStorage.getItem("refreshToken") || "",
-    profile: null
+    profile: null,
+    currentUser: null as any,
+    isAdmin: false,
+    isCalling: false,
+    callingLeadId: null as number | null,
   }),
   getters: {
     getTeams: (state) => state.teams,
@@ -37,6 +41,10 @@ export const useAuthStore = defineStore({
     getAccessToken: (state) => state.accessToken,
     getRefreshToken: (state) => state.refreshToken,
     getProfile: (state) => state.profile,
+    getCurrentUser: (state) => state.currentUser,
+    getIsAdmin: (state) => state.isAdmin,
+    getIsCalling: (state) => state.isCalling,
+    getCallingLeadId: (state) => state.callingLeadId,
   },
   actions: {
     async login(loginData: { username: string; password: string }) {
@@ -44,6 +52,7 @@ export const useAuthStore = defineStore({
         const response = await axios.post("/auth/login/", loginData);
         this.accessToken = response.data.access;
         this.refreshToken = response.data.refresh;
+        console.log('response.status', response);
         localStorage.setItem("accessToken", response.data.access);
         localStorage.setItem("refreshToken", response.data.refresh);
         return response.data;
@@ -84,6 +93,10 @@ export const useAuthStore = defineStore({
         });
         this.accessToken = "";
         this.refreshToken = "";
+        this.currentUser = null;
+        this.isAdmin = false;
+        this.isCalling = false;
+        this.callingLeadId = null;
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
         navigateTo("/auth");
@@ -94,125 +107,22 @@ export const useAuthStore = defineStore({
         throw error;
       }
     },
+    
+    async fetchCurrentUser() {
+      console.log('Fetching user data from API...');
+      try {
+        const response = await axios.get('leads/leads/me/');
+        console.log('User data received:', response.data);
+        this.currentUser = response.data;
+        this.isAdmin = response.data?.role === 'admin';
+        console.log('isAdmin set to:', this.isAdmin);
+        return this.currentUser;
+      } catch (error) {
+        console.error('Error fetching current user:', error);
+        throw error;
+      }
+    },
 
-    // Управление командами
-    async fetchTeams() {
-      try {
-        const response = await axios.get<Team[]>("/auth/teams/");
-        this.teams = response.data;
-      } catch (error) {
-        alert(error);
-        console.error(error);
-      }
-    },
-    async createTeam(teamData: Team) {
-      try {
-        const response = await axios.post<Team>("/auth/teams/", teamData);
-        return response.data;
-      } catch (error) {
-        alert(error);
-        console.error(error);
-      }
-    },
-    async getTeamById(id: number) {
-      try {
-        const response = await axios.get<Team>(`/auth/teams/${id}/`);
-        return response.data;
-      } catch (error) {
-        alert(error);
-        console.error(error);
-      }
-    },
-    async updateTeam(id: number, teamData: Team) {
-      try {
-        const response = await axios.put<Team>(`/auth/teams/${id}/`, teamData);
-        return response.data;
-      } catch (error) {
-        alert(error);
-        console.error(error);
-      }
-    },
-    async patchTeam(id: number, teamData: Partial<Team>) {
-      try {
-        const response = await axios.patch<Team>(
-          `/auth/teams/${id}/`,
-          teamData
-        );
-        return response.data;
-      } catch (error) {
-        alert(error);
-        console.error(error);
-      }
-    },
-    async deleteTeam(id: number) {
-      try {
-        const response = await axios.delete(`/auth/teams/${id}/`);
-        return response.data;
-      } catch (error) {
-        alert(error);
-        console.error(error);
-      }
-    },
-    async removeEmployeesFromTeam(id: number) {
-      try {
-        const response = await axios.patch(
-          `/auth/teams/${id}/remove-employees/`
-        );
-        return response.data;
-      } catch (error) {
-        alert(error);
-        console.error(error);
-      }
-    },
-    // Управление пользователями
-    async fetchUsers() {
-      try {
-        const response = await axios.get<UserResponse[]>("managers/");
-        this.users = response.data;
-      } catch (error) {
-        alert(error);
-        console.error(error);
-      }
-    },
-    async createUser(userData: User) {
-      try {
-        const response = await axios.post<User>("/auth/users/", userData);
-        return response.data;
-      } catch (error) {
-        alert(error);
-        console.error(error);
-      }
-    },
-    async getUserById(id: number) {
-      try {
-        const response = await axios.get<User>(`/auth/users/${id}/`);
-        return response.data;
-      } catch (error) {
-        alert(error);
-        console.error(error);
-      }
-    },
-    async updateUser(id: number, userData: User) {
-      try {
-        const response = await axios.put<User>(`/auth/users/${id}/`, userData);
-        return response.data;
-      } catch (error) {
-        alert(error);
-        console.error(error);
-      }
-    },
-    async patchUser(id: number, userData: Partial<User>) {
-      try {
-        const response = await axios.patch<User>(
-          `/auth/users/${id}/`,
-          userData
-        );
-        return response.data;
-      } catch (error) {
-        alert(error);
-        console.error(error);
-      }
-    },
     async getCurrentUser() {
       try {
         const response = await axios.get<User>("/auth/users/current/");
@@ -221,6 +131,12 @@ export const useAuthStore = defineStore({
         alert(error);
         console.error(error);
       }
+    },
+
+    // Методы для управления состоянием звонка
+    setCallingState(isCalling: boolean, leadId: number | null = null) {
+      this.isCalling = isCalling;
+      this.callingLeadId = leadId;
     },
   },
 });

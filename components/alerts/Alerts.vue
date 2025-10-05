@@ -1,10 +1,11 @@
 <template>
   <transition name="slide-top">
-        <v-alert :type="type">{{message}}</v-alert>
+        <v-alert :type="alertType">{{alertMessage || message}}</v-alert>
   </transition>
 </template>
 
 <script>
+import { useCustomizerStore } from '@/stores/customizer'
 
 export default {
   name: 'Alerts',
@@ -18,7 +19,19 @@ export default {
       required: true
     }
   },
+  setup() {
+    const customizer = useCustomizerStore()
+    return {
+      customizer
+    }
+  },
   computed: {
+    alertType() {
+      return this.customizer.getAlertType
+    },
+    alertMessage() {
+      return this.customizer.getAlertMessage
+    },
     message() {
       switch (this.type) {
         case 'success':

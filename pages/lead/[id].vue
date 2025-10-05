@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useLeadsStore, type Lead } from "@/stores/leads/leads";
 import { useCustomizerStore } from "@/stores/customizer";
+import { useAuthStore } from "@/stores/auth/auth";
 import BaseBreadcrumb from "@/components/shared/BaseBreadcrumb.vue";
 import CommentsSection from "@/components/comments/CommentsSection.vue";
 import { PencilIcon, TrashIcon, PhoneIcon } from "vue-tabler-icons";
@@ -10,6 +11,10 @@ import { PencilIcon, TrashIcon, PhoneIcon } from "vue-tabler-icons";
 const { t } = useI18n();
 const store = useLeadsStore();
 const customizer = useCustomizerStore();
+const authStore = useAuthStore();
+
+// Computed свойства
+const isAdmin = computed(() => authStore.getIsAdmin);
 
 const route = useRoute();
 const leadId = parseInt(route.params.id as string);
@@ -21,7 +26,6 @@ const dialogDelete = ref(false);
 
 // Новые переменные для назначения менеджера
 const allUsers = ref<any[]>([]);
-const isAdmin = ref(false);
 const isAssigning = ref(false);
 const isUpdatingStatus = ref(false);
 const allStatuses = [
@@ -145,14 +149,21 @@ const getStatusColor = (status: string) => {
 const makeCall = async () => {
   if (lead.value?.id) {
     try {
+      // Устанавливаем состояние загрузки для конкретного лида
+      authStore.setCallingState(true, lead.value.id);
+      
       const result = await store.initiateCall(lead.value.id);
-      customizer.toggleAlertVisibility();
-      typeAlert.value = "success";
-      console.log('Call initiated:', result);
+      
+      // Показываем сообщение из ответа API
+      const message = result?.message || 'Call initiated successfully';
+      customizer.toggleAlertVisibility('success', message);
     } catch (error) {
       console.error('Error initiating call:', error);
-      customizer.toggleAlertVisibility();
-      typeAlert.value = "error";
+      const errorMessage = error instanceof Error ? error.message : 'Failed to initiate call';
+      customizer.toggleAlertVisibility('error', errorMessage);
+    } finally {
+      // Сбрасываем состояние загрузки
+      authStore.setCallingState(false, null);
     }
   }
 };
@@ -222,16 +233,13 @@ onMounted(async () => {
   await fetchLead();
   
   // Проверяем, есть ли данные пользователя в store
-  if (!store.getCurrentUser) {
+  if (!authStore.getCurrentUser) {
     try {
-      await store.fetchCurrentUser();
+      await authStore.fetchCurrentUser();
     } catch (error) {
       console.error('Could not fetch current user:', error);
     }
   }
-  
-  // Устанавливаем флаг админа
-  isAdmin.value = store.getIsAdmin;
   
   // Загружаем список пользователей только для админов
   if (isAdmin.value) {
@@ -288,13 +296,15 @@ onMounted(async () => {
                   icon="mdi-phone"
                   size="small"
                   variant="text"
-                  color="success"
+                  :color="authStore.callingLeadId === lead.id ? 'success' : authStore.isCalling && authStore.callingLeadId !== lead.id ? 'error' : 'success'"
+                  :loading="authStore.callingLeadId === lead.id"
+                  :disabled="authStore.isCalling"
                   @click="makeCall"
                   class="call-btn call-button"
                 >
                   <v-icon size="small">mdi-phone</v-icon>
                   <v-tooltip activator="parent" location="top">
-                    {{ t('call') }}
+                    {{ authStore.callingLeadId === lead.id ? t('calling') : authStore.isCalling && authStore.callingLeadId !== lead.id ? t('call_in_progress') : t('call') }}
                   </v-tooltip>
                 </v-btn>
               </div>
@@ -324,7 +334,7 @@ onMounted(async () => {
             
             <div class="info-item mb-3">
               <strong>Status:</strong>
-              <div class="ml-2" v-if="isAdmin || (lead.assigned_to && store.getCurrentUser && lead.assigned_to.id === store.getCurrentUser.id)">
+              <div class="ml-2" v-if="isAdmin || (lead.assigned_to && authStore.getCurrentUser && lead.assigned_to.id === authStore.getCurrentUser.id)">
                 <v-select
                   :items="allStatuses"
                   :model-value="lead.status"
@@ -390,7 +400,7 @@ onMounted(async () => {
                 <v-select
                   :items="[
                     { id: null, display_name: 'Remove Assign', role: 'unassign' },
-                    ...allUsers.map(user => ({ ...user, display_name: getUserDisplayName(user) }))
+                    ...allUsers.map((user: any) => ({ ...user, display_name: getUserDisplayName(user) }))
                   ]"
                   item-title="display_name"
                   item-value="id"
@@ -531,6 +541,15 @@ onMounted(async () => {
 
 .call-btn:hover {
   opacity: 1;
+}
+
+.call-btn.v-btn--disabled {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+}
+
+.call-btn.v-btn--disabled:hover {
+  transform: none !important;
 }
 
 @media (max-width: 600px) {

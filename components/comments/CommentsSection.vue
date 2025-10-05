@@ -108,7 +108,7 @@
     <v-dialog v-model="editDialog" max-width="500">
       <v-card>
         <v-card-title>
-          {{ editingCommentId && comments.find(c => c.id === editingCommentId) && !isCommentAuthor(comments.find(c => c.id === editingCommentId)!) 
+          {{ editingCommentId && comments.find((c: Comment) => c.id === editingCommentId) && !isCommentAuthor(comments.find((c: Comment) => c.id === editingCommentId)!) 
              ? t('edit_comment_as_admin') 
              : t('edit_comment') }}
         </v-card-title>
@@ -142,10 +142,12 @@
 import { ref, onMounted, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useLeadsStore } from '@/stores/leads/leads'
+import { useAuthStore } from '@/stores/auth/auth'
 import type { Comment } from '@/stores/leads/leads'
 
 const { t } = useI18n()
 const store = useLeadsStore()
+const authStore = useAuthStore()
 
 interface Props {
   leadId: number
@@ -163,7 +165,7 @@ const isLoading = ref(false)
 const isSubmitting = ref(false)
 
 // Получаем текущего пользователя
-const currentUser = computed(() => store.getCurrentUser)
+const currentUser = computed(() => authStore.getCurrentUser)
 
 // Загружаем комментарии
 const fetchComments = async () => {

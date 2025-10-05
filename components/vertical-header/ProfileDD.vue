@@ -1,23 +1,21 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { useAuthStore } from "@/stores/auth/auth";
-import { useLeadsStore } from "@/stores/leads/leads";
 
 const authStore = useAuthStore();
-const leadsStore = useLeadsStore();
 
 const loading = ref(false);
 
 const fetchUserProfile = async () => {
   // Если данные уже есть в store, не делаем запрос
-  if (leadsStore.getCurrentUser) {
+  if (authStore.getCurrentUser) {
     return;
   }
   
   loading.value = true;
   try {
     // Вызываем метод из actions
-    await leadsStore.fetchCurrentUser();
+    await authStore.fetchCurrentUser();
   } catch (error) {
     console.error("Error fetching user profile:", error);
   } finally {
@@ -26,7 +24,7 @@ const fetchUserProfile = async () => {
 };
 
 const getUserDisplayName = () => {
-  const user = leadsStore.getCurrentUser;
+  const user = authStore.getCurrentUser;
   if (!user) return "Loading...";
   
   if (user.first_name && user.last_name) {
@@ -36,7 +34,7 @@ const getUserDisplayName = () => {
 };
 
 const getUserRole = () => {
-  const user = leadsStore.getCurrentUser;
+  const user = authStore.getCurrentUser;
   if (!user) return "";
   
   const role = user.role;

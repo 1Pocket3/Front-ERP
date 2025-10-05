@@ -12,16 +12,22 @@ export const useCustomizerStore = defineStore({
     boxed: config.boxed,
     setBorderCard: config.setBorderCard,
     showAlert: config.showAlert,
+    alertType: 'success',
+    alertMessage: '',
     isDark: false
   }),
 
   getters: {
     getCurrentTheme: (state) => {
       return state.isDark ? DARK_THEME : LIGHT_THEME;
-    }
+    },
+    getAlertType: (state) => state.alertType,
+    getAlertMessage: (state) => state.alertMessage,
   },
   actions: {
-    toggleAlertVisibility() {
+    toggleAlertVisibility(type: string = 'success', message: string = '') {
+      this.alertType = type;
+      this.alertMessage = message;
       this.showAlert = !this.showAlert; // Метод для переключения видимости алерта
       if (this.showAlert) {
         setTimeout(() => {
