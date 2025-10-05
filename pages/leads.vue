@@ -590,7 +590,7 @@ onUnmounted(() => {
         <div v-if="isAdmin && selectedRows.length" class="px-4 py-2 d-flex align-center gap-3">
           <div class="text-body-2">{{ t('selected') }}: {{ selectedRows.length }}</div>
           <v-select
-            :items="allUsers.map(user => ({ ...user, display_name: getUserDisplayName(user) }))"
+            :items="allUsers.map((user: any) => ({ ...user, display_name: getUserDisplayName(user) }))"
             item-title="display_name"
             item-value="id"
             density="compact"
