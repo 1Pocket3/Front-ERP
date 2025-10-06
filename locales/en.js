@@ -158,6 +158,18 @@ export const translateEn = {
   first_name: "First Name",
   last_name: "Last Name",
   validation_phone_error: "Invalid phone format",
+  
+  // Column Mapping
+  column_mapping: "Column Mapping",
+  lead_fields: "Lead Fields",
+  select_column: "Select Column",
+  preview: "Preview",
+  sample_data: "Sample Data",
+  lead_date_column: "Lead Date Column",
+  select_date_column: "Select Date Column",
+  lead_date_column_hint: "Select the column that contains the date when the lead was received",
+  save_mapping: "Save Mapping",
+  process_import: "Process Import",
   call: "Call",
   assign_manager: "Assign Manager",
   unassign: "Unassign",

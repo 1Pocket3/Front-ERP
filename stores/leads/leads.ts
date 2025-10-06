@@ -384,6 +384,48 @@ export const useLeadsStore = defineStore({
       }
     },
 
+    // ==================== COLUMN MAPPING METHODS ====================
+
+    async getImportColumns(importId: number) {
+      try {
+        const response = await axios.get(`leads/import/${importId}/columns/`);
+        return response.data;
+      } catch (error) {
+        console.error('Error fetching import columns:', error);
+        throw error;
+      }
+    },
+
+    async saveColumnMapping(importId: number, columnMapping: Record<string, string>, leadDateColumn?: string) {
+      try {
+        const response = await axios.post('leads/import/mapping/save/', {
+          import_id: importId,
+          column_mapping: columnMapping,
+          lead_date_column: leadDateColumn
+        });
+        if (response.status === 200) {
+          return response.data;
+        }
+      } catch (error) {
+        console.error('Error saving column mapping:', error);
+        throw error;
+      }
+    },
+
+    async processImportWithMapping(importId: number) {
+      try {
+        const response = await axios.post('leads/import/process-with-mapping/', {
+          import_id: importId
+        });
+        if (response.status === 200) {
+          return response.data;
+        }
+      } catch (error) {
+        console.error('Error processing import with mapping:', error);
+        throw error;
+      }
+    },
+
     // ==================== CALL METHODS ====================
 
     async initiateCall(leadId: number, billId?: string) {

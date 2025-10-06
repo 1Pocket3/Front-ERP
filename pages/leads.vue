@@ -6,6 +6,7 @@ import { useI18n } from "vue-i18n";
 import { useLeadsStore, type Lead } from "@/stores/leads/leads";
 import { useCustomizerStore } from "@/stores/customizer";
 import { useAuthStore } from "@/stores/auth/auth";
+import ColumnMappingDialog from "@/components/import/ColumnMappingDialog.vue";
 
 interface LeadStatus {
   id: number;
@@ -52,9 +53,14 @@ const typeAlert = ref("success");
 const loading = ref(false);
 const dialogDelete = ref(false);
 const dialogImport = ref(false);
+const dialogColumnMapping = ref(false);
 const selectedLeadId = ref<number | null>(null);
 const dataReadyForTable = ref<RowItem[]>([]);
 const error = ref<string | null>(null);
+
+// Import state
+const currentImportId = ref<number | null>(null);
+const uploadedFile = ref<File | null>(null);
 
 const pagination = ref(1);
 const itemsPerPage = ref(20);
@@ -83,7 +89,7 @@ const headers: ComputedRef = computed(() => [
   { title: t("lead_source"), align: "start", key: "lead_source", sortable: true },
   { title: 'Status', align: 'start', key: 'status', sortable: true },
   { title: t("assigned_to"), align: "start", key: "assigned_to", sortable: true },
-  { title: t("uploaded_by"), align: "start", key: "uploaded_by", sortable: true },
+  // { title: t("uploaded_by"), align: "start", key: "uploaded_by", sortable: true },
   { title: t("created_at"), align: "start", key: "created_at", sortable: true },
 ]);
 
@@ -238,14 +244,28 @@ const handleFileUpload = async (event: Event) => {
   if (!file) return;
 
   try {
-    await store.importLeads(file);
-    customizer.toggleAlertVisibility('success', 'Leads imported successfully');
+    // Загружаем файл
+    const response = await store.uploadFile(file);
+    currentImportId.value = response.data.id;
+    uploadedFile.value = file;
+    
+    // Закрываем диалог импорта и открываем диалог маппинга
     dialogImport.value = false;
-    await fetchLeads();
+    dialogColumnMapping.value = true;
+    
   } catch (error) {
-    console.error("Error importing leads:", error);
-    customizer.toggleAlertVisibility('error', 'Failed to import leads');
+    console.error("Error uploading file:", error);
+    customizer.toggleAlertVisibility('error', 'Failed to upload file');
   }
+};
+
+const handleImportCompleted = async () => {
+  // Обновляем список лидов после успешного импорта
+  await fetchLeads();
+  
+  // Сбрасываем состояние
+  currentImportId.value = null;
+  uploadedFile.value = null;
 };
 
 const fetchAllUsers = async () => {
@@ -305,10 +325,9 @@ const makeCall = async (leadId: number) => {
     // Показываем сообщение из ответа API
     const message = result?.message || 'Call initiated successfully';
     customizer.toggleAlertVisibility('success', message);
-   } catch (error) {
+   } catch (error: any) {
      console.error('Error making call:', error);
-     const errorMessage = error instanceof Error ? error.message : 'Failed to initiate call';
-     customizer.toggleAlertVisibility('error', errorMessage);
+     customizer.toggleAlertVisibility('error', error.response.data.error);
    } finally {
      // Сбрасываем состояние загрузки
      authStore.setCallingState(false, null);
@@ -756,11 +775,11 @@ onUnmounted(() => {
       </template>
 
       <!-- Uploaded by column -->
-      <template v-slot:item.uploaded_by="{ item }">
+      <!-- <template v-slot:item.uploaded_by="{ item }">
         <v-chip color="secondary" size="small" class="text-body-2">
           {{ `${item.uploaded_by.first_name || item.uploaded_by.username} ${item.uploaded_by.last_name || ''}` }}
         </v-chip>
-      </template>
+      </template> -->
 
       <!-- Created at column -->
       <template v-slot:item.created_at="{ item }">
@@ -901,6 +920,13 @@ onUnmounted(() => {
       </v-card-actions>
     </v-card>
   </v-dialog>
+
+  <!-- Column Mapping Dialog -->
+  <ColumnMappingDialog
+    v-model="dialogColumnMapping"
+    :import-id="currentImportId || undefined"
+    @import-completed="handleImportCompleted"
+  />
 </template>
 
 <style scoped lang="scss">

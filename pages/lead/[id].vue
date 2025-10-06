@@ -451,14 +451,18 @@ onMounted(async () => {
         </v-col>
       </v-row>
       
-      <!-- <v-row v-if="lead.additional_data && isAdmin" class="mt-4">
+      <v-row v-if="lead.additional_data" class="mt-4">
         <v-col cols="12">
           <v-card variant="outlined" class="pa-4">
             <h3 class="text-h6 mb-4">{{ t('additional_data') }}</h3>
-            <pre class="text-body-2">{{ JSON.stringify(lead.additional_data, null, 2) }}</pre>
+            <!-- <pre class="text-body-2">{{ JSON.stringify(lead.additional_data, null, 2) }}</pre> -->
+             <div class="d-flex flex-column gap-2">
+              <span>Country: {{lead.additional_data.Country}}</span>
+              <span>Remark: {{lead.additional_data.Remark}}</span>
+             </div>
           </v-card>
         </v-col>
-      </v-row> -->
+      </v-row>
     </v-card-text>
   </v-card>
 
