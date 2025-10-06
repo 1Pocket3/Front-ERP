@@ -1,6 +1,16 @@
 import vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
 
 export default defineNuxtConfig({
+  // Runtime config for environment variables
+  runtimeConfig: {
+    // Private keys (only available on server-side)
+    apiSecret: '',
+    // Public keys (exposed to client-side)
+    public: {
+      apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL || 'http://127.0.0.1:8000',
+    }
+  },
+  
   nitro: {
     devProxy: {
       "/media/": {

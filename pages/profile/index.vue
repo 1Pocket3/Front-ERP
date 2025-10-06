@@ -41,7 +41,8 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from "vue";
-// FontAwesome imports moved to dynamic loading
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faUserSecret } from "@fortawesome/free-solid-svg-icons";
 import { useAuthStore } from "@/stores/auth/auth";
 import ChangePassword from "~/components/change-password-form/change_password.vue";
 import PersonalData from "~/components/personal-data/PersonalData.vue";
@@ -81,11 +82,6 @@ const items = computed(() => [
 ]);
 
 onMounted(async () => {
-  // Dynamic FontAwesome loading
-  const { library } = await import("@fortawesome/fontawesome-svg-core");
-  const { faUserSecret } = await import("@fortawesome/free-solid-svg-icons");
-  library.add(faUserSecret);
-  
   await authStore.fetchProfile();
   const user = authStore.getProfile;
   profileFormData.value = getProfileFormData(user);
@@ -98,7 +94,7 @@ onUnmounted(() => {
   window.removeEventListener("resize", updateWindowWidth);
 });
 
-// FontAwesome library setup moved to dynamic loading
+library.add(faUserSecret);
 
 const itemSelected = ref(0);
 const changePadge = (id) => {
