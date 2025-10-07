@@ -11,6 +11,11 @@ export default defineNuxtPlugin(({ vueApp }) => {
     messages: {
       en: { ...translateEn, en },
     },
+    // Performance optimizations
+    silentTranslationWarn: true,
+    silentFallbackWarn: true,
+    missingWarn: false,
+    fallbackWarn: false,
   });
 
   vueApp.use(i18n);

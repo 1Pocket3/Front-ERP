@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from "vue";
+import { ref, computed, onMounted, onUnmounted, defineAsyncComponent } from "vue";
 import type { ComputedRef } from "vue";
 import { PencilIcon, TrashIcon, PlusIcon, UploadIcon } from "vue-tabler-icons";
 import { useI18n } from "vue-i18n";
@@ -7,7 +7,9 @@ import { useLeadsStore, type Lead } from "@/stores/leads/leads";
 import { useCustomizerStore } from "@/stores/customizer";
 import { useAuthStore } from "@/stores/auth/auth";
 import axios from "@/utils/axios";
-import ColumnMappingDialog from "@/components/import/ColumnMappingDialog.vue";
+
+// Lazy load heavy components
+const ColumnMappingDialog = defineAsyncComponent(() => import("@/components/import/ColumnMappingDialog.vue"));
 
 interface LeadStatus {
   id: number;
@@ -82,6 +84,26 @@ const assignedFilter = ref<'any' | 'assigned' | 'unassigned'>('any');
 // Bulk assign
 const selectedRows = ref<RowItem[]>([]);
 const bulkAssignUserId = ref<number | null>(null);
+const bulkStatusValue = ref<string | null>(null);
+
+// Status options for bulk update
+const statusOptions = [
+  { text: "New", value: "New" },
+  { text: "Ftd", value: "Ftd" },
+  { text: "Ftd Na", value: "Ftd Na" },
+  { text: "No answer", value: "No answer" },
+  { text: "Call again", value: "Call again" },
+  { text: "Money Call", value: "Money Call" },
+  { text: "Awaiting Deposit", value: "Awaiting Deposit" },
+  { text: "Kachin Kachin", value: "Kachin Kachin" },
+  { text: "Not interested", value: "Not interested" },
+  { text: "Reassign", value: "Reassign" },
+  { text: "Risk", value: "Risk" },
+  { text: "Number not in service", value: "Number not in service" },
+  { text: "Different Person", value: "Different Person" },
+  { text: "Wrong number", value: "Wrong number" },
+  { text: "No Language", value: "No Language" },
+];
 
 const headers: ComputedRef = computed(() => [
   { title: "ID", align: "start", key: "id", sortable: true },
@@ -103,18 +125,28 @@ const fetchLeads = async () => {
   isFetching.value = true;
   loading.value = true;
   error.value = null;
+  
   try {
-    await store.fetchLeads({
-      search: searchQuery.value,
-      manager_id: isAdmin.value && managerFilter.value ? managerFilter.value : undefined,
-      status: statusFilter.value && statusFilter.value.length ? statusFilter.value : undefined,
-      campaign: campaignFilter.value && campaignFilter.value.length ? campaignFilter.value : undefined,
-      assigned: assignedFilter.value === 'any' ? undefined : assignedFilter.value === 'assigned',
-      page: pagination.value,
-      page_size: itemsPerPage.value,
-    });
-    leads.value = store.getLeads.map(formatLeadData);
-    processLeads();
+    // Use requestIdleCallback for non-critical data loading
+    const fetchData = async () => {
+      await store.fetchLeads({
+        search: searchQuery.value,
+        manager_id: isAdmin.value && managerFilter.value ? managerFilter.value : undefined,
+        status: statusFilter.value && statusFilter.value.length ? statusFilter.value : undefined,
+        campaign: campaignFilter.value && campaignFilter.value.length ? campaignFilter.value : undefined,
+        assigned: assignedFilter.value === 'any' ? undefined : assignedFilter.value === 'assigned',
+        page: pagination.value,
+        page_size: itemsPerPage.value,
+      });
+      leads.value = store.getLeads.map(formatLeadData);
+      processLeads();
+    };
+
+    if (window.requestIdleCallback) {
+      window.requestIdleCallback(fetchData, { timeout: 1000 });
+    } else {
+      await fetchData();
+    }
   } catch (err) {
     console.error("Error fetching leads:", err);
     error.value = err instanceof Error ? err.message : 'Ошибка загрузки данных';
@@ -309,6 +341,20 @@ const bulkAssign = async () => {
   }
 };
 
+const buldChangeStatus = async () => {
+  if (!isAdmin.value || selectedRows.value.length === 0 || !bulkStatusValue.value) return;
+  try {
+    await store.updateLeadStatus(selectedRows.value.map(r => r.id), bulkStatusValue.value);
+    customizer.toggleAlertVisibility('success', 'Leads status changed successfully');
+    selectedRows.value = [];
+    bulkStatusValue.value = null;
+    await fetchLeads();
+  } catch (error) {
+    console.error('Error changing status of leads:', error);
+    customizer.toggleAlertVisibility('error', 'Failed to change leads status');
+  }
+};
+
 const assignLeadToUser = async (leadId: number, userId: number | null) => {
   try {
     await store.assignLeads([leadId], userId);
@@ -476,33 +522,27 @@ const getStatusColor = (status: string) => {
 };
 
 onMounted(async () => {
-  console.log('Leads page mounted');
+  // Critical data loading first
   await fetchLeads();
   
-  // Проверяем, есть ли данные пользователя в store
-  // console.log('Current user in store:', authStore.getCurrentUser);
-  // if (!authStore.getCurrentUser) {
-  //   console.log('No user data in store, fetching...');
-  //   try {
-  //     await authStore.fetchCurrentUser();
-  //   } catch (error) {
-  //     console.error('Could not fetch current user:', error);
-  //   }
-  // } else {
-  //   console.log('User data already in store');
-  // }
-  
-  // // Устанавливаем флаг админа
-  // console.log('isAdmin set to:', isAdmin.value);
-  
-  // Загружаем список пользователей только для админов
-  if (isAdmin.value) {
-    console.log('Loading all users for admin...');
-    await fetchAllUsers();
+  // Non-critical data loading with lower priority
+  if (window.requestIdleCallback) {
+    window.requestIdleCallback(async () => {
+      // Загружаем список пользователей только для админов
+      if (isAdmin.value) {
+        await fetchAllUsers();
+      }
+      
+      // Загружаем доступные кампании для фильтра
+      await fetchExportFilters();
+    });
+  } else {
+    // Fallback for browsers without requestIdleCallback
+    if (isAdmin.value) {
+      await fetchAllUsers();
+    }
+    await fetchExportFilters();
   }
-  
-  // Загружаем доступные кампании для фильтра
-  await fetchExportFilters();
 });
 
 onUnmounted(() => {
@@ -583,6 +623,7 @@ onUnmounted(() => {
 
         <!-- Campaign filter (multi) -->
         <v-select
+          v-if="isAdmin"
           :items="availableCampaigns"
           multiple
           density="compact"
@@ -597,6 +638,7 @@ onUnmounted(() => {
 
         <!-- Assigned filter -->
         <v-select
+          v-if="isAdmin"
           :items="[
             { title: t('all'), value: 'any' },
             { title: t('assigned_to'), value: 'assigned' },
@@ -641,6 +683,7 @@ onUnmounted(() => {
           </v-btn>
           
           <v-btn
+            v-if="isAdmin"
             color="primary"
             variant="flat"
             @click="navigateTo('/add-lead')"
@@ -652,6 +695,7 @@ onUnmounted(() => {
           </v-btn>
           
           <v-btn
+            v-if="isAdmin"
             color="success"
             variant="outlined"
             @click="exportLeads('csv')"
@@ -663,6 +707,7 @@ onUnmounted(() => {
           </v-btn>
           
           <v-btn
+            v-if="isAdmin"
             color="success"
             variant="outlined"
             @click="exportLeads('excel')"
@@ -724,25 +769,47 @@ onUnmounted(() => {
 
       <!-- Bulk actions toolbar -->
       <template v-slot:top>
-        <div v-if="isAdmin && selectedRows.length" class="px-4 py-2 d-flex align-center gap-3">
-          <div class="text-body-2">{{ t('selected') }}: {{ selectedRows.length }}</div>
-          <v-select
-            :items="allUsers.map((user: any) => ({ ...user, display_name: getUserDisplayName(user) }))"
-            item-title="display_name"
-            item-value="id"
-            density="compact"
-            variant="outlined"
-            hide-details
-            style="min-width: 220px;"
-            :label="t('assign_manager')"
-            v-model="bulkAssignUserId"
-          />
-          <v-btn color="primary" variant="flat" :disabled="bulkAssignUserId===null" @click="bulkAssign">
-            {{ t('assign') }}
-          </v-btn>
-          <v-btn color="error" variant="outlined" @click="() => { bulkAssignUserId = null; selectedRows = []; }">
-            {{ t('cancel') }}
-          </v-btn>
+        <div v-if="isAdmin && selectedRows.length" class="px-4 py-2">
+          <div class="d-flex align-center gap-3 flex-wrap">
+            <div class="text-body-2">{{ t('selected') }}: {{ selectedRows.length }}</div>
+            
+            <!-- Assign Manager Section -->
+            <v-select
+              :items="allUsers.map((user: any) => ({ ...user, display_name: getUserDisplayName(user) }))"
+              item-title="display_name"
+              item-value="id"
+              density="compact"
+              variant="outlined"
+              hide-details
+              style="min-width: 220px;"
+              :label="t('assign_manager')"
+              v-model="bulkAssignUserId"
+            />
+            <v-btn color="primary" variant="flat" :disabled="bulkAssignUserId===null" @click="bulkAssign">
+              {{ t('assign') }}
+            </v-btn>
+            
+            <!-- Change Status Section -->
+            <v-select
+              :items="statusOptions"
+              item-title="text"
+              item-value="value"
+              density="compact"
+              variant="outlined"
+              hide-details
+              style="min-width: 180px;"
+              :label="t('change_status')"
+              v-model="bulkStatusValue"
+            />
+            <v-btn color="secondary" variant="flat" :disabled="!bulkStatusValue" @click="buldChangeStatus">
+              {{ t('change_status') }}
+            </v-btn>
+            
+            <!-- Cancel Button -->
+            <v-btn color="error" variant="outlined" @click="() => { bulkAssignUserId = null; bulkStatusValue = null; selectedRows = []; }">
+              {{ t('cancel') }}
+            </v-btn>
+          </div>
         </div>
       </template>
       <template v-slot:no-data>

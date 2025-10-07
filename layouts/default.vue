@@ -1,14 +1,23 @@
 <script setup lang="ts">
 import { useCustomizerStore } from "@/stores/customizer";
-import VerticalSidebarVue from "@/components/vertical-sidebar/VerticalSidebar.vue";
-import VerticalHeaderVue from "@/components/vertical-header/VerticalHeader.vue";
+import { defineAsyncComponent } from "vue";
+
+// Lazy load heavy components
+const VerticalSidebarVue = defineAsyncComponent(() => import("@/components/vertical-sidebar/VerticalSidebar.vue"));
+const VerticalHeaderVue = defineAsyncComponent(() => import("@/components/vertical-header/VerticalHeader.vue"));
 
 const route = useRoute();
 const customizer = useCustomizerStore();
 
-// Initialize theme on mount
+// Initialize theme on mount with lower priority
 onMounted(() => {
-  customizer.initializeTheme();
+  if (window.requestIdleCallback) {
+    window.requestIdleCallback(() => {
+      customizer.initializeTheme();
+    });
+  } else {
+    customizer.initializeTheme();
+  }
 });
 </script>
 

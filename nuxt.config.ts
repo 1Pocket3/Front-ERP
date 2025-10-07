@@ -27,7 +27,7 @@ export default defineNuxtConfig({
     "@/plugins/vue-datepicker.client"
   ],
   ssr: false,
-  css: ["@/scss/style.scss"],
+  css: ["@/scss/style.scss", "@/assets/css/performance.css"],
 
   modules: [
     "@pinia/nuxt",
@@ -42,7 +42,7 @@ export default defineNuxtConfig({
   ],
 
   mdi: {
-    cache: false,
+    cache: "localStorage", // Enable caching for better performance
     componentName: 'MdiIcon',
     defaultSize: '1em'
   },
@@ -54,33 +54,41 @@ export default defineNuxtConfig({
       },
     },
     build: {
-      // Remove manual chunks to avoid initialization order issues
+      // Optimize chunking for better performance
       rollupOptions: {
         output: {
-          // Let Vite handle chunking automatically
+          manualChunks: {
+            'vendor': ['vue', 'vue-router', 'pinia'],
+            'vuetify': ['vuetify'],
+            'icons': ['vue-tabler-icons'],
+            'utils': ['axios', 'ohash']
+          }
         }
       }
     },
-    // Remove optimizeDeps to avoid initialization issues
-    // optimizeDeps: {
-    //   include: [
-    //     'vue',
-    //     'vue-router',
-    //     'pinia'
-    //   ]
-    // },
-    // Simplified configuration for stability
+    optimizeDeps: {
+      include: [
+        'vue',
+        'vue-router',
+        'pinia',
+        'vuetify',
+        'vue-tabler-icons'
+      ]
+    }
   },
 
   build: {
     analyze: false
   },
 
-  // Production optimizations removed for stability
+  // Performance optimizations
+  experimental: {
+    payloadExtraction: false, // Disable payload extraction for SPA
+  },
 
   devtools: {
     timeline: {
-      enabled: true,
+      enabled: false, // Disable in production
     },
   },
 

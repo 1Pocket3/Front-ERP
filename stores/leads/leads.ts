@@ -1,6 +1,24 @@
 import { defineStore } from "pinia";
 import axios from "@/utils/axios";
 
+// Cache for API responses
+const cache = new Map<string, { data: any; timestamp: number }>();
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
+// Helper function to check cache
+const getCachedData = (key: string) => {
+  const cached = cache.get(key);
+  if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
+    return cached.data;
+  }
+  return null;
+};
+
+// Helper function to set cache
+const setCachedData = (key: string, data: any) => {
+  cache.set(key, { data, timestamp: Date.now() });
+};
+
 export interface Lead {
   id: number;
   first_name: string;
@@ -87,6 +105,20 @@ export const useLeadsStore = defineStore({
       page_size?: number;
     } = {}) {
       try {
+        // Create cache key
+        const cacheKey = `leads_${JSON.stringify(params)}`;
+        
+        // Check cache first
+        const cachedData = getCachedData(cacheKey);
+        if (cachedData) {
+          this.leads = cachedData.results;
+          this.totalCount = cachedData.count;
+          this.pageSize = cachedData.page_size;
+          this.totalPages = cachedData.total_pages;
+          this.isLoaded = true;
+          return cachedData;
+        }
+
         const queryParams = new URLSearchParams();
         
         if (params.search) queryParams.append('search', params.search);
@@ -105,6 +137,9 @@ export const useLeadsStore = defineStore({
 
         const response = await axios.get(`leads/leads/list/?${queryParams.toString()}`);
         const data: LeadsResponse = response.data;
+        
+        // Cache the response
+        setCachedData(cacheKey, data);
         
         this.leads = data.results;
         this.totalCount = data.count;
@@ -155,19 +190,42 @@ export const useLeadsStore = defineStore({
       }
     },
 
-    async updateLeadStatus(id: number, status: string) {
+    async updateLeadStatus(id: number[], status: string) {
       try {
-        const response = await axios.patch(`leads/leads/${id}/`, { status });
-        if (response.status === 200) {
-          // Обновляем локальное состояние при необходимости
-          if (this.currentLead && this.currentLead.id === id) {
-            this.currentLead.status = response.data.status;
+        // Если передан массив ID, используем bulk эндпоинт
+        if (Array.isArray(id) && id.length > 0) {
+          const response = await axios.patch('/leads/leads/bulk-update-status/', { 
+            lead_ids: id, 
+            status: status 
+          });
+          if (response.status === 200) {
+            // Обновляем локальное состояние для всех обновленных лидов
+            id.forEach(leadId => {
+              const idx = this.leads.findIndex((l: Lead) => l.id === leadId);
+              if (idx !== -1) {
+                this.leads[idx] = { ...this.leads[idx], status: status } as Lead;
+              }
+              // Обновляем currentLead если он в списке
+              if (this.currentLead && this.currentLead.id === leadId) {
+                this.currentLead.status = status;
+              }
+            });
+            return response.data;
           }
-          const idx = this.leads.findIndex((l: Lead) => l.id === id);
-          if (idx !== -1) {
-            this.leads[idx] = { ...this.leads[idx], status: response.data.status } as Lead;
+        } else if (typeof id === 'number') {
+          // Если передан один ID, используем обычный эндпоинт
+          const response = await axios.patch(`leads/leads/${id}/`, { status });
+          if (response.status === 200) {
+            // Обновляем локальное состояние при необходимости
+            if (this.currentLead && this.currentLead.id === id) {
+              this.currentLead.status = response.data.status;
+            }
+            const idx = this.leads.findIndex((l: Lead) => l.id === id);
+            if (idx !== -1) {
+              this.leads[idx] = { ...this.leads[idx], status: response.data.status } as Lead;
+            }
+            return response.data;
           }
-          return response.data;
         }
       } catch (error) {
         console.error('Error updating lead status:', error);
