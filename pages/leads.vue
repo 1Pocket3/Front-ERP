@@ -6,6 +6,7 @@ import { useI18n } from "vue-i18n";
 import { useLeadsStore, type Lead } from "@/stores/leads/leads";
 import { useCustomizerStore } from "@/stores/customizer";
 import { useAuthStore } from "@/stores/auth/auth";
+import axios from "@/utils/axios";
 import ColumnMappingDialog from "@/components/import/ColumnMappingDialog.vue";
 
 interface LeadStatus {
@@ -70,10 +71,12 @@ const totalCount = ref(0);
 let searchTimeout: ReturnType<typeof setTimeout> | null = null;
 const isFetching = ref(false);
 const allUsers = ref<any[]>([]);
+const availableCampaigns = ref<string[]>([]);
 
 // Filters
 const managerFilter = ref<number | null>(null);
 const statusFilter = ref<string[]>([]);
+const campaignFilter = ref<string[]>([]);
 const assignedFilter = ref<'any' | 'assigned' | 'unassigned'>('any');
 
 // Bulk assign
@@ -91,6 +94,7 @@ const headers: ComputedRef = computed(() => [
   { title: t("assigned_to"), align: "start", key: "assigned_to", sortable: true },
   // { title: t("uploaded_by"), align: "start", key: "uploaded_by", sortable: true },
   { title: t("created_at"), align: "start", key: "created_at", sortable: true },
+  // { title: 'Campaign', align: "start", key: "campaign", sortable: true },
 ]);
 
 const fetchLeads = async () => {
@@ -104,6 +108,7 @@ const fetchLeads = async () => {
       search: searchQuery.value,
       manager_id: isAdmin.value && managerFilter.value ? managerFilter.value : undefined,
       status: statusFilter.value && statusFilter.value.length ? statusFilter.value : undefined,
+      campaign: campaignFilter.value && campaignFilter.value.length ? campaignFilter.value : undefined,
       assigned: assignedFilter.value === 'any' ? undefined : assignedFilter.value === 'assigned',
       page: pagination.value,
       page_size: itemsPerPage.value,
@@ -284,6 +289,7 @@ const applyFilters = () => {
 const clearFilters = () => {
   managerFilter.value = null;
   statusFilter.value = [];
+  campaignFilter.value = [];
   assignedFilter.value = 'any';
   pagination.value = 1;
   fetchLeads();
@@ -364,6 +370,74 @@ const getUserDisplayName = (user: any) => {
   return `${user.first_name} ${user.last_name}`.trim() || user.username;
 };
 
+const fetchExportFilters = async () => {
+  try {
+    const response = await axios.get('leads/leads/export/filters/');
+    const filters = response.data;
+    availableCampaigns.value = filters.campaigns || [];
+  } catch (error) {
+    console.error('Error fetching export filters:', error);
+  }
+};
+
+const exportLeads = async (format: 'csv' | 'excel' = 'csv') => {
+  try {
+    // Подготавливаем данные для POST запроса
+    const exportData: any = {
+      format: format
+    };
+    
+    if (searchQuery.value) exportData.search = searchQuery.value;
+    if (isAdmin.value && managerFilter.value) exportData.manager_id = managerFilter.value;
+    if (statusFilter.value && statusFilter.value.length) {
+      exportData.statuses = statusFilter.value;
+    }
+    if (campaignFilter.value && campaignFilter.value.length) {
+      exportData.campaigns = campaignFilter.value;
+    }
+    if (assignedFilter.value !== 'any') {
+      exportData.assigned = assignedFilter.value === 'assigned' ? true : false;
+    }
+
+    const response = await axios.post('leads/leads/export/', exportData, {
+      responseType: 'blob'
+    });
+
+    // Создаем ссылку для скачивания файла
+    const downloadUrl = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    
+    // Определяем имя файла из заголовка Content-Disposition или создаем по умолчанию
+    const contentDisposition = response.headers['content-disposition'];
+    // Генерируем имя файла с датой и фильтрами
+    const today = new Date().toISOString().split('T')[0];
+    const statusPart = statusFilter.value.length ? statusFilter.value.join(',') : 'all';
+    const campaignPart = campaignFilter.value.length ? campaignFilter.value.join(',') : 'all';
+    const extension = format === 'excel' ? 'xlsx' : 'csv';
+    
+    let filename = `leads_export_${today}_${statusPart}_${campaignPart}.${extension}`;
+    
+    if (contentDisposition) {
+      const filenameMatch = contentDisposition.match(/filename="(.+)"/);
+      if (filenameMatch) {
+        filename = filenameMatch[1];
+      }
+    }
+    
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(downloadUrl);
+    
+    customizer.toggleAlertVisibility('success', `Leads exported successfully as ${format.toUpperCase()}`);
+  } catch (error) {
+    console.error('Error exporting leads:', error);
+    customizer.toggleAlertVisibility('error', 'Failed to export leads');
+  }
+};
+
 const getStatusColor = (status: string) => {
   switch (status) {
     case 'New':
@@ -425,8 +499,10 @@ onMounted(async () => {
   if (isAdmin.value) {
     console.log('Loading all users for admin...');
     await fetchAllUsers();
-
   }
+  
+  // Загружаем доступные кампании для фильтра
+  await fetchExportFilters();
 });
 
 onUnmounted(() => {
@@ -505,6 +581,20 @@ onUnmounted(() => {
           @update:model-value="applyFilters"
         />
 
+        <!-- Campaign filter (multi) -->
+        <v-select
+          :items="availableCampaigns"
+          multiple
+          density="compact"
+          variant="outlined"
+          hide-details
+          clearable
+          class="filter-item campaign-filter"
+          label="Campaign"
+          v-model="campaignFilter"
+          @update:model-value="applyFilters"
+        />
+
         <!-- Assigned filter -->
         <v-select
           :items="[
@@ -559,6 +649,28 @@ onUnmounted(() => {
           >
             <PlusIcon stroke-width="1.5" size="16" class="btn-icon" />
             <span class="btn-text">{{ t('add_lead') }}</span>
+          </v-btn>
+          
+          <v-btn
+            color="success"
+            variant="outlined"
+            @click="exportLeads('csv')"
+            class="action-btn"
+            size="small"
+          >
+            <v-icon size="small">mdi-file-export</v-icon>
+            <span class="btn-text">Export CSV</span>
+          </v-btn>
+          
+          <v-btn
+            color="success"
+            variant="outlined"
+            @click="exportLeads('excel')"
+            class="action-btn"
+            size="small"
+          >
+            <v-icon size="small">mdi-file-excel</v-icon>
+            <span class="btn-text">Export Excel</span>
           </v-btn>
           
           <v-btn
@@ -957,6 +1069,10 @@ onUnmounted(() => {
           min-width: 220px;
         }
         
+        &.campaign-filter {
+          min-width: 200px;
+        }
+        
         &.assigned-filter {
           min-width: 160px;
         }
@@ -1042,6 +1158,10 @@ onUnmounted(() => {
       &.status-filter {
         min-width: 200px;
       }
+      
+      &.campaign-filter {
+        min-width: 180px;
+      }
     }
   }
 }
@@ -1053,6 +1173,10 @@ onUnmounted(() => {
       
       &.status-filter {
         min-width: 180px;
+      }
+      
+      &.campaign-filter {
+        min-width: 160px;
       }
     }
   }

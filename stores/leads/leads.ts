@@ -82,6 +82,7 @@ export const useLeadsStore = defineStore({
       manager_id?: number;
       status?: string | string[];
       assigned?: boolean;
+      campaign?: string | string[];
       page?: number;
       page_size?: number;
     } = {}) {
@@ -93,6 +94,10 @@ export const useLeadsStore = defineStore({
         if (params.status) {
           const statuses = Array.isArray(params.status) ? params.status : [params.status];
           if (statuses.length > 0) queryParams.append('statuses', statuses.join(','));
+        }
+        if (params.campaign) {
+          const campaigns = Array.isArray(params.campaign) ? params.campaign : [params.campaign];
+          if (campaigns.length > 0) queryParams.append('campaigns', campaigns.join(','));
         }
         if (params.assigned !== undefined) queryParams.append('assigned', params.assigned ? 'true' : 'false');
         if (params.page) queryParams.append('page', params.page.toString());
@@ -438,6 +443,54 @@ export const useLeadsStore = defineStore({
         }
       } catch (error) {
         console.error('Error initiating call:', error);
+        throw error;
+      }
+    },
+
+    // ==================== EXPORT METHODS ====================
+
+    async exportLeads(params: {
+      search?: string;
+      manager_id?: number;
+      status?: string | string[];
+      assigned?: boolean;
+      campaign?: string | string[];
+      format?: 'csv' | 'excel';
+    } = {}) {
+      try {
+        // Подготавливаем данные для POST запроса
+        const exportData: any = {};
+        
+        if (params.search) exportData.search = params.search;
+        if (params.manager_id) exportData.manager_id = params.manager_id;
+        if (params.status) {
+          const statuses = Array.isArray(params.status) ? params.status : [params.status];
+          if (statuses.length > 0) exportData.statuses = statuses;
+        }
+        if (params.campaign) {
+          const campaigns = Array.isArray(params.campaign) ? params.campaign : [params.campaign];
+          if (campaigns.length > 0) exportData.campaigns = campaigns;
+        }
+        if (params.assigned !== undefined) exportData.assigned = params.assigned;
+        if (params.format) exportData.format = params.format;
+
+        const response = await axios.post('leads/leads/export/', exportData, {
+          responseType: 'blob'
+        });
+        
+        return response;
+      } catch (error) {
+        console.error('Error exporting leads:', error);
+        throw error;
+      }
+    },
+
+    async getExportFilters() {
+      try {
+        const response = await axios.get('leads/leads/export/filters/');
+        return response.data;
+      } catch (error) {
+        console.error('Error fetching export filters:', error);
         throw error;
       }
     },
