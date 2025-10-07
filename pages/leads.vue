@@ -41,12 +41,20 @@ interface RowItem {
   uploaded_by: LeadManager;
   created_at: string;
   updated_at: string;
+  last_note_date?: string;
 }
 
 const { t } = useI18n();
 const store = useLeadsStore();
 const customizer = useCustomizerStore();
 const authStore = useAuthStore();
+
+// Функция форматирования даты
+const formatDate = (date: Date) => {
+  return `${date.getFullYear()}-${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+};
 
 // Computed свойства
 const isAdmin = computed(() => authStore.getIsAdmin);
@@ -116,6 +124,7 @@ const headers: ComputedRef = computed(() => [
   { title: t("assigned_to"), align: "start", key: "assigned_to", sortable: true },
   // { title: t("uploaded_by"), align: "start", key: "uploaded_by", sortable: true },
   { title: t("created_at"), align: "start", key: "created_at", sortable: true },
+  { title: "Last Note", align: "start", key: "last_note_date", sortable: true },
   // { title: 'Campaign', align: "start", key: "campaign", sortable: true },
 ]);
 
@@ -160,12 +169,6 @@ const fetchLeads = async () => {
 const formatLeadData = (lead: Lead): RowItem => {
   const createdDate = new Date(lead.created_at);
   const updatedDate = new Date(lead.updated_at);
-  
-  const formatDate = (date: Date) => {
-    return `${date.getFullYear()}-${(date.getMonth() + 1)
-      .toString()
-      .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
-  };
 
   return {
     id: lead.id,
@@ -195,6 +198,7 @@ const formatLeadData = (lead: Lead): RowItem => {
     },
     created_at: formatDate(createdDate),
     updated_at: formatDate(updatedDate),
+    last_note_date: lead.last_note_date ? formatDate(new Date(lead.last_note_date)) : '—',
   };
 };
 
@@ -327,31 +331,47 @@ const clearFilters = () => {
   fetchLeads();
 };
 
-const bulkAssign = async () => {
+const bulkApplyChanges = async () => {
   if (!isAdmin.value || selectedRows.value.length === 0) return;
+  if (bulkAssignUserId.value === null && !bulkStatusValue.value) return;
+  
+  const leadIds = selectedRows.value.map(r => r.id);
+  const operations = [];
+  
   try {
-    await store.assignLeads(selectedRows.value.map(r => r.id), bulkAssignUserId.value);
-    customizer.toggleAlertVisibility('success', 'Leads assigned successfully');
+    // Выполняем назначение менеджера, если выбрано
+    if (bulkAssignUserId.value !== null) {
+      operations.push('assign');
+      await store.assignLeads(leadIds, bulkAssignUserId.value);
+    }
+    
+    // Выполняем изменение статуса, если выбрано
+    if (bulkStatusValue.value) {
+      operations.push('status');
+      await store.updateLeadStatus(leadIds, bulkStatusValue.value);
+    }
+    
+    // Формируем сообщение об успехе
+    let successMessage = '';
+    if (operations.includes('assign') && operations.includes('status')) {
+      successMessage = 'Leads assigned and status changed successfully';
+    } else if (operations.includes('assign')) {
+      successMessage = 'Leads assigned successfully';
+    } else if (operations.includes('status')) {
+      successMessage = 'Leads status changed successfully';
+    }
+    
+    customizer.toggleAlertVisibility('success', successMessage);
+    
+    // Очищаем форму
     selectedRows.value = [];
     bulkAssignUserId.value = null;
-    await fetchLeads();
-  } catch (error) {
-    console.error('Error bulk assigning leads:', error);
-    customizer.toggleAlertVisibility('error', 'Failed to assign leads');
-  }
-};
-
-const buldChangeStatus = async () => {
-  if (!isAdmin.value || selectedRows.value.length === 0 || !bulkStatusValue.value) return;
-  try {
-    await store.updateLeadStatus(selectedRows.value.map(r => r.id), bulkStatusValue.value);
-    customizer.toggleAlertVisibility('success', 'Leads status changed successfully');
-    selectedRows.value = [];
     bulkStatusValue.value = null;
-    await fetchLeads();
+    
+    await fetchLeads(); // Обновляем данные для гарантии
   } catch (error) {
-    console.error('Error changing status of leads:', error);
-    customizer.toggleAlertVisibility('error', 'Failed to change leads status');
+    console.error('Error applying bulk changes:', error);
+    customizer.toggleAlertVisibility('error', 'Failed to apply changes');
   }
 };
 
@@ -359,7 +379,7 @@ const assignLeadToUser = async (leadId: number, userId: number | null) => {
   try {
     await store.assignLeads([leadId], userId);
     customizer.toggleAlertVisibility('success', 'Lead assigned successfully');
-    await fetchLeads(); // Обновляем данные
+    await fetchLeads(); // Обновляем данные для гарантии
   } catch (error) {
     console.error("Error assigning lead:", error);
     customizer.toggleAlertVisibility('error', 'Failed to assign lead');
@@ -785,9 +805,6 @@ onUnmounted(() => {
               :label="t('assign_manager')"
               v-model="bulkAssignUserId"
             />
-            <v-btn color="primary" variant="flat" :disabled="bulkAssignUserId===null" @click="bulkAssign">
-              {{ t('assign') }}
-            </v-btn>
             
             <!-- Change Status Section -->
             <v-select
@@ -801,8 +818,15 @@ onUnmounted(() => {
               :label="t('change_status')"
               v-model="bulkStatusValue"
             />
-            <v-btn color="secondary" variant="flat" :disabled="!bulkStatusValue" @click="buldChangeStatus">
-              {{ t('change_status') }}
+            
+            <!-- Apply Changes Button -->
+            <v-btn 
+              color="primary" 
+              variant="flat" 
+              :disabled="bulkAssignUserId===null && !bulkStatusValue" 
+              @click="bulkApplyChanges"
+            >
+              {{ t('apply_changes') }}
             </v-btn>
             
             <!-- Cancel Button -->

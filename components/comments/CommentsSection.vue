@@ -39,7 +39,7 @@
         v-for="comment in comments"
         :key="comment.id"
         variant="outlined"
-        class="mb-3 pa-3"
+        class="mb-3 pa-3 comment-card"
       >
         <div class="d-flex justify-space-between align-start">
           <div class="flex-grow-1">
@@ -70,7 +70,7 @@
           </div>
           
           <!-- Кнопки действий (для автора или админа) -->
-          <div v-if="canEditComment(comment)" class="ml-2">
+          <div v-if="canEditComment(comment)" class="ml-2 comment-actions">
             <v-menu>
               <template v-slot:activator="{ props }">
                 <v-btn
@@ -274,16 +274,32 @@ const formatDate = (dateString: string) => {
 onMounted(() => {
   fetchComments()
 })
+
+// Экспортируем функцию для обновления комментариев извне
+defineExpose({
+  fetchComments
+})
 </script>
 
 <style scoped>
 .comments-list {
   max-height: 500px;
   overflow-y: auto;
+  overflow-x: visible;
 }
 
 .comment-text {
   white-space: pre-wrap;
   word-break: break-word;
+}
+
+/* Убираем overflow: hidden с карточек комментариев */
+.comment-card {
+  overflow: visible !important;
+}
+
+/* Стили для контейнера кнопок действий */
+.comment-actions {
+  position: relative;
 }
 </style>

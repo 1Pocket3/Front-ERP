@@ -47,6 +47,7 @@ export interface Lead {
   created_at: string;
   updated_at: string;
   full_name: string;
+  last_note_date?: string;
   additional_data?: any;
 }
 
@@ -200,14 +201,20 @@ export const useLeadsStore = defineStore({
           });
           if (response.status === 200) {
             // Обновляем локальное состояние для всех обновленных лидов
+            const currentTime = new Date().toISOString();
             id.forEach(leadId => {
               const idx = this.leads.findIndex((l: Lead) => l.id === leadId);
               if (idx !== -1) {
-                this.leads[idx] = { ...this.leads[idx], status: status } as Lead;
+                this.leads[idx] = { 
+                  ...this.leads[idx], 
+                  status: status,
+                  last_note_date: currentTime
+                } as Lead;
               }
               // Обновляем currentLead если он в списке
               if (this.currentLead && this.currentLead.id === leadId) {
                 this.currentLead.status = status;
+                this.currentLead.last_note_date = currentTime;
               }
             });
             return response.data;
@@ -217,12 +224,18 @@ export const useLeadsStore = defineStore({
           const response = await axios.patch(`leads/leads/${id}/`, { status });
           if (response.status === 200) {
             // Обновляем локальное состояние при необходимости
+            const currentTime = new Date().toISOString();
             if (this.currentLead && this.currentLead.id === id) {
               this.currentLead.status = response.data.status;
+              this.currentLead.last_note_date = currentTime;
             }
             const idx = this.leads.findIndex((l: Lead) => l.id === id);
             if (idx !== -1) {
-              this.leads[idx] = { ...this.leads[idx], status: response.data.status } as Lead;
+              this.leads[idx] = { 
+                ...this.leads[idx], 
+                status: response.data.status,
+                last_note_date: currentTime
+              } as Lead;
             }
             return response.data;
           }
@@ -252,6 +265,31 @@ export const useLeadsStore = defineStore({
           assigned_to_id: assignedToId
         });
         if (response.status === 200) {
+          // Получаем информацию о пользователе, если назначение не null
+          let assignedUser = null;
+          if (assignedToId) {
+            try {
+              const usersResponse = await axios.get('leads/leads/users/');
+              assignedUser = usersResponse.data.find((u: any) => u.id === assignedToId);
+            } catch (error) {
+              console.warn('Could not fetch user info for assignment:', error);
+            }
+          }
+          
+          // Обновляем локальное состояние для всех назначенных лидов
+          leadIds.forEach(leadId => {
+            const idx = this.leads.findIndex((l: Lead) => l.id === leadId);
+            if (idx !== -1) {
+              this.leads[idx] = { 
+                ...this.leads[idx], 
+                assigned_to: assignedUser 
+              } as Lead;
+            }
+            // Обновляем currentLead если он в списке
+            if (this.currentLead && this.currentLead.id === leadId) {
+              this.currentLead.assigned_to = assignedUser;
+            }
+          });
           return response.data;
         }
       } catch (error) {

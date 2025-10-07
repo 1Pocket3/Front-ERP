@@ -27,6 +27,7 @@ const dialogDelete = ref(false);
 const allUsers = ref<any[]>([]);
 const isAssigning = ref(false);
 const isUpdatingStatus = ref(false);
+const commentsSectionRef = ref();
 const allStatuses = [
   'New',
   'Ftd',
@@ -66,6 +67,12 @@ const fetchAllUsers = async () => {
   }
 };
 
+const refreshComments = async () => {
+  if (commentsSectionRef.value && commentsSectionRef.value.fetchComments) {
+    await commentsSectionRef.value.fetchComments();
+  }
+};
+
 
 const getUserDisplayName = (user: any) => {
   if (user.first_name && user.last_name) {
@@ -99,8 +106,12 @@ const updateStatus = async (newStatus: string) => {
   if (!lead.value) return;
   isUpdatingStatus.value = true;
   try {
-    await store.updateLeadStatus(lead.value.id, newStatus);
+    await store.updateLeadStatus([lead.value.id], newStatus);
     await fetchLead();
+    
+    // Обновляем комментарии после изменения статуса
+    await refreshComments();
+    
     customizer.toggleAlertVisibility();
     typeAlert.value = "success";
   } catch (error) {
@@ -469,7 +480,7 @@ onMounted(async () => {
 
 
   <!-- Comments Section -->
-  <CommentsSection v-if="lead" :lead-id="lead.id" class="mt-4" />
+  <CommentsSection v-if="lead" :lead-id="lead.id" class="mt-4" ref="commentsSectionRef" />
 
   <v-card v-else-if="loading" elevation="0" class="mt-4">
     <v-card-text class="text-center py-8">

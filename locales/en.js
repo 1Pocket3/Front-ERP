@@ -177,6 +177,7 @@ export const translateEn = {
   selected: "Selected",
   assign: "Assign",
   change_status: "Change Status",
+  apply_changes: "Apply Changes",
   items_per_page: "Items per page",
   of: "of",
   page: "Page",
@@ -208,6 +209,7 @@ export const translateEn = {
   edit_as_admin: "Edit (as Admin)",
   delete_as_admin: "Delete (as Admin)",
   editing_as_admin: "Editing as Admin",
+  comment_actions: "Comment Actions",
   cancel: "Cancel",
   save: "Save",
   
