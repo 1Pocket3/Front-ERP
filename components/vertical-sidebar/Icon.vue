@@ -1,20 +1,22 @@
 <script setup>
-const props = defineProps({ item: Object, level: Number });
+const props = defineProps({ item: [Object, String], level: Number });
 </script>
 
 <template>
-  <template v-if="level > 0">
-    <component
-      :is="item"
-      size="14"
-      stroke-width="1.5"
+  <template v-if="typeof item === 'string'">
+    <!-- MDI иконка -->
+    <v-icon 
+      :size="level > 0 ? 14 : 20" 
       class="iconClass"
-    ></component>
+    >
+      {{ item }}
+    </v-icon>
   </template>
   <template v-else>
+    <!-- Компонент иконки (для обратной совместимости) -->
     <component
       :is="item"
-      size="20"
+      :size="level > 0 ? 14 : 20"
       stroke-width="1.5"
       class="iconClass"
     ></component>

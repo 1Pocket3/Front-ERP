@@ -29,7 +29,6 @@ export default defineNuxtConfig({
 
   modules: [
     "@pinia/nuxt",
-    'nuxt-mdi',
     "@vee-validate/nuxt",
     (_options, nuxt) => {
       nuxt.hooks.hook("vite:extendConfig", (config) => {
@@ -39,6 +38,7 @@ export default defineNuxtConfig({
     },
   ],
 
+  // @ts-ignore - nuxt-mdi module configuration
   mdi: {
     cache: "localStorage", // Enable caching for better performance
     componentName: 'MdiIcon',
