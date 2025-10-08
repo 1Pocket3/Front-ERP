@@ -23,9 +23,7 @@ export default defineNuxtConfig({
       wasm: false
     }
   },
-  plugins: [
-    "@/plugins/vue-datepicker.client"
-  ],
+  plugins: [],
   ssr: false,
   css: ["@/scss/style.scss", "@/assets/css/performance.css"],
 

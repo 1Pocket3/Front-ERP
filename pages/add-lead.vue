@@ -3,7 +3,6 @@ import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useLeadsStore } from "@/stores/leads/leads";
 import { useCustomizerStore } from "@/stores/customizer";
-import BaseBreadcrumb from "@/components/shared/BaseBreadcrumb.vue";
 
 const { t } = useI18n();
 const store = useLeadsStore();
@@ -75,7 +74,6 @@ const cancelForm = () => {
 </script>
 
 <template>
-  <BaseBreadcrumb :project-title="t('add_lead')" />
   
   <div class="mt-2 alert-container" v-if="customizer.showAlert">
     <Alerts :t="t" :type="typeAlert" />

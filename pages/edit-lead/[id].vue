@@ -3,7 +3,6 @@ import { ref, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useLeadsStore, type Lead } from "@/stores/leads/leads";
 import { useCustomizerStore } from "@/stores/customizer";
-import BaseBreadcrumb from "@/components/shared/BaseBreadcrumb.vue";
 
 const { t } = useI18n();
 const store = useLeadsStore();
@@ -96,7 +95,6 @@ onMounted(async () => {
 </script>
 
 <template>
-  <BaseBreadcrumb :project-title="t('edit_lead')" />
   
   <div class="mt-2 alert-container" v-if="customizer.showAlert">
     <Alerts :t="t" :type="typeAlert" />

@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from "vue";
 // import LogoLight from "./LogoLight.vue";
-import LogoDark from "./LogoDark.vue";
+// import LogoDark from "./LogoDark.vue";
 import { useCustomizerStore } from "@/stores/customizer";
 
 const customizer = useCustomizerStore();
@@ -28,7 +28,7 @@ const dark = computed(() => {
   <!-- <LogoLight v-if="dark" /> -->
   <!-- <LogoDark v-else /> -->
 	<NuxtLink :to="'/main_page'">
-  <LogoDark/>
+  <!-- <LogoDark/> -->
 	</NuxtLink>
   <!-- <img v-else="dark" :src="data.imgUrl" alt="Logo" /> -->
 

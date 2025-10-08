@@ -12,6 +12,5 @@ export function useLazyComponent(loader: () => Promise<Component>) {
 
 // Pre-defined lazy components
 export const LazyComponents = {
-  BaseBreadcrumb: () => import('@/components/shared/BaseBreadcrumb.vue'),
   CommentsSection: () => import('@/components/comments/CommentsSection.vue'),
 }
