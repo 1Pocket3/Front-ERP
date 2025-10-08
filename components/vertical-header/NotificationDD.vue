@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { BellRingingIcon } from "vue-tabler-icons";
+// Иконки теперь используются через mdi
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 </script>
@@ -16,9 +16,7 @@ const { t } = useI18n();
         class="custom-hover-primary"
         v-bind="props"
       >
-        <v-badge dot color="primary">
-          <BellRingingIcon stroke-width="1.5" size="22" />
-        </v-badge>
+          <v-icon size="22">mdi-bell-badge-outline</v-icon>
       </v-btn>
     </template>
     <v-sheet rounded="md" width="360" elevation="10">

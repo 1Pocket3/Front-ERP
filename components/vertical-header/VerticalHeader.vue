@@ -2,9 +2,7 @@
 import { ref } from "vue";
 // import { useCustomizerStore } from "@/stores/customizer";
 // import { useEcomStore } from '@/stores/apps/eCommerce';
-import {
-  Menu2Icon,
-} from "vue-tabler-icons";
+// Иконки теперь используются через mdi
 // import LanguageDD from "./LanguageDD.vue";
 import NotificationDD from "./NotificationDD.vue";
 import ProfileDD from "./ProfileDD.vue";
@@ -50,7 +48,7 @@ const toggleSidebar = () => {
       variant="text"
       @click.stop="toggleSidebar"
     >
-      <Menu2Icon size="20" stroke-width="1.5" />
+      <v-icon size="20">mdi-menu</v-icon>
     </v-btn>
     <v-btn
       class="hidden-lg-and-up"
@@ -59,7 +57,7 @@ const toggleSidebar = () => {
       @click.stop="customizer.SET_SIDEBAR_DRAWER"
       size="small"
     >
-      <Menu2Icon size="20" stroke-width="1.5" />
+      <v-icon size="20">mdi-menu</v-icon>
     </v-btn>
 
     <!-- search mobile -->
@@ -122,7 +120,7 @@ const toggleSidebar = () => {
       icon
       @click.stop="appsdrawer = !appsdrawer"
     >
-      <GridDotsIcon size="17" stroke-width="1.5" />
+      <v-icon size="17">mdi-dots-grid</v-icon>
     </v-btn> -->
 
     <!-- ---------------------------------------------- -->

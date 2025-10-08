@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, defineAsyncComponent } from "vue";
 import type { ComputedRef } from "vue";
-import { PencilIcon, TrashIcon, PlusIcon, UploadIcon } from "vue-tabler-icons";
+// Иконки теперь используются через mdi
 import { useI18n } from "vue-i18n";
 import { useLeadsStore, type Lead } from "@/stores/leads/leads";
 import { useCustomizerStore } from "@/stores/customizer";
@@ -698,7 +698,7 @@ onUnmounted(() => {
             class="action-btn"
             size="small"
           >
-            <UploadIcon stroke-width="1.5" size="16" class="btn-icon" />
+            <v-icon size="16" class="btn-icon">mdi-upload</v-icon>
             <span class="btn-text">{{ t('import_leads') }}</span>
           </v-btn>
           
@@ -710,7 +710,7 @@ onUnmounted(() => {
             class="action-btn"
             size="small"
           >
-            <PlusIcon stroke-width="1.5" size="16" class="btn-icon" />
+            <v-icon size="16" class="btn-icon">mdi-plus</v-icon>
             <span class="btn-text">{{ t('add_lead') }}</span>
           </v-btn>
           

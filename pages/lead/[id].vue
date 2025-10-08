@@ -5,7 +5,7 @@ import { useLeadsStore, type Lead } from "@/stores/leads/leads";
 import { useCustomizerStore } from "@/stores/customizer";
 import { useAuthStore } from "@/stores/auth/auth";
 // Components will be loaded lazily
-import { PencilIcon, TrashIcon, PhoneIcon } from "vue-tabler-icons";
+// Иконки теперь используются через mdi
 
 const { t } = useI18n();
 const store = useLeadsStore();
@@ -277,7 +277,7 @@ onMounted(async () => {
           @click="editLead"
           class="mr-2"
         >
-          <PencilIcon stroke-width="1.5" size="20" class="mr-2" />
+          <v-icon size="20" class="mr-2">mdi-pencil</v-icon>
           {{ t('edit') }}
         </v-btn>
         <v-btn
@@ -286,7 +286,7 @@ onMounted(async () => {
           variant="outlined"
           @click="dialogDelete = true"
         >
-          <TrashIcon stroke-width="1.5" size="20" class="mr-2" />
+          <v-icon size="20" class="mr-2">mdi-delete</v-icon>
           {{ t('delete') }}
         </v-btn>
       </div>

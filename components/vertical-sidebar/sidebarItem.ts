@@ -1,6 +1,4 @@
-import {
-  UsersIcon,
-} from "vue-tabler-icons";
+// Иконки теперь используются через mdi
 
 // import testIcon from "@/public/manopera.png";
 
@@ -32,7 +30,7 @@ const sidebarItem: menu[] = [
   // },
   {
     title: "leads",
-    icon: UsersIcon,
+    icon: "mdi-account-group",
     to: "/leads",
   },
   // {

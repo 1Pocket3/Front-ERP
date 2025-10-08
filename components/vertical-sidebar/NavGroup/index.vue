@@ -1,12 +1,12 @@
 <script setup>
-import {DotsIcon} from 'vue-tabler-icons'
+// Иконки теперь используются через mdi
 
 const props = defineProps({ item: Object });
 </script>
 
 <template>
     <v-list-subheader  class="smallCap text-uppercase text-subtitle-2 mt-5 font-weight-bold d-flex align-items-center">
-        <span class="mini-icon"><DotsIcon size="16" stroke-width="1.5" class="iconClass" /></span>
+        <span class="mini-icon"><v-icon size="16" class="iconClass">mdi-dots-horizontal</v-icon></span>
        <span class="mini-text calibrate">{{ $t(props.item.header) }}</span> 
     </v-list-subheader>
 </template>

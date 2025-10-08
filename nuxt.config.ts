@@ -58,7 +58,7 @@ export default defineNuxtConfig({
           manualChunks: {
             'vendor': ['vue', 'vue-router', 'pinia'],
             'vuetify': ['vuetify'],
-            'icons': ['vue-tabler-icons'],
+            'icons': ['@mdi/js'],
             'utils': ['axios', 'ohash']
           }
         }
@@ -70,7 +70,7 @@ export default defineNuxtConfig({
         'vue-router',
         'pinia',
         'vuetify',
-        'vue-tabler-icons'
+        '@mdi/js'
       ]
     }
   },
