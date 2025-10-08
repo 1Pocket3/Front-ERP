@@ -38,7 +38,7 @@ const props = defineProps<{
         <!-- ---------------------------------------------- -->
         <!---Navigation -->
         <!-- ---------------------------------------------- -->
-        <perfect-scrollbar class="scrollnavbar">
+        <div class="scrollnavbar custom-scrollbar">
           <v-list class="pa-6">
             <!---Menu Loop -->
             <template v-for="(item, i) in sidebarMenu">
@@ -59,7 +59,7 @@ const props = defineProps<{
           <!-- <div class="pa-6 userbottom">
                 <Profile />
             </div> -->
-        </perfect-scrollbar>
+        </div>
       </v-navigation-drawer>
     </div>
 </template>

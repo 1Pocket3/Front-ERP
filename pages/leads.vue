@@ -391,7 +391,7 @@ const makeCall = async (leadId: number) => {
     // Устанавливаем состояние загрузки для конкретного лида
     authStore.setCallingState(true, leadId);
     
-    const billId = authStore.getCurrentUser?.phone_extension;
+    const billId = authStore.currentUser?.phone_extension;
     const result = await store.initiateCall(leadId, billId);
     
     // Показываем сообщение из ответа API

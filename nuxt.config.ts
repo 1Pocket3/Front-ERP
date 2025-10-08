@@ -25,7 +25,7 @@ export default defineNuxtConfig({
   },
   plugins: [],
   ssr: false,
-  css: ["@/scss/style.scss", "@/assets/css/performance.css"],
+  css: ["@/scss/style.scss"],
 
   modules: [
     "@pinia/nuxt",
@@ -37,13 +37,6 @@ export default defineNuxtConfig({
       });
     },
   ],
-
-  // @ts-ignore - nuxt-mdi module configuration
-  mdi: {
-    cache: "localStorage", // Enable caching for better performance
-    componentName: 'MdiIcon',
-    defaultSize: '1em'
-  },
 
   vite: {
     vue: {
@@ -58,7 +51,6 @@ export default defineNuxtConfig({
           manualChunks: {
             'vendor': ['vue', 'vue-router', 'pinia'],
             'vuetify': ['vuetify'],
-            'icons': ['@mdi/js'],
             'utils': ['axios', 'ohash']
           }
         }
@@ -69,8 +61,7 @@ export default defineNuxtConfig({
         'vue',
         'vue-router',
         'pinia',
-        'vuetify',
-        '@mdi/js'
+        'vuetify'
       ]
     }
   },
