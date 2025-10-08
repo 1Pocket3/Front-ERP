@@ -20,14 +20,6 @@ export interface menu {
   subCaption?: string;
 }
 
-// Materiale
-// Angajați
-// Echipe
-// Manopera
-// Utilaje de construcții
-// Acceptări marfă
-// Furnizori
-
 const sidebarItem: menu[] = [
   { header: "pages" },
   // {

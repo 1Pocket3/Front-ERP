@@ -14,7 +14,4 @@ export function useLazyComponent(loader: () => Promise<Component>) {
 export const LazyComponents = {
   BaseBreadcrumb: () => import('@/components/shared/BaseBreadcrumb.vue'),
   CommentsSection: () => import('@/components/comments/CommentsSection.vue'),
-  ProfileForm: () => import('@/components/profile/ProfileForm.vue'),
-  ChangePassword: () => import('@/components/change-password-form/change_password.vue'),
-  PersonalData: () => import('@/components/personal-data/PersonalData.vue')
 }
