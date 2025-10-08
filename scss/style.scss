@@ -5,14 +5,10 @@
 @use './layout/reboot' as *;
 @use './layout/container' as *;
 @use './layout/sidebar' as *;
-@use './layout/rtl' as *;
 @use './layout/topbar' as *;
-@use './layout/horizontal' as *;
 @use './layout/dark' as *;
-@use './layout/customizer' as *;
 
 
-@use './components/VBreadcrumb' as *;
 @use './components/VAlert' as *;
 @use './components/VButtons' as *;
 @use './components/VCard' as *;

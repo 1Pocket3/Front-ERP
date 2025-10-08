@@ -1,4 +1,7 @@
 export const translateEn = {
+  pop_profile_title: "Profile",
+  notifications: "Notifications",
+  notifications_btn_text: "See All Notifications",
   // Leads
   leads: "Leads",
   lead: "Lead",
