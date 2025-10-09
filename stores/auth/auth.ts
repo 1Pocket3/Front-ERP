@@ -162,16 +162,6 @@ export const useAuthStore = defineStore({
       }
     },
 
-    async getCurrentUser() {
-      try {
-        const response = await axios.get<User>("/auth/users/current/");
-        return response.data;
-      } catch (error) {
-        alert(error);
-        console.error(error);
-      }
-    },
-
     // Методы для управления состоянием звонка
     setCallingState(isCalling: boolean, leadId: number | null = null) {
       this.isCalling = isCalling;

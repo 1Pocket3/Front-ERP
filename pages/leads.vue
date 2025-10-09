@@ -3,9 +3,9 @@ import { ref, computed, onMounted, onUnmounted, defineAsyncComponent } from "vue
 import type { ComputedRef } from "vue";
 // Иконки теперь используются через mdi
 import { useI18n } from "vue-i18n";
-import { useLeadsStore, type Lead } from "@/stores/leads/leads";
-import { useCustomizerStore } from "@/stores/customizer";
 import { useAuthStore } from "@/stores/auth/auth";
+import { useCustomizerStore } from "@/stores/customizer";
+import { useLeadsStore, type Lead } from "@/stores/leads/leads";
 import axios from "@/utils/axios";
 
 // Lazy load heavy components
@@ -45,9 +45,9 @@ interface RowItem {
 }
 
 const { t } = useI18n();
-const store = useLeadsStore();
-const customizer = useCustomizerStore();
 const authStore = useAuthStore();
+const customizer = useCustomizerStore();
+const store = useLeadsStore();
 
 // Функция форматирования даты
 const formatDate = (date: Date) => {
@@ -58,6 +58,7 @@ const formatDate = (date: Date) => {
 
 // Computed свойства
 const isAdmin = computed(() => authStore.getIsAdmin);
+const isManager = computed(() => authStore.getCurrentUser?.role === 'manager');
 const leads = ref<RowItem[]>([]);
 const typeAlert = ref("success");
 
@@ -128,34 +129,30 @@ const headers: ComputedRef = computed(() => [
   // { title: 'Campaign', align: "start", key: "campaign", sortable: true },
 ]);
 
-const fetchLeads = async () => {
-  if (isFetching.value) return; // Защита от повторных вызовов
+const fetchLeads = async (skipCache = false) => {
+  // Если уже идет загрузка и это не принудительное обновление, выходим
+  if (isFetching.value && !skipCache) {
+    console.log('Fetching already in progress, skipping...');
+    return;
+  }
   
   isFetching.value = true;
   loading.value = true;
   error.value = null;
   
   try {
-    // Use requestIdleCallback for non-critical data loading
-    const fetchData = async () => {
-      await store.fetchLeads({
-        search: searchQuery.value,
-        manager_id: isAdmin.value && managerFilter.value ? managerFilter.value : undefined,
-        status: statusFilter.value && statusFilter.value.length ? statusFilter.value : undefined,
-        campaign: campaignFilter.value && campaignFilter.value.length ? campaignFilter.value : undefined,
-        assigned: assignedFilter.value === 'any' ? undefined : assignedFilter.value === 'assigned',
-        page: pagination.value,
-        page_size: itemsPerPage.value,
-      });
-      leads.value = store.getLeads.map(formatLeadData);
-      processLeads();
-    };
-
-    if (window.requestIdleCallback) {
-      window.requestIdleCallback(fetchData, { timeout: 1000 });
-    } else {
-      await fetchData();
-    }
+    await store.fetchLeads({
+      search: searchQuery.value,
+      manager_id: isAdmin.value && managerFilter.value ? managerFilter.value : undefined,
+      status: statusFilter.value && statusFilter.value.length ? statusFilter.value : undefined,
+      campaign: campaignFilter.value && campaignFilter.value.length ? campaignFilter.value : undefined,
+      assigned: assignedFilter.value === 'any' ? undefined : assignedFilter.value === 'assigned',
+      page: pagination.value,
+      page_size: itemsPerPage.value,
+      skipCache: skipCache, // Пропускаем кэш при принудительном обновлении
+    });
+    leads.value = store.getLeads.map(formatLeadData);
+    processLeads();
   } catch (err) {
     console.error("Error fetching leads:", err);
     error.value = err instanceof Error ? err.message : 'Ошибка загрузки данных';
@@ -214,7 +211,7 @@ const deleteLead = async () => {
   try {
     await store.deleteLead(selectedLeadId.value);
     customizer.toggleAlertVisibility('success', 'Lead deleted successfully');
-    await fetchLeads();
+    await fetchLeads(true); // Принудительное обновление после удаления
     dialogDelete.value = false;
     selectedLeadId.value = null;
   } catch (error) {
@@ -230,7 +227,7 @@ const handleSearch = () => {
   
   searchTimeout = setTimeout(() => {
     pagination.value = 1;
-    fetchLeads();
+    fetchLeads(true); // Принудительное обновление при поиске
   }, 500); // Задержка 500мс
 };
 
@@ -301,12 +298,23 @@ const handleFileUpload = async (event: Event) => {
 };
 
 const handleImportCompleted = async () => {
-  // Обновляем список лидов после успешного импорта
-  await fetchLeads();
-  
   // Сбрасываем состояние
   currentImportId.value = null;
   uploadedFile.value = null;
+  
+  // Показываем сообщение об успехе
+  customizer.toggleAlertVisibility('success', 'Import completed successfully');
+  
+  // Очищаем весь кэш перед обновлением
+  store.clearCache();
+  
+  // Сбрасываем на первую страницу
+  pagination.value = 1;
+  
+  // Даем серверу время на обработку импорта
+  setTimeout(async () => {
+    await fetchLeads(true); // Принудительное обновление с пропуском кэша
+  }, 1000); // Увеличили задержку до 1 секунды
 };
 
 const fetchAllUsers = async () => {
@@ -319,7 +327,7 @@ const fetchAllUsers = async () => {
 
 const applyFilters = () => {
   pagination.value = 1;
-  fetchLeads();
+  fetchLeads(true); // Принудительное обновление при применении фильтров
 };
 
 const clearFilters = () => {
@@ -328,11 +336,11 @@ const clearFilters = () => {
   campaignFilter.value = [];
   assignedFilter.value = 'any';
   pagination.value = 1;
-  fetchLeads();
+  fetchLeads(true); // Принудительное обновление при очистке фильтров
 };
 
 const bulkApplyChanges = async () => {
-  if (!isAdmin.value || selectedRows.value.length === 0) return;
+  // if (!isAdmin.value || selectedRows.value.length === 0) return;
   if (bulkAssignUserId.value === null && !bulkStatusValue.value) return;
   
   const leadIds = selectedRows.value.map(r => r.id);
@@ -346,9 +354,11 @@ const bulkApplyChanges = async () => {
     }
     
     // Выполняем изменение статуса, если выбрано
-    if (bulkStatusValue.value) {
-      operations.push('status');
-      await store.updateLeadStatus(leadIds, bulkStatusValue.value);
+    if (isManager.value || isAdmin.value) {
+      if (bulkStatusValue.value) {
+          operations.push('status');
+          await store.updateLeadStatus(leadIds, bulkStatusValue.value);
+        }
     }
     
     // Формируем сообщение об успехе
@@ -368,7 +378,7 @@ const bulkApplyChanges = async () => {
     bulkAssignUserId.value = null;
     bulkStatusValue.value = null;
     
-    await fetchLeads(); // Обновляем данные для гарантии
+    await fetchLeads(true); // Принудительное обновление после массовых изменений
   } catch (error) {
     console.error('Error applying bulk changes:', error);
     customizer.toggleAlertVisibility('error', 'Failed to apply changes');
@@ -379,7 +389,7 @@ const assignLeadToUser = async (leadId: number, userId: number | null) => {
   try {
     await store.assignLeads([leadId], userId);
     customizer.toggleAlertVisibility('success', 'Lead assigned successfully');
-    await fetchLeads(); // Обновляем данные для гарантии
+    await fetchLeads(true); // Принудительное обновление после назначения
   } catch (error) {
     console.error("Error assigning lead:", error);
     customizer.toggleAlertVisibility('error', 'Failed to assign lead');
@@ -542,26 +552,32 @@ const getStatusColor = (status: string) => {
 };
 
 onMounted(async () => {
-  // Critical data loading first
-  await fetchLeads();
-  
-  // Non-critical data loading with lower priority
-  if (window.requestIdleCallback) {
-    window.requestIdleCallback(async () => {
-      // Загружаем список пользователей только для админов
+  try {
+    // Layout уже загрузил данные пользователя, можем сразу загружать лиды
+    console.log('📋 Leads page: Loading leads... (isAdmin:', isAdmin.value, ')');
+    await fetchLeads();
+    
+    // Шаг 3: Non-critical data loading with lower priority
+    if (window.requestIdleCallback) {
+      window.requestIdleCallback(async () => {
+        // Загружаем список пользователей только для админов
+        if (isAdmin.value) {
+          await fetchAllUsers();
+        }
+        
+        // Загружаем доступные кампании для фильтра
+        await fetchExportFilters();
+      });
+    } else {
+      // Fallback for browsers without requestIdleCallback
       if (isAdmin.value) {
         await fetchAllUsers();
       }
-      
-      // Загружаем доступные кампании для фильтра
       await fetchExportFilters();
-    });
-  } else {
-    // Fallback for browsers without requestIdleCallback
-    if (isAdmin.value) {
-      await fetchAllUsers();
     }
-    await fetchExportFilters();
+  } catch (err) {
+    console.error('Error during page initialization:', err);
+    error.value = 'Failed to initialize page';
   }
 });
 
@@ -681,13 +697,14 @@ onUnmounted(() => {
           <v-btn
             color="info"
             variant="outlined"
-            @click="fetchLeads"
+            @click="() => { store.clearCache(); fetchLeads(true); }"
             :loading="loading"
+            :disabled="loading"
             class="action-btn"
             size="small"
           >
             <v-icon size="small">mdi-refresh</v-icon>
-            <span class="btn-text">Refresh</span>
+            <span class="btn-text">{{ loading ? 'Loading...' : 'Refresh' }}</span>
           </v-btn>
           
           <v-btn
@@ -763,7 +780,7 @@ onUnmounted(() => {
           color="primary"
           variant="outlined"
           size="small"
-          @click="searchQuery = ''; fetchLeads()"
+          @click="searchQuery = ''; fetchLeads(true)"
         >
           {{ t('refresh') }}
         </v-btn>
@@ -772,6 +789,15 @@ onUnmounted(() => {
   </v-card>
 
   <v-card elevation="0" class="lead-card">
+    <!-- Loading Progress Bar -->
+    <!-- <v-progress-linear
+      v-if="loading"
+      indeterminate
+      color="primary"
+      height="4"
+      class="loading-bar"
+    /> -->
+
     <v-data-table
       :items-per-page="-1"
       :page="1"
@@ -781,7 +807,7 @@ onUnmounted(() => {
       :return-object="true"
       v-model="selectedRows"
       show-select
-      class="border rounded-md table-hover leads-table"
+      :class="['border rounded-md table-hover leads-table', { 'table-loading': loading }]"
       :loading="loading"
       hide-default-footer
     >
@@ -789,12 +815,13 @@ onUnmounted(() => {
 
       <!-- Bulk actions toolbar -->
       <template v-slot:top>
-        <div v-if="isAdmin && selectedRows.length" class="px-4 py-2">
+        <div v-if="selectedRows.length" class="px-4 py-2">
           <div class="d-flex align-center gap-3 flex-wrap">
             <div class="text-body-2">{{ t('selected') }}: {{ selectedRows.length }}</div>
             
             <!-- Assign Manager Section -->
             <v-select
+              v-if="isAdmin"
               :items="allUsers.map((user: any) => ({ ...user, display_name: getUserDisplayName(user) }))"
               item-title="display_name"
               item-value="id"
@@ -808,6 +835,7 @@ onUnmounted(() => {
             
             <!-- Change Status Section -->
             <v-select
+              v-if="isManager || isAdmin"
               :items="statusOptions"
               item-title="text"
               item-value="value"
@@ -848,7 +876,7 @@ onUnmounted(() => {
             color="primary"
             variant="outlined"
             class="mt-4"
-            @click="searchQuery = ''; fetchLeads()"
+            @click="searchQuery = ''; fetchLeads(true)"
           >
             {{ t('clear_search') }}
           </v-btn>
@@ -1133,6 +1161,22 @@ onUnmounted(() => {
 </template>
 
 <style scoped lang="scss">
+// Loading bar
+.loading-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+}
+
+// Table loading state
+.table-loading {
+  opacity: 0.6;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
 // Filters Container
 .filters-container {
   .search-section {

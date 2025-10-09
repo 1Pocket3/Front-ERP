@@ -242,20 +242,10 @@ const formatDate = (dateString: string) => {
 onMounted(async () => {
   await fetchLead();
   
-  // Проверяем, есть ли данные пользователя в store
-  if (!authStore.getCurrentUser) {
-    try {
-      await authStore.fetchCurrentUser();
-    } catch (error) {
-      console.error('Could not fetch current user:', error);
-    }
-  }
-  
   // Загружаем список пользователей только для админов
   if (isAdmin.value) {
     await fetchAllUsers();
   }
-  
 });
 </script>
 

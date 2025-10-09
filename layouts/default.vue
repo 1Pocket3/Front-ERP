@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import { useAuthStore } from "@/stores/auth/auth";
 import { useCustomizerStore } from "@/stores/customizer";
-import { defineAsyncComponent } from "vue";
+import { defineAsyncComponent, ref } from "vue";
 
 // Lazy load heavy components
 const VerticalSidebarVue = defineAsyncComponent(() => import("@/components/vertical-sidebar/VerticalSidebar.vue"));
@@ -8,16 +9,36 @@ const VerticalHeaderVue = defineAsyncComponent(() => import("@/components/vertic
 
 const route = useRoute();
 const customizer = useCustomizerStore();
+const authStore = useAuthStore();
+const isLoading = ref(true);
 
-// Initialize theme on mount with lower priority
-onMounted(() => {
-  if (window.requestIdleCallback) {
-    window.requestIdleCallback(() => {
+// Initialize app on mount
+onMounted(async () => {
+  try {
+    // Шаг 2: Инициализируем тему (некритично)
+    if (window.requestIdleCallback) {
+      window.requestIdleCallback(() => {
+        customizer.initializeTheme();
+      });
+    } else {
       customizer.initializeTheme();
-    });
-  } else {
-    customizer.initializeTheme();
+    }
+  } catch (error) {
+    console.error('Error initializing layout:', error);
+  } finally {
+    isLoading.value = false;
   }
+});
+
+onBeforeMount(async () => {
+  if (!route.path.startsWith('/auth')) {
+      const accessToken = localStorage.getItem('accessToken');
+      if (accessToken && !authStore.getCurrentUser) {
+        console.log('🚀 Layout: Loading user data...');
+        await authStore.fetchCurrentUser();
+        console.log('✅ Layout: User data loaded, isAdmin:', authStore.getIsAdmin);
+      }
+    }
 });
 </script>
 
@@ -32,6 +53,15 @@ onMounted(() => {
         customizer.setBorderCard ? 'cardBordered' : '',
       ]"
     >
+      <!-- Global loading indicator while initializing -->
+      <v-progress-linear
+        v-if="isLoading && !route.path.startsWith('/auth')"
+        indeterminate
+        color="primary"
+        height="3"
+        style="position: fixed; top: 0; left: 0; right: 0; z-index: 9999;"
+      />
+
       <template v-if="!route.path.startsWith('/auth')">
         <VerticalSidebarVue
           :customizer="customizer"

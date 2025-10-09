@@ -1,28 +1,9 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
 import { useAuthStore } from "@/stores/auth/auth";
 
 const authStore = useAuthStore();
 
-const loading = ref(false);
-
-const fetchUserProfile = async () => {
-  // Если данные уже есть в store, не делаем запрос
-  if (authStore.getCurrentUser) {
-    return;
-  }
-  
-  loading.value = true;
-  try {
-    // Вызываем метод из actions
-    await authStore.fetchCurrentUser();
-  } catch (error) {
-    console.error("Error fetching user profile:", error);
-  } finally {
-    loading.value = false;
-  }
-};
-
+// Layout уже загружает данные пользователя, здесь только читаем их
 const getUserDisplayName = () => {
   const user = authStore.getCurrentUser;
   if (!user) return "Loading...";
@@ -47,10 +28,6 @@ const getUserRole = () => {
       return role || 'User';
   }
 };
-
-onMounted(() => {
-  fetchUserProfile();
-});
 </script>
 
 <template>
@@ -76,13 +53,6 @@ onMounted(() => {
           </v-avatar>
           <div class="ml-3">
             <h6 class="text-h6 mb-n1">
-              <v-progress-circular
-                v-if="loading"
-                indeterminate
-                size="16"
-                width="2"
-                class="mr-2"
-              ></v-progress-circular>
               {{ getUserDisplayName() }}
             </h6>
             <span class="text-subtitle-1 font-weight-regular textSecondary">

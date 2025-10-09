@@ -96,6 +96,11 @@ export const useLeadsStore = defineStore({
     getTotalPages: (state) => state.totalPages,
   },
   actions: {
+    // Метод для очистки кэша
+    clearCache() {
+      cache.clear();
+    },
+
     async fetchLeads(params: {
       search?: string;
       manager_id?: number;
@@ -104,20 +109,23 @@ export const useLeadsStore = defineStore({
       campaign?: string | string[];
       page?: number;
       page_size?: number;
+      skipCache?: boolean;
     } = {}) {
       try {
         // Create cache key
         const cacheKey = `leads_${JSON.stringify(params)}`;
         
-        // Check cache first
-        const cachedData = getCachedData(cacheKey);
-        if (cachedData) {
-          this.leads = cachedData.results;
-          this.totalCount = cachedData.count;
-          this.pageSize = cachedData.page_size;
-          this.totalPages = cachedData.total_pages;
-          this.isLoaded = true;
-          return cachedData;
+        // Check cache first (only if skipCache is not true)
+        if (!params.skipCache) {
+          const cachedData = getCachedData(cacheKey);
+          if (cachedData) {
+            this.leads = cachedData.results;
+            this.totalCount = cachedData.count;
+            this.pageSize = cachedData.page_size;
+            this.totalPages = cachedData.total_pages;
+            this.isLoaded = true;
+            return cachedData;
+          }
         }
 
         const queryParams = new URLSearchParams();
