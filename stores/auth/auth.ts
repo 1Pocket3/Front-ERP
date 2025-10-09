@@ -58,6 +58,7 @@ export const useAuthStore = defineStore({
           // console.log('response.status', response);
           localStorage.setItem("accessToken", response.data.access);
           localStorage.setItem("refreshToken", response.data.refresh);
+          await this.fetchCurrentUser();
           return response.data;
         } else {
           throw new Error("Invalid response format from server");
