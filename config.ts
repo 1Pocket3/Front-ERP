@@ -10,7 +10,7 @@ export type ConfigProps = {
 
 const config: ConfigProps = {
     Sidebar_drawer: null,
-    mini_sidebar: false,
+    mini_sidebar: true,
     setHorizontalLayout: false, // Horizontal layout
     actTheme: 'LIGHT_THEME', // CYAN_THEME BLUE_THEME ORANGE_THEME
     boxed: false,
